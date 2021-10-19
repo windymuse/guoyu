@@ -122,7 +122,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'guest',
+        // username: 'guest',
+        username: 'admin',
         password: '123456',
         verifyCode: '666666'
       },

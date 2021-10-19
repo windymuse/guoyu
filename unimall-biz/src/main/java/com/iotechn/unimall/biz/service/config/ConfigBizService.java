@@ -69,6 +69,12 @@ public class ConfigBizService {
                 case "address":
                     configDTO.setAddress(configDO.getValueWorth());
                     break;
+                case "longitude":
+                    configDTO.setLongitude(configDO.getValueWorth());
+                    break;
+                case "latitude":
+                    configDTO.setLatitude(configDO.getValueWorth());
+                    break;
                 case "showType":
                     configDTO.setShowType(Integer.parseInt(configDO.getValueWorth()));
                     break;

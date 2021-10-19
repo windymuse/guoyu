@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iotechn.unimall.data.mapper.MemberLevelMapper">
+
+
+    <select id="getMemberLevelList" resultType="com.iotechn.unimall.data.domain.MemberLevelDO">
+        SELECT
+        id,
+        name,
+        degree,
+        percent,
+        img,
+        description,
+        gmt_update AS gmtUpdate,
+        gmt_create AS gmtCreate
+        FROM
+        unimall_member_level
+        WHERE
+        1 = 1
+        <if test="id != null">
+            AND id = #{id}
+        </if>
+        <if test="name != null">
+            AND name like concat(concat("%",#{name}),"%")
+        </if>
+        <if test="degree != null">
+            AND `degree` = #{degree}
+        </if>
+        <if test="percent != null">
+            AND percent = #{percent}
+        </if>
+        <if test="description != null">
+            AND description like concat(concat("%",#{description}),"%")
+        </if>
+        limit #{offset},#{limit}
+    </select>
+
+    <select id="countMemberLevel" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        unimall_member_level
+        WHERE
+        1 = 1
+        <if test="id != null">
+            AND id = #{id}
+        </if>
+        <if test="name != null">
+            AND name like concat(concat("%",#{name}),"%")
+        </if>
+        <if test="degree != null">
+            AND `degree` = #{degree}
+        </if>
+        <if test="percent != null">
+            AND percent = #{percent}
+        </if>
+        <if test="description != null">
+            AND description like concat(concat("%",#{description}),"%")
+        </if>
+    </select>
+
+</mapper>

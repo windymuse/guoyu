@@ -85,8 +85,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-show="false" align="center" label="使用类目ID" prop="categoryId" width="100" />
-
       <el-table-column align="center" label="领券相对天数" prop="days">
         <template slot-scope="scope">{{ scope.row.days != null ? scope.row.days : "无" }}</template>
       </el-table-column>
@@ -95,6 +93,12 @@
       </el-table-column>
       <el-table-column align="center" label="领券结束时间" prop="gmtEnd">
         <template slot-scope="scope">{{ scope.row.gmtEnd | formatGmt }}</template>
+      </el-table-column>
+
+      <el-table-column align="center" label="领取类型" prop="gmtType" width="100">
+        <template slot-scope="scope">
+          <el-tag> {{ scope.row.gmtType | formatGmtType }} </el-tag>
+        </template>
       </el-table-column>
 
       <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
@@ -174,6 +178,11 @@
         <el-form-item label="优惠卷状态" prop="status">
           <el-select v-model="dataForm.status" :disabled="dialogStatus === 'update'">
             <el-option v-for="(item,index) in couponStatusOptions" :key="index" :label="item.name" :value="item.value" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="领取类型" prop="gmtType">
+          <el-select v-model="dataForm.gmtType" :disabled="dialogStatus === 'update'">
+            <el-option v-for="(item,index) in couponGmtTypeOptions" :key="index" :label="item.name" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="有效期">
@@ -304,14 +313,25 @@ export default {
       } else {
         return '错误状态'
       }
+    },
+    formatGmtType(gmtType) {
+      if (gmtType === 1) {
+        return '直接领取'
+      } else if (gmtType === 2) {
+        return '激活码领取'
+      } else {
+        return '不可领取'
+      }
     }
   },
   data() {
     return {
-      couponTypeMap: [{ value: 1, name: '满减卷' }, { value: '', name: '全部' }],
+      couponTypeMap: [{ value: 1, name: '满减卷' }, { value: 2, name: '折扣卷' }, { value: '', name: '全部' }],
+      couponGmtTypeMap: [{ value: 1, name: '直接领取' }, { value: 2, name: '激活码领取' }],
       couponStatusMap: [{ value: 0, name: '下架' }, { value: 1, name: '正常' }, { value: -1, name: '已过期' }, { value: '', name: '全部' }],
       couponStatusOptions: [{ value: 1, name: '正常' }, { value: 0, name: '下架' }],
-      couponTypeOptions: [{ value: 1, name: '满减卷' }],
+      couponTypeOptions: [{ value: 1, name: '满减卷' }, { value: 2, name: '折扣卷' }],
+      couponGmtTypeOptions: [{ value: 1, name: '直接领取' }, { value: 2, name: '激活码领取' }],
       list: undefined,
       total: 0,
       listLoading: true,
@@ -341,7 +361,8 @@ export default {
         timeType: 1,
         days: undefined,
         gmtStart: null,
-        gmtEnd: null
+        gmtEnd: null,
+        gmtType: 1
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -411,7 +432,8 @@ export default {
         categoryId: undefined,
         categoryTitle: undefined,
         gmtStart: null,
-        gmtEnd: null
+        gmtEnd: null,
+        gmtType: 1
       }
     },
     refreshOptions() {

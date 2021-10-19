@@ -43,4 +43,6 @@ public class CouponAdminDTO extends SuperDTO {
     private Date gmtStart;
 
     private Date gmtEnd;
+
+    private Integer gmtType;
 }

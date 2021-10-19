@@ -33,6 +33,8 @@ public interface AdminMerchantConfigService {
             @HttpParam(name = "logoUrl", type = HttpParamType.COMMON, description = "商铺logo") String logoUrl,
             @HttpParam(name = "description", type = HttpParamType.COMMON, description = "商铺描述") String description,
             @HttpParam(name = "address", type = HttpParamType.COMMON, description = "商铺地址") String address,
+            @HttpParam(name = "longitude", type = HttpParamType.COMMON, description = "经度") String longitude,
+            @HttpParam(name = "latitude", type = HttpParamType.COMMON, description = "维度") String latitude,
             @NotNull @HttpParam(name = "showType", type = HttpParamType.COMMON, description = "展示方式") Integer showType
     ) throws ServiceException;
 
@@ -43,6 +45,8 @@ public interface AdminMerchantConfigService {
             @HttpParam(name = "logoUrl", type = HttpParamType.COMMON, description = "商铺logo") String logoUrl,
             @HttpParam(name = "description", type = HttpParamType.COMMON, description = "商铺描述") String description,
             @HttpParam(name = "address", type = HttpParamType.COMMON, description = "商铺地址") String address,
+            @HttpParam(name = "longitude", type = HttpParamType.COMMON, description = "经度") String longitude,
+            @HttpParam(name = "latitude", type = HttpParamType.COMMON, description = "维度") String latitude,
             @NotNull @HttpParam(name = "showType", type = HttpParamType.COMMON, description = "展示方式") Integer showType
     ) throws ServiceException;
 

@@ -26,6 +26,12 @@
         <el-form-item label="地址" prop="address">
           <el-input v-model="dataForm.address" />
         </el-form-item>
+        <el-form-item label="经度" prop="longitude">
+          <el-input v-model="dataForm.longitude" />
+        </el-form-item>
+        <el-form-item label="维度" prop="latitude">
+          <el-input v-model="dataForm.latitude" />
+        </el-form-item>
         <!-- <el-form-item label="展示方式" prop="showType">
           <el-radio-group v-model="dataForm.showType">
             <el-radio :label="1">商品列表</el-radio>
@@ -84,6 +90,22 @@ export default {
   name: 'GoodsEdit',
   components: { Editor },
   data() {
+    const validateLongitude = (rule, value, callback) => {
+      // 经度,整数部分为0-180小数部分为0到15位
+      var longreg = /^(\-|\+)?(((\d|[1-9]\d|1[0-7]\d|0{1,3})\.\d{0,15})|(\d|[1-9]\d|1[0-7]\d|0{1,3})|180\.0{0,15}|180)$/
+      if (!longreg.test(value)) {
+        callback(new Error('经度整数部分为0-180,小数部分为0到15位!'))
+      }
+      callback()
+    }
+    const validateLatitude = (rule, value, callback) => {
+      // 纬度,整数部分为0-90小数部分为0到15位
+      var latreg = /^(\-|\+)?([0-8]?\d{1}\.\d{0,15}|90\.0{0,15}|[0-8]?\d{1}|90)$/
+      if (!latreg.test(value)) {
+        callback(new Error('纬度整数部分为0-90,小数部分为0到15位!'))
+      }
+      callback()
+    }
     return {
       uploadPath,
       list: [],
@@ -92,13 +114,21 @@ export default {
         logoUrl: undefined,
         description: undefined,
         address: undefined,
+        longitude: undefined,
+        latitude: undefined,
         showType: 1
       },
       rules: {
         //     showType: [{ required: true, message: '商铺展示类型不能为空', trigger: 'blur' }],
         address: [{ required: true, message: '商铺地址不能为空', trigger: 'blur' }],
         title: [{ required: true, message: '商铺标题不能为空', trigger: 'blur' }],
-        description: [{ required: true, message: '商铺描述不能为空', trigger: 'blur' }]
+        description: [{ required: true, message: '商铺描述不能为空', trigger: 'blur' }],
+        longitude: [
+          { required: true, validator: validateLongitude, trigger: 'blur' },
+          { validator: validateLongitude, trigger: 'change' }],
+        latitude: [
+          { required: true, validator: validateLatitude, trigger: 'blur' },
+          { validator: validateLatitude, trigger: 'change' }]
       },
       listLoading: false
     }

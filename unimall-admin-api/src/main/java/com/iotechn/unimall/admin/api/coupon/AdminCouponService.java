@@ -38,7 +38,8 @@ public interface AdminCouponService {
             @HttpParam(name = "categoryId", type = HttpParamType.COMMON, description = "优惠类别") Long categoryId,
             @HttpParam(name = "days", type = HttpParamType.COMMON, description = "优惠时长") Integer days,
             @HttpParam(name = "gmtStart", type = HttpParamType.COMMON, description = "优惠开始时间") Long gmtStart,
-            @HttpParam(name = "gmtEnd", type = HttpParamType.COMMON, description = "优惠结束时间") Long gmtEnd) throws ServiceException;
+            @HttpParam(name = "gmtEnd", type = HttpParamType.COMMON, description = "优惠结束时间") Long gmtEnd,
+            @NotNull @HttpParam(name = "gmtType", type = HttpParamType.COMMON, description = "领取类型") Integer gmtType) throws ServiceException;
 
     @HttpMethod(description = "删除", permission = "promote:coupon:delete", permissionParentName = "推广管理", permissionName = "优惠管理")
     public Boolean deleteCoupon(
@@ -61,7 +62,8 @@ public interface AdminCouponService {
             @HttpParam(name = "categoryId", type = HttpParamType.COMMON, description = "优惠类别") Long categoryId,
             @HttpParam(name = "days", type = HttpParamType.COMMON, description = "优惠时长") Integer days,
             @HttpParam(name = "gmtStart", type = HttpParamType.COMMON, description = "优惠开始时间") Date gmtStart,
-            @HttpParam(name = "gmtEnd", type = HttpParamType.COMMON, description = "优惠结束时间") Date gmtEnd) throws ServiceException;
+            @HttpParam(name = "gmtEnd", type = HttpParamType.COMMON, description = "优惠结束时间") Date gmtEnd,
+            @NotNull @HttpParam(name = "gmtType", type = HttpParamType.COMMON, description = "领取类型") Integer gmtType) throws ServiceException;
 
     @HttpMethod(description = "修改", permission = "promote:coupon:update", permissionParentName = "推广管理", permissionName = "优惠管理")
     public Boolean updateCouponStatus(
@@ -71,10 +73,11 @@ public interface AdminCouponService {
 
 
     @HttpMethod(description = "查询", permission = "promote:coupon:query", permissionParentName = "推广管理", permissionName = "优惠管理")
-    public Page<CouponAdminDTO> queryCouponByTitle(
+    public Page<CouponAdminDTO> queryCoupon(
             @NotNull @HttpParam(name = "adminId", type = HttpParamType.ADMIN_ID, description = "管理员ID") Long adminId,
             @HttpParam(name = "title", type = HttpParamType.COMMON, description = "优惠卷标题") String title,
             @HttpParam(name = "type", type = HttpParamType.COMMON, description = "优惠卷类型") Integer type,
+            @HttpParam(name = "gmtType", type = HttpParamType.COMMON, description = "领取类型") Integer gmtType,
             @HttpParam(name = "status", type = HttpParamType.COMMON, description = "优惠卷状态") Integer status,
             @HttpParam(name = "pageNo", type = HttpParamType.COMMON, description = "页码", valueDef = "1") Integer pageNo,
             @HttpParam(name = "limit", type = HttpParamType.COMMON, description = "页码长度", valueDef = "10") Integer limit) throws ServiceException;

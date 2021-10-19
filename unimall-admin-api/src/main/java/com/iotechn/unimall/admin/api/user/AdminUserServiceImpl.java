@@ -72,7 +72,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         Date now = new Date();
         user.setGmtUpdate(now);
         UserDO userDO  = userMapper.selectById(user.getId());
-        if(userDO.getPassword().equals(user.getPassword())){
+        if(userDO.getPassword() != null && userDO.getPassword().equals(user.getPassword())){
             return userMapper.updateById(user) > 0;
         }
         if(user.getPassword() != null) {

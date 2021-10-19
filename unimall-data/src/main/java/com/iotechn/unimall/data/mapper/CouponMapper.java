@@ -23,6 +23,6 @@ public interface CouponMapper extends BaseMapper<CouponDO> {
 
     public List<CouponDTO> getActiveCoupons();
 
-    public List<CouponAdminDTO> getAdminCouponList(@Param("title")String title, @Param("type") Integer type, @Param("status")Integer status, @Param("now")Date now,@Param("offset") Integer offset,@Param("limit") Integer limit);
+    public List<CouponAdminDTO> getAdminCouponList(@Param("title")String title, @Param("type") Integer type, @Param("gmtType") Integer gmtType, @Param("status")Integer status, @Param("now")Date now,@Param("offset") Integer offset,@Param("limit") Integer limit);
 
 }

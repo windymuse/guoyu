@@ -39,7 +39,8 @@
           c.category_id as categoryId,
           c.days AS days,
           c.gmt_start as gmtStart,
-          c.gmt_end as gmtEnd
+          c.gmt_end as gmtEnd,
+          c.gmt_type as gmtType
         FROM
           unimall_coupon c
         LEFT JOIN unimall_category g on c.category_id = g.id
@@ -50,6 +51,9 @@
         </if>
         <if test="type != null">
             AND c.type = #{type}
+        </if>
+        <if test="gmtType != null">
+            AND c.gmt_type = #{gmtType}
         </if>
         <if test="status != null">
           <if test="status >= 0">
@@ -79,6 +83,7 @@
             c.days,
             c.gmt_start AS gmtStart,
             c.gmt_end AS gmtEnd,
+            c.gmt_type as gmtType,
             c.gmt_update AS gmtUpdate,
             c.gmt_create AS gmtCreate,
             y.title AS categoryTitle

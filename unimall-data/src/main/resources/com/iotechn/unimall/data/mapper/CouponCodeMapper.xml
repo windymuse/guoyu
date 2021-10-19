@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iotechn.unimall.data.mapper.CouponCodeMapper">
+
+
+    <select id="getCouponCodeList" resultType="com.iotechn.unimall.data.domain.CouponCodeDO">
+        SELECT
+          c.id AS id,
+          c.coupon_id AS couponId,
+          c.user_id AS userId,
+          c.code AS code,
+          c.status AS status,
+          c.description AS description,
+          c.gmt_start as gmtStart,
+          c.gmt_end as gmtEnd
+        FROM
+          unimall_coupon_code c
+        WHERE
+        1 = 1
+        <if test="couponId != null">
+            AND c.coupon_id = #{couponId}
+        </if>
+        <if test="userId != null">
+            AND c.user_id = #{userId}
+        </if>
+        <if test="status != null">
+            AND c.status = #{status}
+        </if>
+        order BY c.id DESC
+        limit #{offset},#{limit}
+    </select>
+
+
+
+</mapper>

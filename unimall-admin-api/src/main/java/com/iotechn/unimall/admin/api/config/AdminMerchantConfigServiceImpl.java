@@ -30,7 +30,7 @@ public class AdminMerchantConfigServiceImpl implements AdminMerchantConfigServic
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean addMerchant(Long adminId, String title, String logoUrl, String description, String address, Integer showType) throws ServiceException {
+    public boolean addMerchant(Long adminId, String title, String logoUrl, String description, String address, String longitude, String latitude, Integer showType) throws ServiceException {
         Date now = new Date();
         ConfigDO titleDO = new ConfigDO("title",title);
             titleDO.setGmtCreate(now);titleDO.setGmtUpdate(now);
@@ -42,27 +42,38 @@ public class AdminMerchantConfigServiceImpl implements AdminMerchantConfigServic
             addressDO.setGmtCreate(now);addressDO.setGmtUpdate(now);
         ConfigDO showTypeDO = new ConfigDO("showType",String.valueOf(showType));
             showTypeDO.setGmtCreate(now);showTypeDO.setGmtUpdate(now);
+        ConfigDO longitudeDO = new ConfigDO("longitude",longitude);
+            longitudeDO.setGmtCreate(now);longitudeDO.setGmtUpdate(now);
+        ConfigDO latitudeDO = new ConfigDO("latitude",latitude);
+            latitudeDO.setGmtCreate(now);latitudeDO.setGmtUpdate(now);
         configMapper.insert(titleDO);
         configMapper.insert(logoDO);
         configMapper.insert(descDO);
         configMapper.insert(addressDO);
         configMapper.insert(showTypeDO);
+        configMapper.insert(longitudeDO);
+        configMapper.insert(latitudeDO);
         configBizService.clearMerchantConfigCache();
         return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateMerchant(Long adminId, String title, String logoUrl, String description, String address, Integer showType) throws ServiceException {
-        configMapper.update(new ConfigDO("title",title), new EntityWrapper<ConfigDO>().eq("key_word","title"));
+    public boolean updateMerchant(Long adminId, String title, String logoUrl, String description, String address, String longitude, String latitude, Integer showType) throws ServiceException {
 
-        configMapper.update(new ConfigDO("logoUrl",logoUrl), new EntityWrapper<ConfigDO>().eq("key_word","logoUrl"));
+        configMapper.update(new ConfigDO("title", title), new EntityWrapper<ConfigDO>().eq("key_word", "title"));
 
-        configMapper.update(new ConfigDO("description",description), new EntityWrapper<ConfigDO>().eq("key_word","description"));
+        configMapper.update(new ConfigDO("logoUrl", logoUrl), new EntityWrapper<ConfigDO>().eq("key_word", "logoUrl"));
 
-        configMapper.update(new ConfigDO("address",address), new EntityWrapper<ConfigDO>().eq("key_word","address"));
+        configMapper.update(new ConfigDO("description", description), new EntityWrapper<ConfigDO>().eq("key_word", "description"));
 
-        configMapper.update(new ConfigDO("showType",String.valueOf(showType)), new EntityWrapper<ConfigDO>().eq("key_word","showType"));
+        configMapper.update(new ConfigDO("address", address), new EntityWrapper<ConfigDO>().eq("key_word", "address"));
+
+        configMapper.update(new ConfigDO("showType", String.valueOf(showType)), new EntityWrapper<ConfigDO>().eq("key_word", "showType"));
+
+        configMapper.update(new ConfigDO("longitude", longitude), new EntityWrapper<ConfigDO>().eq("key_word", "longitude"));
+
+        configMapper.update(new ConfigDO("latitude", latitude), new EntityWrapper<ConfigDO>().eq("key_word", "latitude"));
 
         configBizService.clearMerchantConfigCache();
         return true;

@@ -91,15 +91,15 @@
         <template slot-scope="scope">{{ scope.row.gmtCreate | formatTime }}</template>
       </el-table-column>
 
-      <el-table-column align="center" width="140" label="物流渠道" prop="shipCode">
+      <el-table-column align="center" width="100" label="物流渠道" prop="shipCode">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.shipCode | shipCodeFilter }}</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="200" label="物流单号" prop="shipCode"/>
+      <el-table-column align="center" width="150" label="物流单号" prop="shipCode"/>
 
-      <el-table-column align="center" width="200" label="备注" prop="mono"/>
+      <el-table-column align="center" width="150" label="备注" prop="mono"/>
 
       <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -263,7 +263,7 @@ const statusMap = {
 }
 
 const shipCodeMap = {
-  'NONE': '无需物流公司',
+  'NONE': '无需物流公司(外卖)',
   'SF': '顺丰速运',
   'HTKY': '百世快递',
   'ZTO': '中通快递',

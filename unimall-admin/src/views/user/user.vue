@@ -16,7 +16,7 @@
         class="filter-item"
         placeholder="请选择用户会员等级"
       >
-        <el-option v-for="(key,index) in levelDic" :key="index" :label="key.name" :value="key.value" />
+        <el-option v-for="(key) in memberLevelList" :key="key.degree" :label="key.name" :value="key.degree" />
       </el-select>
       <el-select
         v-model="listQuery.gender"
@@ -81,7 +81,7 @@
 
       <el-table-column align="center" label="会员等级" prop="level">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.level | levelDicFilter }}</el-tag>
+          <el-tag>{{ getLevelStr(scope.row.level) }}</el-tag>
         </template>
       </el-table-column>
 
@@ -163,7 +163,7 @@
         </el-form-item>
         <el-form-item label="用户等级" prop="level">
           <el-select v-model="dataForm.level" placeholder="请选择">
-            <el-option v-for="(key, index) in levelDic" :key="index" :label="key.name" :value="key.value" />
+            <el-option v-for="(key) in memberLevelList" :key="key.degree" :label="key.name" :value="key.degree" />
           </el-select>
         </el-form-item>
         <el-form-item label="用户状态" prop="status">
@@ -182,6 +182,7 @@
 </template>
 
 <script>
+import { listMemberLevel } from '@/api/member_level'
 import { fetchList, activeUser, createUser, updateUser, deleteUser } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -209,6 +210,16 @@ export default {
   },
   data() {
     return {
+      memberLevelList: [],
+      memberLevelListQuery: {
+        pageNo: 1,
+        limit: 200,
+        id: undefined,
+        name: undefined,
+        degree: undefined,
+        percent: undefined,
+        description: undefined
+      },
       list: [],
       total: 0,
       listLoading: true,
@@ -249,9 +260,33 @@ export default {
     }
   },
   created() {
+    this.getMemberLevelList()
     this.getList()
   },
   methods: {
+    getMemberLevelList() {
+      this.listLoading = true
+      listMemberLevel(this.memberLevelListQuery)
+        .then(response => {
+          this.memberLevelList = response.data.data.items
+          this.memberLevelList.push({
+            name: '全部',
+            value: 0
+          })
+          console.log(this.memberLevelList)
+        })
+        .catch(() => {
+          this.list = []
+        })
+    },
+    getLevelStr(level) {
+      for (let i = 0; i < this.memberLevelList.length; i++) {
+        if (this.memberLevelList[i].degree === level) {
+          return this.memberLevelList[i].name
+        }
+      }
+      return '普通会员'
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery)

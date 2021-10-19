@@ -46,4 +46,10 @@ public class CouponDO extends SuperDO {
     @TableField("gmt_end")
     private Date gmtEnd;
 
+    /**
+     * 领取类型：1 直接领取 2 代码领取
+     */
+    @TableField("gmt_type")
+    private Integer gmtType;
+
 }

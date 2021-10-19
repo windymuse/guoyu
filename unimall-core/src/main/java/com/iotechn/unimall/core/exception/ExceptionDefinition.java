@@ -379,6 +379,11 @@ public class ExceptionDefinition {
     public static final ServiceExceptionDefinition GROUP_SHOP_ALREAD_ATCIVE =
             new ServiceExceptionDefinition(53015, "团购商品已经在团购中.无法进行编辑或修改操作");
 
+    public static final ServiceExceptionDefinition MEMBER_LEVEL_INFORMATION_MISSING =
+            new ServiceExceptionDefinition(54001, "会员等级信息缺失，不能添加");
+
+    public static final ServiceExceptionDefinition MEMBER_LEVEL_NAME_EXIST =
+            new ServiceExceptionDefinition(54002, "会员等级称号已经存在，不能添加");
 
 
 
