@@ -1,40 +1,46 @@
 <template>  
-    <view class="container">  
+    <view class="container">
+		<!-- 头部轮播 -->
+		<view class="carousel-section">
+			<!-- 标题栏和状态栏占位符 -->
+			<!-- <view class="titleNview-placing"></view> -->
+			<!-- 背景色区域 -->
+			<!-- <view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view> -->
+			<swiper autoplay="true" interval="3000" duration="500" class="carousel" circular @change="swiperChange" indicator-dots="true">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="naviageToPage(item.url)">
+					<image :src="item.imgUrl" />
+				</swiper-item>
+			</swiper>
+		</view>
 		<view class="user-section">
-			<image class="bg" src="/static/user-bg.jpg"></image>
+			<!-- <image class="bg" src="/static/user-bg.jpg"></image> -->
 			<view class="user-info-box">
+				<view class="info-box">
+					<text @click="toLogin" class="username">{{ hasLogin? ('Hey，' + userInfo.nickname || '未设置昵称') : '立即登录' }}</text>
+					<text v-if="hasLogin" class="level">普通会员</text>
+					
+				</view>
 				<view class="portrait-box">
 					<image class="portrait" :src="userInfo.avatarUrl || '/static/missing-face.png'"></image>
 				</view>
-				<view class="info-box">
-					<text @click="toLogin" class="username">{{ hasLogin? (userInfo.nickname || '未设置昵称') : '立即登录' }}</text>
-				</view>
 			</view>
 			<view class="vip-card-box">
-				<image class="card-bg" src="/static/vip-card-bg.png" mode=""></image>
-				<!-- <view class="b-btn">
-					立即开通
-				</view> -->
-				<view class="tit">
-					<text class="yticon icon-iLinkapp-"></text>
-					{{isVip ? 'VIP会员' : '普通会员'}}
+				<view class="b-btn">
+					当前等级折扣9.5折
 				</view>
-				<text class="e-m">VIP权益</text>
-				<text class="e-b">{{isVip ? '会员专享VIP价' : '请联系管理员开通会员'}}</text>
+				<view class="tit">
+					Lv2
+				</view>
+				<view class="progress-box">
+				  <progress percent="60" active stroke-width='10' border-radius='10' color="#478FFF" />
+				</view>
+				<text class="e-b">再消费xxx元，即可升级为Lv3</text>
 			</view>
 		</view>
 		
 		<view 
 			class="cover-container"
-			:style="[{
-				transform: coverTransform,
-				transition: coverTransition
-			}]"
-			@touchstart="coverTouchstart"
-			@touchmove="coverTouchmove"
-			@touchend="coverTouchend"
 		>
-			<image class="arc" src="/static/arc.png"></image>
 			
 			<!-- <view class="tj-sction">
 				<view class="tj-item">
@@ -50,7 +56,6 @@
 					<text>积分</text>
 				</view>
 			</view> -->
-			<!-- 订单 -->
 			<view class="order-section">
 				<view class="order-item" @click="navTo('/pages/order/list?state=0')" hover-class="common-hover"  :hover-stay-time="50">
 					<text class="yticon icon-shouye"></text>
@@ -82,7 +87,7 @@
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="navTo('/pages/product/favorite')"></list-cell>
 				<list-cell icon="icon-huifu" iconColor="#e07472" title="在线客服" :openType="'contact'"></list-cell>
 				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="navTo('/pages/user/profile')"></list-cell>
-				<!-- <list-cell icon="icon-iconfontweixin" iconColor="#EEEE00" title="我的优惠券" @eventClick="navTo('/pages/coupon/listTODO')"></list-cell> -->
+				<list-cell icon="icon-iconfontweixin" iconColor="#EEEE00" title="我的优惠券" @eventClick="navTo('/pages/coupon/listTODO')"></list-cell>
 				<list-cell icon="icon-pinglun-copy" iconColor="#ee883b" title="关于" @eventClick="navTo('/pages/user/about')"></list-cell>
 				<list-cell icon="icon-shanchu4" iconColor="#e07472" title="退出登录" border="" @eventClick="logout()"></list-cell>
 			</view> 
@@ -103,6 +108,10 @@
 		},
 		data(){
 			return {
+				titleNViewBackground: '',
+				swiperCurrent: 0,
+				swiperLength: 0,
+				carouselList: [],
 				coverTransform: 'translateY(0px)',
 				coverTransition: '0s',
 				moving: false,
@@ -115,6 +124,7 @@
 			this.loadFootprint()
 		},
 		onLoad(){
+			this.loadData()
 		},
 		// #ifndef MP
 		onNavigationBarButtonTap(e) {
@@ -140,6 +150,46 @@
 			...mapState(['hasLogin','userInfo'])
 		},
         methods: {
+			async loadData() {
+				const that = this
+				uni.showLoading({
+					title: '正在加载'
+				})
+				that.$api.request('integral', 'getIndexData', failres => {
+					that.$api.msg(failres.errmsg)
+					uni.hideLoading()
+				}).then(res => {
+					let data = res.data
+					//橱窗
+					that.windowSpuList = data.windowRecommend
+					//轮播
+					data.advertisement.t1.forEach(item => {
+						if (!item.color) {
+							item.color = 'rgb(205, 215, 218)'
+						}
+					})
+					that.carouselList = data.advertisement.t1
+					that.swiperLength = data.advertisement.t1.length
+					that.titleNViewBackground = data.advertisement.t1[0].color
+					//分类精选
+					if (data.advertisement.t2) {
+						that.categoryPickList = data.advertisement.t2
+					}
+					//横幅
+					if (data.advertisement.t3 && data.advertisement.t3.length > 0) {
+						that.banner = data.advertisement.t3[0]
+					}
+					//热销
+					if (data.salesTop) {
+						that.salesTop = data.salesTop
+					}
+					//分类5Buttom
+					if (data.advertisement.t4) {
+						that.categoryButtomList = data.advertisement.t4
+					}
+					uni.hideLoading()
+				})
+			},
 			async loadFootprint() {
 				const that = this
 				that.$api.request('footprint', 'getAllFootprint').then(res => {
@@ -243,6 +293,45 @@
     }  
 </script>  
 <style lang='scss'>
+	/* 头部轮播 */
+	
+	/* 头部 轮播图 */
+	.carousel-section {
+		position: relative;
+		/* padding-top: 10px; */
+	
+		.titleNview-placing {
+			height: var(--status-bar-height);
+			padding-top: 44px;
+			box-sizing: content-box;
+		}
+	
+		.titleNview-background {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 426upx;
+			transition: .4s;
+		}
+	}
+	.carousel {
+		width: 100%;
+		height: 550upx;
+	
+		.carousel-item {
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+	
+		image {
+			width: 100%;
+			height: 100%;
+		}
+	}
+	
+	
 	%flex-center {
 	 display:flex;
 	 flex-direction: column;
@@ -258,9 +347,11 @@
 	}
 
 	.user-section{
-		height: 520upx;
-		padding: 100upx 30upx 0;
+		padding: 10upx 30upx 0;
 		position:relative;
+		margin: 30upx;
+		box-shadow: 0 0 10upx black;
+		border-radius: 20upx;
 		.bg{
 			position:absolute;
 			left: 0;
@@ -270,76 +361,91 @@
 			filter: blur(1px);
 			opacity: .7;
 		}
-	}
-	.user-info-box{
-		height: 180upx;
-		display:flex;
-		align-items:center;
-		position:relative;
-		z-index: 1;
-		.portrait{
-			width: 130upx;
-			height: 130upx;
-			border:5upx solid #fff;
-			border-radius: 50%;
-		}
-		.username{
-			font-size: $font-lg + 6upx;
-			color: $font-color-dark;
-			margin-left: 20upx;
-		}
-	}
-
-	.vip-card-box{
-		display:flex;
-		flex-direction: column;
-		color: #f7d680;
-		height: 240upx;
-		background: linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.8));
-		border-radius: 16upx 16upx 0 0;
-		overflow: hidden;
-		position: relative;
-		padding: 20upx 24upx;
-		.card-bg{
-			position:absolute;
-			top: 20upx;
-			right: 0;
-			width: 380upx;
-			height: 260upx;
-		}
-		.b-btn{
-			position: absolute;
-			right: 20upx;
-			top: 16upx;
-			width: 132upx;
-			height: 40upx;
-			text-align: center;
-			line-height: 40upx;
-			font-size: 22upx;
-			color: #36343c;
-			border-radius: 20px;
-			background: linear-gradient(left, #f9e6af, #ffd465);
+		
+		.user-info-box{
+			height: 180upx;
+			display:flex;
+			align-items:center;
+			justify-content: space-between;
+			position:relative;
 			z-index: 1;
-		}
-		.tit{
-			font-size: $font-base+2upx;
-			color: #f7d680;
-			margin-bottom: 28upx;
-			.yticon{
-				color: #f6e5a3;
-				margin-right: 16upx;
+			.portrait-box {
+				width: 220upx;
+				text-align: center;
+				.portrait{
+					width: 130upx;
+					height: 130upx;
+					border:5upx solid #fff;
+					border-radius: 50%;
+				}
+			}
+			.username{
+				font-size: $font-lg + 6upx;
+				color: $font-color-dark;
+				margin-left: 20upx;
+				margin-bottom: 20upx;
+			}
+			.level{
+				display: block;
+				font-size: $font-lg + 6upx;
+				color: $font-color-dark;
+				margin-left: 30upx;
+				margin-top: 20upx;
 			}
 		}
-		.e-b{
-			font-size: $font-sm;
-			color: #d8cba9;
-			margin-top: 10upx;
+		
+		.vip-card-box{
+			display:flex;
+			flex-direction: column;
+			height: 240upx;
+			background: linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.8));
+			border-radius: 16upx 16upx 0 0;
+			overflow: hidden;
+			position: relative;
+			padding: 20upx 24upx;
+			.card-bg{
+				position:absolute;
+				top: 20upx;
+				right: 0;
+				width: 380upx;
+				height: 260upx;
+			}
+			.b-btn{
+				position: absolute;
+				right: 20upx;
+				top: 0upx;
+				/* width: 132upx; */
+				height: 40upx;
+				text-align: center;
+				line-height: 40upx;
+				font-size: 22upx;
+				color: #36343c;
+				border-radius: 20px;
+				background: linear-gradient(left, #f9e6af, #ffd465);
+				z-index: 1;
+			}
+			.tit{
+				font-size: $font-base+2upx;
+				border: 6upx solid #f7d680;
+				margin-bottom: 28upx;
+				display: inline-block;
+				width: 100upx;
+				text-align: center;
+			}
+			.progress-box {
+				height: 40upx;
+			}
+			.e-b{
+				font-size: $font-sm;
+				margin-top: 10upx;
+				margin: 10upx auto;
+			}
 		}
 	}
 	.cover-container{
 		background: $page-color-base;
-		margin-top: -150upx;
-		padding: 0 30upx;
+		margin-top: 0upx;
+		padding: 30upx;
 		position:relative;
 		background: #f5f5f5;
 		padding-bottom: 20upx;
@@ -369,7 +475,6 @@
 	.order-section{
 		@extend %section;
 		padding: 28upx 0;
-		margin-top: 20upx;
 		.order-item{
 			@extend %flex-center;
 			width: 120upx;

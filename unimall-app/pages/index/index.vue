@@ -2,9 +2,9 @@
 	<view class="container">
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
-		<view class="mp-search-box">
+		<!-- <view class="mp-search-box">
 			<input @click="naviageToPage('/pages/product/search')" class="ser-input" type="text" value="输入关键字搜索" disabled />
-		</view>
+		</view> -->
 		<!-- #endif -->
 		
 		<!-- 头部轮播 -->
@@ -13,20 +13,38 @@
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
-			<swiper autoplay="true" interval="3000" duration="500" class="carousel" circular @change="swiperChange">
+			<swiper autoplay="true" interval="3000" duration="500" class="carousel" circular @change="swiperChange" indicator-dots>
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="naviageToPage(item.url)">
 					<image :src="item.imgUrl" />
 				</swiper-item>
 			</swiper>
-			<!-- 自定义swiper指示器 -->
-			<view class="swiper-dots">
-				<text class="num">{{swiperCurrent+1}}</text>
-				<text class="sign">/</text>
-				<text class="num">{{swiperLength}}</text>
+		</view>
+		
+		<!-- 外卖 -->
+		<view class="wm-section">
+			<view class="container">
+				<view class="title">门店自取</view>
+				<view class="info">下单免排队</view>
+				<image src="../../static/门店自取.jpg" class="img" mode=""></image>
+			</view>
+			<view class="container">
+				<view class="title">外卖</view>
+				<view class="info">无接触配送，安全到家</view>
+				<image src="../../static/外卖.jpg" class="img" mode=""></image>
 			</view>
 		</view>
+		
+		<!-- 底部操作菜单 -->
+		<view class="page-bottom">
+			<view class="p-b-btn">
+				<view class="title">我的积分 88</view>
+				<view class="info">积分可用于抵扣价格</view>
+			</view>
+		</view>
+		
+		
 		<!-- 分类 -->
-		<view class="cate-section">
+		<!-- <view class="cate-section">
 			<view v-for="(item, index) in categoryButtomList" :key="index" @click="naviageToPage(item.url)" class="cate-item">
 				<image :src="item.imgUrl"></image>
 				<text>{{item.title}}</text>
@@ -35,7 +53,7 @@
 		
 		<view v-if="banner" @click="naviageToPage(banner.url)" class="ad-1">
 			<image :src="banner.imgUrl" mode="scaleToFill"></image>
-		</view>
+		</view> -->
 		
 		<!-- 秒杀楼层 -->
 		<!-- <view class="seckill-section m-t">
@@ -63,7 +81,7 @@
 		</view> -->
 		
 		<!-- 橱窗推荐 -->
-		<view class="f-header m-t">
+		<!-- <view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
 				<text class="tit">橱窗推荐</text>
@@ -109,10 +127,10 @@
 				</swiper-item>
 
 			</swiper>
-		</view>
+		</view> -->
 		
 		<!-- 分类推荐楼层 -->
-		<view class="f-header m-t">
+		<!-- <view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
 				<text class="tit">分类精选</text>
@@ -140,10 +158,10 @@
 					</view>
 				</view>
 			</scroll-view>
-		</view>
+		</view> -->
 		
 		<!-- 销量top -->
-		<view class="f-header m-t">
+		<!-- <view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
 				<text class="tit">热销宝贝</text>
@@ -163,7 +181,7 @@
 				<text class="title clamp">{{item.title}}</text>
 				<text class="price">￥{{isVip ? (item.vipPrice / 100 + ' [VIP]') : item.price / 100}}</text>
 			</view>
-		</view>
+		</view> -->
 		
 
 	</view>
@@ -366,6 +384,38 @@
 	}
 	/* #endif */
 	
+	.wm-section {
+		background-color: white;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		padding: 40upx;
+		.container {
+			width: 320upx;
+			height: 320upx;
+			text-align: center;
+			padding: 20upx;
+			margin: 20upx;
+			overflow: hidden;
+			border-radius: 20upx;
+			box-shadow: 0 0 5px #333333;
+			
+			.title {
+				font-size: $font-lg;
+				font-weight: bold;
+				margin-bottom: 10upx;
+			}
+			.info {
+				font-size: $font-sm;
+				color: $border-color-light;
+			}
+			.img {
+				max-width: 200upx;
+				max-height: 200upx;
+				
+			}
+		}
+	}
 	
 	page {
 		background: #f5f5f5;
@@ -395,7 +445,7 @@
 	}
 	.carousel {
 		width: 100%;
-		height: 350upx;
+		height: 550upx;
 
 		.carousel-item {
 			width: 100%;
@@ -742,5 +792,35 @@
 		}
 	}
 	
+	
+	/* 底部操作菜单 */
+	.page-bottom {
+		position: fixed;
+		left: 0;
+		bottom: 20upx;
+		z-index: 95;
+		text-align: left;
+		width: 750upx;
+		height: 110upx;
+		background: rgba(255, 255, 255, .9);
+		box-shadow: 0 0 20upx 0 rgba(0, 0, 0, .5);
+	
+		.p-b-btn {
+			margin-left: 30upx;
+			font-size: $font-sm;
+			color: $font-color-base;
+			height: 80upx;
+			
+			.title {
+				font-size: $font-lg;
+				font-weight: bold;
+				margin: 10upx 0;
+			}
+			.info {
+				font-size: $font-sm;
+				color: $font-color-light;
+			}
+		}
+	}
 
 </style>

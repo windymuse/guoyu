@@ -130,7 +130,12 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 22));
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 78));
+
+
+
+
+
 
 
 
@@ -235,6 +240,10 @@ var startY = 0,moveY = 0,pageAtTop = true;var _default =
 
   data: function data() {
     return {
+      titleNViewBackground: '',
+      swiperCurrent: 0,
+      swiperLength: 0,
+      carouselList: [],
       coverTransform: 'translateY(0px)',
       coverTransition: '0s',
       moving: false,
@@ -247,6 +256,7 @@ var startY = 0,moveY = 0,pageAtTop = true;var _default =
     this.loadFootprint();
   },
   onLoad: function onLoad() {
+    this.loadData();
   },
 
 
@@ -272,11 +282,51 @@ var startY = 0,moveY = 0,pageAtTop = true;var _default =
   (0, _vuex.mapState)(['hasLogin', 'userInfo'])),
 
   methods: {
-    loadFootprint: function loadFootprint() {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var that;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+    loadData: function loadData() {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var that;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
                 that = _this;
+                uni.showLoading({
+                  title: '正在加载' });
+
+                that.$api.request('integral', 'getIndexData', function (failres) {
+                  that.$api.msg(failres.errmsg);
+                  uni.hideLoading();
+                }).then(function (res) {
+                  var data = res.data;
+                  //橱窗
+                  that.windowSpuList = data.windowRecommend;
+                  //轮播
+                  data.advertisement.t1.forEach(function (item) {
+                    if (!item.color) {
+                      item.color = 'rgb(205, 215, 218)';
+                    }
+                  });
+                  that.carouselList = data.advertisement.t1;
+                  that.swiperLength = data.advertisement.t1.length;
+                  that.titleNViewBackground = data.advertisement.t1[0].color;
+                  //分类精选
+                  if (data.advertisement.t2) {
+                    that.categoryPickList = data.advertisement.t2;
+                  }
+                  //横幅
+                  if (data.advertisement.t3 && data.advertisement.t3.length > 0) {
+                    that.banner = data.advertisement.t3[0];
+                  }
+                  //热销
+                  if (data.salesTop) {
+                    that.salesTop = data.salesTop;
+                  }
+                  //分类5Buttom
+                  if (data.advertisement.t4) {
+                    that.categoryButtomList = data.advertisement.t4;
+                  }
+                  uni.hideLoading();
+                });case 3:case "end":return _context.stop();}}}, _callee);}))();
+    },
+    loadFootprint: function loadFootprint() {var _this2 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var that;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
+                that = _this2;
                 that.$api.request('footprint', 'getAllFootprint').then(function (res) {
                   that.footprintList = res.data;
-                });case 2:case "end":return _context.stop();}}}, _callee);}))();
+                });case 2:case "end":return _context2.stop();}}}, _callee2);}))();
     },
 
     deleteFootprint: function deleteFootprint(item) {

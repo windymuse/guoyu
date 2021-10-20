@@ -86,6 +86,10 @@
 					that.userInfo[that.feild] = that.inputContent
 					that.inputContent = ''
 					that.$store.commit('login', that.userInfo)
+					uni.showToast({
+						title: '修改成功',
+						duration: 1500
+					});
 				})
 			},
 			genderRadioChange(e) {
@@ -102,6 +106,10 @@
 				}
 				that.$api.request('user', 'syncUserInfo', obj).then(res => {
 					that.userInfo.gender = that.gender
+					uni.showToast({
+						title: '修改成功',
+						duration: 1500
+					});
 				})
 			}
 			
