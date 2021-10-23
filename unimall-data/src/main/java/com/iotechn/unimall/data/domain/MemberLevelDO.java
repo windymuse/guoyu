@@ -27,6 +27,11 @@ public class MemberLevelDO extends SuperDO {
     private Integer percent;
 
     /**
+     * 消费额度，到此额度后自动升级
+     */
+    private Integer money;
+
+    /**
      * 会员等级图片
      */
     private String img;

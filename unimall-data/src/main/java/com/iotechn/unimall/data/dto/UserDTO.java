@@ -22,6 +22,8 @@ public class UserDTO extends SuperDTO {
 
     private Integer level;
 
+    private Integer points;
+
     private Date birthday;
 
     private Integer gender;

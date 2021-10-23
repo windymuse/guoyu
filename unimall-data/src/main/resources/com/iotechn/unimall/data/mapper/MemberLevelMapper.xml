@@ -9,6 +9,7 @@
         name,
         degree,
         percent,
+        money,
         img,
         description,
         gmt_update AS gmtUpdate,

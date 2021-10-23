@@ -33,6 +33,8 @@ public class UserDO extends SuperDO {
 
     private Integer level;
 
+    private Integer points;
+
     private Date birthday;
 
     private Integer gender;

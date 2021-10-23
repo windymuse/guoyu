@@ -67,7 +67,7 @@ page .carousel-section .swiper-dots {
 }
 .wm-section .container .info {
   font-size: 24rpx;
-  color: #EBEEF5;
+  color: grey;
 }
 .wm-section .container .img {
   max-width: 200rpx;

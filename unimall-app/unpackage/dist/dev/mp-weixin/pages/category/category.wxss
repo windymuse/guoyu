@@ -5,157 +5,10 @@
 /* 边框颜色 */
 /* 图片加载中颜色 */
 /* 行为相关颜色 */
-.neil-modal {
-  position: fixed;
-  visibility: hidden;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-  transition: visibility 200ms ease-in;
-}
-.neil-modal.neil-modal--show {
-  visibility: visible;
-}
-.neil-modal__header {
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  padding: 18rpx 24rpx;
-  line-height: 1.5;
-  color: #333;
-  font-size: 32rpx;
-  text-align: center;
-}
-.neil-modal__header::after {
-  content: " ";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  height: 1px;
-  border-top: 1px solid #e5e5e5;
-  -webkit-transform-origin: 0 0;
-          transform-origin: 0 0;
-  -webkit-transform: scaleY(0.5);
-          transform: scaleY(0.5);
-}
-.neil-modal__container {
-  position: absolute;
-  z-index: 999;
-  top: 50%;
-  left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-  transition: -webkit-transform 0.3s;
-  transition: transform 0.3s;
-  transition: transform 0.3s, -webkit-transform 0.3s;
-  width: 540rpx;
-  border-radius: 20rpx;
-  background-color: #fff;
-  overflow: hidden;
-  opacity: 0;
-  transition: opacity 200ms ease-in;
-}
-.neil-modal__content {
-  position: relative;
-  color: #333;
-  font-size: 28rpx;
-  box-sizing: border-box;
-  line-height: 1.5;
-}
-.neil-modal__content::after {
-  content: " ";
-  position: absolute;
-  left: 0;
-  bottom: -1px;
-  right: 0;
-  height: 1px;
-  border-bottom: 1px solid #e5e5e5;
-  -webkit-transform-origin: 0 0;
-          transform-origin: 0 0;
-  -webkit-transform: scaleY(0.5);
-          transform: scaleY(0.5);
-}
-.neil-modal__footer {
-  position: relative;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #333;
-  font-size: 32rpx;
-  display: flex;
-  flex-direction: row;
-}
-.neil-modal__footer-left, .neil-modal__footer-right {
-  position: relative;
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  height: 88rpx;
-  font-size: 28rpx;
-  line-height: 88rpx;
-  text-align: center;
-  background-color: #fff;
-  color: #333;
-}
-.neil-modal__footer-right {
-  color: #007aff;
-}
-.neil-modal__footer-left::after {
-  content: " ";
-  position: absolute;
-  right: -1px;
-  top: 0;
-  width: 1px;
-  bottom: 0;
-  border-right: 1px solid #e5e5e5;
-  -webkit-transform-origin: 0 0;
-          transform-origin: 0 0;
-  -webkit-transform: scaleX(0.5);
-          transform: scaleX(0.5);
-}
-.neil-modal__footer-hover {
-  background-color: #f1f1f1;
-}
-.neil-modal__mask {
-  display: block;
-  position: absolute;
-  z-index: 998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-  transition: opacity 200ms ease-in;
-}
-.neil-modal__mask.neil-modal--show {
-  opacity: 1;
-}
-.neil-modal--padding {
-  padding: 32rpx 24rpx;
-  min-height: 90rpx;
-}
-.neil-modal--show .neil-modal__container, .neil-modal--show .neil-modal__mask {
-  opacity: 1;
-}
-
-@charset "UTF-8";
-/* 页面左右间距 */
-/* 文字尺寸 */
-/*文字颜色*/
-/* 边框颜色 */
-/* 图片加载中颜色 */
-/* 行为相关颜色 */
 .info-box {
   /* position:absolute; */
   /* left: 0; */
   top: 30rpx;
-  z-index: 9999;
   width: 100%;
   padding: 0;
   background-color: white;
@@ -267,6 +120,7 @@ page,
   width: 550rpx;
   background-color: white;
   min-height: 1000rpx;
+  padding-bottom: 40rpx;
 }
 .s-item {
   display: flex;
@@ -328,5 +182,120 @@ page,
   background-color: #28D7FE;
   border-radius: 20rpx;
   color: white;
+}
+.product-detail {
+  position: relative;
+  text-align: center;
+}
+.product-detail .close {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  width: 60rpx;
+  height: 60rpx;
+  border: 1px solid #909399;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 60rpx;
+  color: #909399;
+}
+.product-detail .img {
+  height: 500rpx;
+  width: 100%;
+}
+.product-detail .info {
+  margin-left: 50rpx;
+  text-align: left;
+}
+.product-detail .box {
+  border-top: 2rpx solid #909399;
+  margin: 0 20rpx;
+  position: relative;
+  margin-top: 80rpx;
+}
+.product-detail .box .price {
+  position: absolute;
+  left: 20rpx;
+  top: 20rpx;
+}
+.product-detail .box .sub {
+  position: absolute;
+  right: 100rpx;
+  top: 20rpx;
+  border: 1rpx solid #909399;
+  color: #909399;
+  box-sizing: border-box;
+  height: 40rpx;
+  width: 40rpx;
+  border-radius: 50%;
+  line-height: 30rpx;
+  font-size: 40rpx;
+}
+.product-detail .box .num {
+  position: absolute;
+  right: 60rpx;
+  top: 20rpx;
+  color: #909399;
+  box-sizing: border-box;
+  height: 40rpx;
+  width: 40rpx;
+}
+.product-detail .box .add {
+  position: absolute;
+  right: 20rpx;
+  top: 20rpx;
+  color: #909399;
+  box-sizing: border-box;
+  height: 40rpx;
+  width: 40rpx;
+  border-radius: 50%;
+  line-height: 30rpx;
+  font-size: 40rpx;
+  color: white;
+  background-color: #28D7FE;
+}
+.product-detail .box .btn {
+  height: 80rpx;
+  background-color: #28D7FE;
+  width: 60%;
+  margin: 0 auto;
+  margin-top: 80rpx;
+  margin-bottom: 40rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  color: white;
+  font-weight: bold;
+}
+.product-detail .box .attr-list {
+  display: flex;
+  flex-direction: column;
+  font-size: 30rpx;
+  color: #606266;
+  padding-top: 30rpx;
+  padding-left: 10rpx;
+  margin: 40rpx auto;
+}
+.product-detail .box .item-list {
+  padding: 20rpx 0 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+.product-detail .box .item-list text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  margin-right: 20rpx;
+  margin-bottom: 20rpx;
+  border-radius: 100rpx;
+  min-width: 60rpx;
+  height: 60rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  color: #303133;
+}
+.product-detail .box .item-list .selected {
+  background: #fbebee;
+  color: #fa436a;
 }
 

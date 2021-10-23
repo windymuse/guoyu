@@ -74,11 +74,21 @@ page {
 }
 .welcome {
   position: relative;
-  left: 50rpx;
+  left: 55rpx;
   top: -90rpx;
   font-size: 46rpx;
   color: #555;
   text-shadow: 1px 0px 1px rgba(0, 0, 0, 0.3);
+}
+.welcome .img {
+  width: 640rpx;
+}
+.welcome .info {
+  display: block;
+  width: 640rpx;
+  text-align: center;
+  font-size: 24rpx;
+  color: #909399;
 }
 .input-content {
   padding: 0 60rpx;

@@ -18,7 +18,7 @@
 					</radio>
 				</label>
 			</view>
-			<view class="type-item b-b">
+			<!-- <view class="type-item b-b">
 				<text class="icon yticon icon-alipay"></text>
 				<view class="con">
 					<text class="tit">支付宝（敬请期待）</text>
@@ -37,7 +37,7 @@
 					<radio value="" color="#fa436a" :checked='payType == 3' />
 					</radio>
 				</label>
-			</view>
+			</view> -->
 		</view>
 
 		<text :disabled="submiting" class="mix-btn" @click="confirm">确认支付</text>
@@ -111,6 +111,7 @@
 							orderInfo: payParam,
 							//#endif
 							success: function(res) {
+								uni.setStorageSync('curr_pay', that.price)
 								uni.redirectTo({
 									url: '/pages/pay/success'
 								})
@@ -133,6 +134,7 @@
 							paySign: prepayRes.data.paySign,
 							success: (e) => {
 								//支付成功
+								uni.setStorageSync('curr_pay', that.price)
 								uni.redirectTo({
 									url: '/pages/pay/success'
 								})
@@ -156,6 +158,7 @@
 						that.submiting = false
 						that.$api.msg(failres.errmsg)
 					}).then(res => {
+						uni.setStorageSync('curr_pay', that.price)
 						uni.redirectTo({
 							url: '/pages/pay/success'
 						})

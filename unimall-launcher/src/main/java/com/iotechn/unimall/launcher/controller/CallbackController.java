@@ -13,6 +13,7 @@ import com.iotechn.unimall.biz.service.user.UserBizService;
 import com.iotechn.unimall.core.exception.ServiceException;
 import com.iotechn.unimall.data.domain.OrderDO;
 import com.iotechn.unimall.data.domain.OrderSkuDO;
+import com.iotechn.unimall.data.domain.UserDO;
 import com.iotechn.unimall.data.dto.order.OrderDTO;
 import com.iotechn.unimall.data.enums.OrderStatusType;
 import com.iotechn.unimall.data.mapper.*;
@@ -42,6 +43,9 @@ public class CallbackController {
 
     @Autowired
     private OrderBizService orderBizService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private UserBizService userBizService;
@@ -144,6 +148,12 @@ public class CallbackController {
                 orderDTO = paySuccess.invoke(orderDTO, formId);
             }
         }
+
+        // 更新用户的积分
+        UserDO userDO = userMapper.selectById(orderDTO.getUserId());
+        userDO.setPoints(userDO.getPoints() + result.getTotalFee());
+        userMapper.updateById(userDO);
+
         //通知管理员发货
         OrderDTO finalOrderDTO = orderDTO;
         GlobalExecutor.execute(() -> {

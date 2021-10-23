@@ -16,7 +16,7 @@
                     hover-class="neil-modal__footer-hover" :hover-start-time="20" :hover-stay-time="70">
                     {{cancelText}}
                 </view>
-                <view class="neil-modal__footer-right" @click="clickRight" :style="{color:confirmColor}" hover-class="neil-modal__footer-hover"
+                <view v-if="showConfirm" class="neil-modal__footer-right" @click="clickRight" :style="{color:confirmColor}" hover-class="neil-modal__footer-hover"
                     :hover-start-time="20" :hover-stay-time="70">
                     {{confirmText}}
                 </view>
@@ -55,6 +55,10 @@
                 default: '#007aff'
             },
             showCancel: { //是否显示取消按钮，默认为 true
+                type: [Boolean, String],
+                default: true
+            },
+			showConfirm: { //是否显示确认按钮，默认为 true
                 type: [Boolean, String],
                 default: true
             },

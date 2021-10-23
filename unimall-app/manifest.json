@@ -108,6 +108,11 @@
         "appid" : "wx7b755a09ea204f37",
         "setting" : {
             "urlCheck" : true
+        },
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "位置信息用于判断，是通过外卖还是快递为用户提供服务"
+            }
         }
     },
     "h5" : {

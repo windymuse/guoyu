@@ -130,7 +130,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 78));
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 22));
 
 
 
@@ -248,15 +248,24 @@ var startY = 0,moveY = 0,pageAtTop = true;var _default =
       coverTransition: '0s',
       moving: false,
       footprintList: [],
-      isVip: false };
+      isVip: false,
+      currVipDegree: {},
+      nextVipDegree: {} };
 
   },
   onShow: function onShow() {
     this.isVip = this.$api.isVip();
     this.loadFootprint();
+    this.loadData();
+    if (this.hasLogin) {
+      this.loadMemberLevel();
+    }
   },
   onLoad: function onLoad() {
     this.loadData();
+    if (this.hasLogin) {
+      this.loadMemberLevel();
+    }
   },
 
 
@@ -278,12 +287,56 @@ var startY = 0,moveY = 0,pageAtTop = true;var _default =
 
 
 
-  computed: _objectSpread({},
-  (0, _vuex.mapState)(['hasLogin', 'userInfo'])),
+  computed: _objectSpread(_objectSpread({},
+  (0, _vuex.mapState)(['hasLogin', 'userInfo'])), {}, {
+    moneyToNext: function moneyToNext() {
+      if (this.nextVipDegree.money > 0) {
+        return (this.nextVipDegree.money - this.userInfo.points) / 100;
+      } else {
+        return 0;
+      }
+    },
+    upgradePercent: function upgradePercent() {
+      // 升级进度
+      if (this.nextVipDegree.money > 0) {
+        return this.userInfo.points / this.nextVipDegree.money * 100;
+      } else {
+        return 0;
+      }
+    } }),
 
   methods: {
-    loadData: function loadData() {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var that;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+    loadMemberLevel: function loadMemberLevel() {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var that;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
                 that = _this;
+                that.$api.request('member_level', 'getMemberLevel', {
+                  degree: that.userInfo.level,
+                  page: 1,
+                  limit: 1 },
+                function (failres) {
+                  that.$api.msg(failres.errmsg);
+                }).then(function (res) {
+                  var data = res.data;
+                  console.log('curr level', data);
+                  if (data && data.length > 0) {
+                    _this.currVipDegree = data[0];
+                  }
+                });
+                that.$api.request('member_level', 'getMemberLevel', {
+                  degree: that.userInfo.level + 1,
+                  page: 1,
+                  limit: 1 },
+                function (failres) {
+                  that.$api.msg(failres.errmsg);
+                }).then(function (res) {
+                  var data = res.data;
+                  console.log('next level', data);
+                  if (data && data.length > 0) {
+                    _this.nextVipDegree = data[0];
+                  }
+                });case 3:case "end":return _context.stop();}}}, _callee);}))();
+    },
+    loadData: function loadData() {var _this2 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var that;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
+                that = _this2;
                 uni.showLoading({
                   title: '正在加载' });
 
@@ -320,13 +373,13 @@ var startY = 0,moveY = 0,pageAtTop = true;var _default =
                     that.categoryButtomList = data.advertisement.t4;
                   }
                   uni.hideLoading();
-                });case 3:case "end":return _context.stop();}}}, _callee);}))();
+                });case 3:case "end":return _context2.stop();}}}, _callee2);}))();
     },
-    loadFootprint: function loadFootprint() {var _this2 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {var that;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
-                that = _this2;
+    loadFootprint: function loadFootprint() {var _this3 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {var that;return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
+                that = _this3;
                 that.$api.request('footprint', 'getAllFootprint').then(function (res) {
                   that.footprintList = res.data;
-                });case 2:case "end":return _context2.stop();}}}, _callee2);}))();
+                });case 2:case "end":return _context3.stop();}}}, _callee3);}))();
     },
 
     deleteFootprint: function deleteFootprint(item) {
@@ -383,6 +436,12 @@ var startY = 0,moveY = 0,pageAtTop = true;var _default =
 
     },
 
+    //轮播图切换修改背景色
+    swiperChange: function swiperChange(e) {
+      var index = e.detail.current;
+      this.swiperCurrent = index;
+      this.titleNViewBackground = this.carouselList[index].color;
+    },
     /**
         *  会员卡下拉和回弹
         *  1.关闭bounce避免ios端下拉冲突

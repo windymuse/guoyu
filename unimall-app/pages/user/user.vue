@@ -17,7 +17,7 @@
 			<view class="user-info-box">
 				<view class="info-box">
 					<text @click="toLogin" class="username">{{ hasLogin? ('Hey，' + userInfo.nickname || '未设置昵称') : '立即登录' }}</text>
-					<text v-if="hasLogin" class="level">普通会员</text>
+					<text v-if="hasLogin" class="level">{{currVipDegree.name}}</text>
 					
 				</view>
 				<view class="portrait-box">
@@ -26,15 +26,15 @@
 			</view>
 			<view class="vip-card-box">
 				<view class="b-btn">
-					当前等级折扣9.5折
+					当前等级折扣 {{currVipDegree.percent == 100 ? '无折扣' : currVipDegree / 10 + '折'}}
 				</view>
 				<view class="tit">
-					Lv2
+					Lv{{userInfo.level}}
 				</view>
 				<view class="progress-box">
-				  <progress percent="60" active stroke-width='10' border-radius='10' color="#478FFF" />
+				  <progress :percent="upgradePercent" active stroke-width='10' border-radius='10' color="#478FFF" />
 				</view>
-				<text class="e-b">再消费xxx元，即可升级为Lv3</text>
+				<text class="e-b">再消费{{moneyToNext}}元，即可升级为Lv{{userInfo.level + 1}}</text>
 			</view>
 		</view>
 		
@@ -117,14 +117,23 @@
 				moving: false,
 				footprintList: [],
 				isVip: false,
+				currVipDegree: {},
+				nextVipDegree: {}
 			}
 		},
 		onShow() {
 			this.isVip = this.$api.isVip()
 			this.loadFootprint()
+			this.loadData()
+			if (this.hasLogin) {
+				this.loadMemberLevel()
+			}
 		},
 		onLoad(){
 			this.loadData()
+			if (this.hasLogin) {
+				this.loadMemberLevel()
+			}
 		},
 		// #ifndef MP
 		onNavigationBarButtonTap(e) {
@@ -147,9 +156,53 @@
 		},
 		// #endif
         computed: {
-			...mapState(['hasLogin','userInfo'])
+			...mapState(['hasLogin','userInfo']),
+			moneyToNext() {
+				if (this.nextVipDegree.money > 0) {
+					return (this.nextVipDegree.money - this.userInfo.points) / 100
+				} else {
+					return 0
+				}
+			},
+			upgradePercent() {
+				// 升级进度
+				if (this.nextVipDegree.money > 0) {
+					return (this.userInfo.points / this.nextVipDegree.money) * 100
+				} else {
+					return 0
+				}
+			}
 		},
         methods: {
+			async loadMemberLevel() {
+				const that = this
+				that.$api.request('member_level', 'getMemberLevel',{
+					degree: that.userInfo.level,
+					page: 1,
+					limit: 1
+				}, failres => {
+					that.$api.msg(failres.errmsg)
+				}).then(res => {
+					let data = res.data
+					console.log('curr level', data)
+					if (data && data.length > 0) {
+						this.currVipDegree = data[0]
+					}
+				})
+				that.$api.request('member_level', 'getMemberLevel',{
+					degree: that.userInfo.level + 1,
+					page: 1,
+					limit: 1
+				}, failres => {
+					that.$api.msg(failres.errmsg)
+				}).then(res => {
+					let data = res.data
+					console.log('next level', data)
+					if (data && data.length > 0) {
+						this.nextVipDegree = data[0]
+					}
+				})
+			},
 			async loadData() {
 				const that = this
 				uni.showLoading({
@@ -251,6 +304,12 @@
 				})
 			}, 
 	
+			//轮播图切换修改背景色
+			swiperChange(e) {
+				const index = e.detail.current;
+				this.swiperCurrent = index;
+				this.titleNViewBackground = this.carouselList[index].color;
+			},
 			/**
 			 *  会员卡下拉和回弹
 			 *  1.关闭bounce避免ios端下拉冲突

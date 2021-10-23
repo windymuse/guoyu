@@ -7,7 +7,8 @@
 		<view class="wrapper">
 			<view class="left-top-sign">LOGIN</view>
 			<view class="welcome">
-				欢迎回来！
+				<image class="img" src="../../static/guoyu_logo.jpg" mode=""></image>
+				<text class="info">一家只卖xxxxxxxxxxx的店</text>
 			</view>
 			<view v-if="loginType === 'phone'" class="input-content">
 				<view class="input-item">
@@ -21,7 +22,7 @@
 				</view>
 			</view>
 			<button v-if="!loginType" class="confirm-btn" @click="chooseLoginType('wechat')" :disabled="logining">微信快速登录（推荐）</button>
-			<button v-if="!loginType" class="confirm-btn" @click="chooseLoginType('phone')" :disabled="logining">手机注册登录</button>
+			<!-- <button v-if="!loginType" class="confirm-btn" @click="chooseLoginType('phone')" :disabled="logining">手机注册登录</button> -->
 			<!-- #ifdef MP-WEIXIN -->
 			<button v-if="loginType === 'wechat'" class="confirm-btn" open-type="getUserInfo" @getuserinfo="miniWechatLogin"
 			 :disabled="logining">微信授权登录</button>
@@ -52,7 +53,7 @@
 	export default {
 		data() {
 			return {
-				loginType: '',
+				loginType: 'wechat',
 				phone: '',
 				password: '',
 				logining: false
@@ -319,11 +320,23 @@
 
 	.welcome {
 		position: relative;
-		left: 50upx;
+		left: 55upx;
 		top: -90upx;
 		font-size: 46upx;
 		color: #555;
 		text-shadow: 1px 0px 1px rgba(0, 0, 0, .3);
+		
+		.img {
+			width: 640upx;
+		}
+		
+		.info {
+			display: block;
+			width: 640upx;
+			text-align: center;
+			font-size: $font-sm;
+			color: $font-color-light;
+		}
 	}
 
 	.input-content {

@@ -2,51 +2,6 @@
   <div class="app-container">
     <!-- 查询和其他操作 -->
     <div class="filter-container">
-      <el-select
-        v-model="listQuery.status"
-        style="width: 200px"
-        class="filter-item"
-        placeholder="请选择用户状态"
-      >
-        <el-option v-for="(key,index) in statusDic" :key="index" :label="key.name" :value="key.value" />
-      </el-select>
-      <el-select
-        v-model="listQuery.level"
-        style="width: 200px"
-        class="filter-item"
-        placeholder="请选择用户会员等级"
-      >
-        <el-option v-for="(key,index) in levelDic" :key="index" :label="key.name" :value="key.value" />
-      </el-select>
-      <el-select
-        v-model="listQuery.gender"
-        style="width: 200px"
-        class="filter-item"
-        placeholder="请选择用户性别"
-      >
-        <el-option v-for="(key,index) in genderDic" :key="index" :label="key.name" :value="key.value" />
-      </el-select>
-      <el-input
-        v-model="listQuery.id"
-        clearable
-        class="filter-item"
-        style="width: 200px;"
-        placeholder="请输入用户Id"
-      />
-      <el-input
-        v-model="listQuery.name"
-        clearable
-        class="filter-item"
-        style="width: 200px;"
-        placeholder="请输入昵称"
-      />
-      <el-button
-        v-permission="['system:member_level:query']"
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >查找</el-button>
       <!--添加用户-->
       <el-button
         v-permission="['system:member_level:create']"
@@ -71,11 +26,17 @@
 
       <el-table-column align="center" label="会员等级称号" prop="name" />
 
-      <el-table-column align="center" label="会员等级" prop="degree" />
+      <el-table-column sortable align="center" label="会员等级" prop="degree" />
 
-      <el-table-column align="center" label="通用折扣" prop="percent">
+      <el-table-column align="center" label="通用折扣百分比" prop="percent">
         <template slot-scope="scope">
           {{ scope.row.percent / 100 }}
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="最低消费额（元）" prop="percent">
+        <template slot-scope="scope">
+          {{ scope.row.money / 100 }}
         </template>
       </el-table-column>
 
@@ -133,8 +94,11 @@
         <el-form-item label="会员等级" prop="degree">
           <el-input v-model="dataForm.degree" />
         </el-form-item>
-        <el-form-item label="通用折扣" prop="percent">
+        <el-form-item label="通用折扣百分比" prop="percent">
           <el-input v-model="dataForm.percent" />
+        </el-form-item>
+        <el-form-item label="最低消费额（分）" prop="money">
+          <el-input v-model="dataForm.money" />
         </el-form-item>
         <el-form-item label="会员等级描述" prop="description">
           <el-input v-model="dataForm.description" type="textarea" />
@@ -214,6 +178,7 @@ export default {
         name: undefined,
         degree: undefined,
         percent: undefined,
+        money: undefined,
         description: undefined,
         img: undefined
       },
@@ -226,11 +191,11 @@ export default {
       dialogStatus: '',
       rules: {
         name: [{ required: true, message: '用户昵称不能为空', trigger: 'blur' }],
-        phone: [{ required: true, message: '用户手机不能为空', trigger: 'blur' }, { pattern: /^1[3456789]\d{9}$/, message: '请输入正确电话' }],
-        gender: [{ required: true, message: '请选择用户性别类型', trigger: 'blur' }],
-        level: [{ required: true, message: '请选择用户会员等级状态', trigger: 'blur' }],
-        status: [{ required: true, message: '请选择用户状态', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入密码', trigger: 'blur' }, { pattern: /^[0-9a-zA-Z$./]{8}/, message: '至少八个数字和字母' }]
+        degree: [{ required: true, message: '等级不能为空', trigger: 'blur' }],
+        percent: [{ required: true, message: '请输入通用折扣百分比', trigger: 'blur' }],
+        money: [{ required: true, message: '请输入最低消费额度（分）', trigger: 'blur' }],
+        description: [{ required: true, message: '请选择用户状态', trigger: 'blur' }],
+        img: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       }
     }
   },

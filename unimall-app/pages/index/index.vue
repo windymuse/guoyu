@@ -3,7 +3,7 @@
 		<!-- 小程序头部兼容 -->
 		<!-- #ifdef MP -->
 		<!-- <view class="mp-search-box">
-			<input @click="naviageToPage('/pages/product/search')" class="ser-input" type="text" value="输入关键字搜索" disabled />
+			<input @click="navigateToPage('/pages/product/search')" class="ser-input" type="text" value="输入关键字搜索" disabled />
 		</view> -->
 		<!-- #endif -->
 		
@@ -14,7 +14,7 @@
 			<!-- 背景色区域 -->
 			<view class="titleNview-background" :style="{backgroundColor:titleNViewBackground}"></view>
 			<swiper autoplay="true" interval="3000" duration="500" class="carousel" circular @change="swiperChange" indicator-dots>
-				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="naviageToPage(item.url)">
+				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navigateToPage(item.url)">
 					<image :src="item.imgUrl" />
 				</swiper-item>
 			</swiper>
@@ -22,22 +22,22 @@
 		
 		<!-- 外卖 -->
 		<view class="wm-section">
-			<view class="container">
+			<view class="container" @click="navigateToPage('/pages/category/category', 0)">
 				<view class="title">门店自取</view>
 				<view class="info">下单免排队</view>
-				<image src="../../static/门店自取.jpg" class="img" mode=""></image>
+				<image src="https://guoyu-admin.windymuse.cn/static/img/%E9%97%A8%E5%BA%97%E8%87%AA%E5%8F%96.jpg" class="img" mode=""></image>
 			</view>
-			<view class="container">
+			<view class="container" @click="navigateToPage('/pages/category/category', 1)">
 				<view class="title">外卖</view>
 				<view class="info">无接触配送，安全到家</view>
-				<image src="../../static/外卖.jpg" class="img" mode=""></image>
+				<image src="https://guoyu-admin.windymuse.cn/static/img/%E5%A4%96%E5%8D%96.jpg" class="img" mode=""></image>
 			</view>
 		</view>
 		
 		<!-- 底部操作菜单 -->
-		<view class="page-bottom">
+		<view class="page-bottom" v-if="hasLogin">
 			<view class="p-b-btn">
-				<view class="title">我的积分 88</view>
+				<view class="title">我的积分 {{userInfo.points}}</view>
 				<view class="info">积分可用于抵扣价格</view>
 			</view>
 		</view>
@@ -45,13 +45,13 @@
 		
 		<!-- 分类 -->
 		<!-- <view class="cate-section">
-			<view v-for="(item, index) in categoryButtomList" :key="index" @click="naviageToPage(item.url)" class="cate-item">
+			<view v-for="(item, index) in categoryButtomList" :key="index" @click="navigateToPage(item.url)" class="cate-item">
 				<image :src="item.imgUrl"></image>
 				<text>{{item.title}}</text>
 			</view>
 		</view>
 		
-		<view v-if="banner" @click="naviageToPage(banner.url)" class="ad-1">
+		<view v-if="banner" @click="navigateToPage(banner.url)" class="ad-1">
 			<image :src="banner.imgUrl" mode="scaleToFill"></image>
 		</view> -->
 		
@@ -152,7 +152,7 @@
 						<text class="title clamp">{{spuItem.title}}</text>
 						<text class="price">￥{{(isVip ? spuItem.vipPrice : spuItem.price) / 100 }}</text>
 					</view>
-					<view @click="naviageToPage(item.url)" class="more">
+					<view @click="navigateToPage(item.url)" class="more">
 						<text>查看全部</text>
 						<text>More+</text>
 					</view>
@@ -189,6 +189,9 @@
 
 <script>
 
+    import {  
+        mapState 
+    } from 'vuex';  
 	export default {
 
 		data() {
@@ -204,6 +207,9 @@
 				banner: undefined,
 				isVip: false
 			};
+		},
+        computed: {
+			...mapState(['hasLogin','userInfo']),
 		},
 		onShow() {
 			this.isVip = this.$api.isVip()
@@ -302,10 +308,18 @@
 					url: '/pages/product/detail?id=' + that.windowSpuList[index].spuId
 				})
 			},
-			naviageToPage(page) {
-				uni.navigateTo({
-					url: page
-				})
+			navigateToPage(page, deliverType=0) {
+				console.log(page)
+				if (page.indexOf('category') >= 0) {
+					uni.setStorageSync('deliverType', deliverType);
+					uni.switchTab({
+						url: page
+					})
+				} else {
+					uni.navigateTo({
+						url: page
+					})
+				}
 			}
 		},
 		// #ifndef MP
@@ -407,7 +421,7 @@
 			}
 			.info {
 				font-size: $font-sm;
-				color: $border-color-light;
+				color: grey;
 			}
 			.img {
 				max-width: 200upx;

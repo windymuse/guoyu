@@ -11,12 +11,12 @@
           class="img"
           src="@/assets/avatar.png"
           alt="">
-        <p class="title">Unimall 开源商城后台登录</p>
+        <p class="title"> 开源商城后台登录</p>
       </div>
       <div class="login-border">
         <div class="login-main">
           <h4 class="login-title">
-            登录 Unimall
+            登录
           </h4>
           <el-form
             ref="loginForm"
@@ -82,7 +82,7 @@
             </el-form-item>
           </el-form>
 
-          <div class="login-menu">
+          <!-- <div class="login-menu">
             <a
               href="#"
               @click.stop="activeName='user'">驽驹官网</a>
@@ -93,12 +93,12 @@
               href="#"
               @click.stop="activeName='third'">Test</a>
           </div>
-        </div>
+        </div> -->
 
+        </div>
       </div>
     </div>
-  </div>
-</template>
+</div></template>
 
 <script>
 import { sendMsg } from '@/api/login'

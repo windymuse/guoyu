@@ -11,11 +11,24 @@
 </template>
 
 <script>
+	import {
+		mapMutations, mapState
+	} from 'vuex';
+	
 	export default {
 		data() {
 			return {
 				
 			}
+		},
+		onShow() {
+			const points = uni.getStorageSync('curr_pay')
+			this.userInfo.points += parseInt(points)
+			uni.setStorageSync('userInfo', this.userInfo)
+			uni.setStorageSync('curr_pay', 0)
+		},
+        computed: {
+			...mapState(['hasLogin','userInfo']),
 		},
 		methods: {
 			
