@@ -3,7 +3,9 @@ package com.iotechn.unimall.admin.api.appraise;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.iotechn.unimall.core.exception.ServiceException;
 import com.iotechn.unimall.data.dto.appraise.AppraiseResponseDTO;
+import com.iotechn.unimall.data.enums.BizType;
 import com.iotechn.unimall.data.mapper.AppraiseMapper;
+import com.iotechn.unimall.data.mapper.ImgMapper;
 import com.iotechn.unimall.data.model.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class AdminAppraiseImpl implements  AdminAppraise {
     @Autowired
     private AppraiseMapper appraiseMapper;
 
+    @Autowired
+    private ImgMapper imgMapper;
+
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -38,6 +43,11 @@ public class AdminAppraiseImpl implements  AdminAppraise {
         Integer count = appraiseMapper.countAppraiseCondition(id,userName ,spuName , orderId, score, content);
 
         List<AppraiseResponseDTO> appraiseResponseDTOList = appraiseMapper.selectAppraiseCondition(id,userName ,spuName , orderId, score, content,(pageNo-1)*limit,limit);
+
+        for (int i = 0; i < appraiseResponseDTOList.size(); i++) {
+            AppraiseResponseDTO curr = appraiseResponseDTOList.get(i);
+            curr.setImgList(imgMapper.getImgs(BizType.COMMENT.getCode(), curr.getId()));
+        }
 
         Page<AppraiseResponseDTO> page = new Page<AppraiseResponseDTO>(appraiseResponseDTOList,pageNo,limit,count);
 

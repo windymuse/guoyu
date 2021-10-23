@@ -166,6 +166,18 @@ public class ExceptionDefinition {
     public static final ServiceExceptionDefinition COUPON_CHECK_DATA_FAILED =
             new ServiceExceptionDefinition(14006, "优惠券审核数据失败");
 
+    public static final ServiceExceptionDefinition COUPON_CHECK_CODE_FAILED =
+            new ServiceExceptionDefinition(14007, "优惠券领取需要兑换码");
+
+    public static final ServiceExceptionDefinition COUPON_CODE_ERROR =
+            new ServiceExceptionDefinition(14008, "兑换码不属于该优惠券");
+
+    public static final ServiceExceptionDefinition COUPON_CODE_USED =
+            new ServiceExceptionDefinition(14009, "兑换码已被使用");
+
+    public static final ServiceExceptionDefinition COUPON_CODE_NOT_FOUND =
+            new ServiceExceptionDefinition(14010, "兑换码不存在");
+
 
     public static final ServiceExceptionDefinition COLLECT_ALREADY_EXISTED =
             new ServiceExceptionDefinition(15001, "该商品不允许重复收藏");

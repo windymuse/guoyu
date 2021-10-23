@@ -214,8 +214,8 @@ export default {
         return '下架'
       } else if (status === 1) {
         return '正常'
-      } else if (status < 0) {
-        return '已过期'
+      } else if (status === 2) {
+        return '已被领取'
       } else {
         return '错误状态'
       }

@@ -5,16 +5,16 @@
 
     <select id="getCouponCodeList" resultType="com.iotechn.unimall.data.domain.CouponCodeDO">
         SELECT
-          c.id AS id,
-          c.coupon_id AS couponId,
-          c.user_id AS userId,
-          c.code AS code,
-          c.status AS status,
-          c.description AS description,
-          c.gmt_start as gmtStart,
-          c.gmt_end as gmtEnd
+        c.id AS id,
+        c.coupon_id AS couponId,
+        c.user_id AS userId,
+        c.code AS code,
+        c.status AS status,
+        c.description AS description,
+        c.gmt_start as gmtStart,
+        c.gmt_end as gmtEnd
         FROM
-          unimall_coupon_code c
+        unimall_coupon_code c
         WHERE
         1 = 1
         <if test="couponId != null">
@@ -28,6 +28,22 @@
         </if>
         order BY c.id DESC
         limit #{offset},#{limit}
+    </select>
+
+    <select id="selectCouponCodeByCode" resultType="com.iotechn.unimall.data.domain.CouponCodeDO">
+        SELECT
+        c.id AS id,
+        c.coupon_id AS couponId,
+        c.user_id AS userId,
+        c.code AS code,
+        c.status AS status,
+        c.description AS description,
+        c.gmt_start as gmtStart,
+        c.gmt_end as gmtEnd
+        FROM
+        unimall_coupon_code c
+        WHERE
+        c.code = #{code}
     </select>
 
 

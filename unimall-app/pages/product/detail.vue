@@ -4,7 +4,7 @@
 			<swiper indicator-dots circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in goods.imgList" :key="index">
 					<view class="image-wrapper">
-						<image :src="item + '?x-oss-process=style/600px'" class="loaded" mode="aspectFill"></image>
+						<image :src="item + '?x-oss-process=style/600px'" class="loaded" mode="aspectFit"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -171,6 +171,11 @@
 						</text>
 					</view>
 				</view>
+				
+				<view class="sub" @click="numSub">-</view>
+				<view class="num">{{goodsNum}}</view>
+				<view class="add" @click="numAdd">+</view>
+				
 				<button class="btn" @click="toggleSpec">完成</button>
 			</view>
 		</view>
@@ -200,7 +205,7 @@
 				maskState: 0, //优惠券面板显示状态
 				couponList: [],
 				submiting: false,
-
+				goodsNum: 1,
 			};
 		},
 		onShow() {
@@ -247,6 +252,14 @@
 			}
 		},
 		methods: {
+			
+			numSub() {
+				if (this.goodsNum > 1)
+					this.goodsNum --
+			},
+			numAdd() {
+				this.goodsNum ++
+			},
 			toggleMask(type) {
 				let timer = type === 'show' ? 10 : 300;
 				let state = type === 'show' ? 1 : 0;
@@ -299,17 +312,15 @@
 					that.toggleSpec()
 					that.toggleCallback = that.addCart
 				} else {
-					//添加到购车车
+					//添加到购物车
 					that.$api.request('cart', 'addCartItem', {
 						skuId: that.selectedSku.id,
-						num: 1
+						num: that.goodsNum,
 					}).then(res => {
-						if (that.goods.groupShop) {
-							that.$api.msg('从购物车结算不会参加团购')
-						} else {
-							that.$api.msg('添加购物车成功')
-						}
-						
+						that.$api.msg('添加购物车成功')
+						that.specClass = 'none'
+						that.selectedSku = {}
+						that.toggleCallback = undefined
 					})
 				}
 			},
@@ -341,7 +352,7 @@
 				} else {
 					let skuItem = {
 						skuId: that.selectedSku.id,
-						num: 1,
+						num: that.goodsNum,
 						title: that.goods.title,
 						originalPrice: that.selectedSku.originalPrice,
 						price: that.selectedSku.price,
@@ -363,6 +374,9 @@
 					uni.navigateTo({
 						url: `/pages/order/create?takeway=buy`
 					})
+					that.specClass = 'none'
+					that.selectedSku = {}
+					that.toggleCallback = undefined
 				}
 			},
 			//查看所有评价
@@ -760,6 +774,51 @@
 				color: $uni-color-primary;
 			}
 		}
+		
+		
+		
+		.sub {
+			position: absolute;
+			right: 100upx;
+			top: 20upx;
+			border: 1upx solid $font-color-light;
+			color: $font-color-light;
+			box-sizing: border-box;
+			height: 40upx;
+			width: 40upx;
+			border-radius: 50%;
+			line-height: 30upx;
+			font-size: 40upx;
+			text-align: center;
+		}
+		
+		.num {
+			position: absolute;
+			right: 60upx;
+			top: 20upx;
+			color: $font-color-light;
+			box-sizing: border-box;
+			height: 40upx;
+			width: 40upx;
+			text-align: center;
+		}
+		
+		.add {
+			position: absolute;
+			right: 20upx;
+			top: 20upx;
+			color: $font-color-light;
+			box-sizing: border-box;
+			height: 40upx;
+			width: 40upx;
+			border-radius: 50%;
+			line-height: 30upx;
+			font-size: 40upx;
+			color: white;
+			background-color: #28D7FE;
+			text-align: center;
+		}
+		
 	}
 
 	/*  弹出层 */

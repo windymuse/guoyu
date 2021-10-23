@@ -5,11 +5,13 @@ import com.iotechn.unimall.core.exception.ExceptionDefinition;
 import com.iotechn.unimall.core.exception.AppServiceException;
 import com.iotechn.unimall.core.exception.ServiceException;
 import com.iotechn.unimall.data.component.LockComponent;
+import com.iotechn.unimall.data.domain.CouponCodeDO;
 import com.iotechn.unimall.data.domain.CouponDO;
 import com.iotechn.unimall.data.domain.UserCouponDO;
 import com.iotechn.unimall.data.dto.CouponDTO;
 import com.iotechn.unimall.data.dto.UserCouponDTO;
 import com.iotechn.unimall.data.enums.StatusType;
+import com.iotechn.unimall.data.mapper.CouponCodeMapper;
 import com.iotechn.unimall.data.mapper.CouponMapper;
 import com.iotechn.unimall.data.mapper.UserCouponMapper;
 import com.iotechn.unimall.data.model.KVModel;
@@ -41,6 +43,9 @@ public class CouponServiceImpl implements CouponService {
     @Autowired
     private LockComponent lockComponent;
 
+    @Autowired
+    private CouponCodeMapper couponCodeMapper;
+
     private static final String COUPON_LOCK = "COUPON_LOCK_";
 
     private static final String COUPON_USER_LOCK = "COUPON_USER_LOCK_";
@@ -49,13 +54,17 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String obtainCoupon(Long couponId, Long userId) throws ServiceException {
+    public String obtainCoupon(Long couponId, String code, Long userId) throws ServiceException {
         //防止用户一瞬间提交两次表单，导致超领
         if (lockComponent.tryLock(COUPON_USER_LOCK + userId + "_" + couponId, 10)) {
             try {
                 CouponDO couponDO = couponMapper.selectById(couponId);
                 if (couponDO.getStatus() == StatusType.LOCK.getCode()) {
                     throw new AppServiceException(ExceptionDefinition.COUPON_HAS_LOCKED);
+                }
+                // 需要使用兑换码领取的优惠券
+                if (couponDO.getGmtType() == 2 && code == null) {
+                    throw new AppServiceException(ExceptionDefinition.COUPON_CHECK_CODE_FAILED);
                 }
                 Date now = new Date();
                 if (couponDO.getGmtEnd() != null && couponDO.getGmtEnd().getTime() < now.getTime()) {
@@ -90,6 +99,26 @@ public class CouponServiceImpl implements CouponService {
                     }
                 }
 
+                // 检查兑换码有效性
+                System.out.println(code);
+                CouponCodeDO couponCodeDO = couponCodeMapper.selectCouponCodeByCode(code);
+
+                if (couponCodeDO == null) {
+                    // 兑换码不存在
+                    throw new AppServiceException(ExceptionDefinition.COUPON_CODE_NOT_FOUND);
+                }
+                System.out.println(couponCodeDO.getCouponId());
+                System.out.println(couponId);
+                System.out.println(couponCodeDO.getCouponId().equals(couponId));
+                if (!couponCodeDO.getCouponId().equals(couponId)) {
+                    // 兑换码不属于该优惠券
+                    throw new AppServiceException(ExceptionDefinition.COUPON_CODE_ERROR);
+                }
+                if (couponCodeDO.getStatus() == 2) {
+                    // 兑换码已被使用
+                    throw new AppServiceException(ExceptionDefinition.COUPON_CODE_USED);
+                }
+
                 //领取优惠券
                 UserCouponDO userCouponDO = new UserCouponDO();
                 userCouponDO.setUserId(userId);
@@ -110,6 +139,13 @@ public class CouponServiceImpl implements CouponService {
                 userCouponDO.setGmtCreate(now);
 
                 userCouponMapper.insert(userCouponDO);
+
+                // 更新兑换码状态
+                couponCodeDO.setStatus(2);
+                couponCodeDO.setUserId(userId);
+                couponCodeMapper.updateById(couponCodeDO);
+
+
                 return "ok";
             } catch (ServiceException e) {
                 throw e;

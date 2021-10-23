@@ -13,4 +13,5 @@ import java.util.List;
 public interface CouponCodeMapper extends BaseMapper<CouponCodeDO> {
     public List<CouponCodeDO> getCouponCodeList(@Param("couponId")Long couponId, @Param("userId") Long userId, @Param("status")Integer status, @Param("offset") Integer offset,@Param("limit") Integer limit);
 
+    public CouponCodeDO selectCouponCodeByCode(@Param("code") String code);
 }

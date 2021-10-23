@@ -53,6 +53,11 @@
     >
       <el-table-column align="center" label="评论编号" prop="id" />
 
+      <el-table-column type="expand" label="评论配图">
+        <template slot-scope="props">
+          <img v-for="(img, index) in props.row.imgList" :key="img + index" :src="img" height="200" style="margin-right: 30px" >
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="评论内容" width="300" prop="content" />
       <el-table-column align="center" label="评论分数" prop="score" />
 

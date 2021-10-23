@@ -96,7 +96,7 @@ var components
 try {
   components = {
     neilModal: function() {
-      return __webpack_require__.e(/*! import() | components/neil-modal/neil-modal */ "components/neil-modal/neil-modal").then(__webpack_require__.bind(null, /*! @/components/neil-modal/neil-modal.vue */ 248))
+      return __webpack_require__.e(/*! import() | components/neil-modal/neil-modal */ "components/neil-modal/neil-modal").then(__webpack_require__.bind(null, /*! @/components/neil-modal/neil-modal.vue */ 256))
     }
   }
 } catch (e) {
@@ -153,7 +153,21 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 22));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var neilModal = function neilModal() {__webpack_require__.e(/*! require.ensure | components/neil-modal/neil-modal */ "components/neil-modal/neil-modal").then((function () {return resolve(__webpack_require__(/*! @/components/neil-modal/neil-modal.vue */ 248));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 22));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var neilModal = function neilModal() {__webpack_require__.e(/*! require.ensure | components/neil-modal/neil-modal */ "components/neil-modal/neil-modal").then((function () {return resolve(__webpack_require__(/*! @/components/neil-modal/neil-modal.vue */ 256));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -292,7 +306,7 @@ __webpack_require__.r(__webpack_exports__);
                 } });case 5:case "end":return _context.stop();}}}, _callee);}))();
 
   },
-  methods: {
+  methods: _defineProperty({
     // 计算距离函数
     Rad: function Rad(d) {
       //根据经纬度判断距离
@@ -385,6 +399,67 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
+    //详情
+    navToDetailPage: function navToDetailPage(item) {
+      //测试数据没有写id，用title代替
+      var id = item.id;
+      uni.navigateTo({
+        url: "/pages/product/detail?id=".concat(id) });
+
+    },
+    //收藏
+    toFavorite: function toFavorite() {
+      var that = this;
+      if (that.goods.collect) {
+        //取消收藏
+        that.goods.collect = false;
+        this.$api.request('collect', 'deleteCollect', {
+          spuId: that.goods.id }).
+        then(function (res) {
+
+        });
+      } else {
+        //添加收藏
+        that.goods.collect = true;
+        this.$api.request('collect', 'addCollect', {
+          spuId: that.goods.id });
+
+      }
+    },
+    // 直接购买
+    buy: function buy() {
+      var that = this;
+      if (!that.selectedSku.id) {
+        that.specClass = 'none';
+        that.toggleSpec();
+        that.toggleCallback = that.buy;
+      } else {
+        var skuItem = {
+          skuId: that.selectedSku.id,
+          num: that.goodsNum,
+          title: that.goods.title,
+          originalPrice: that.selectedSku.originalPrice,
+          price: that.selectedSku.price,
+          vipPrice: that.selectedSku.vipPrice,
+          skuTitle: that.selectedSku.title,
+          spuImg: that.goods.img,
+          skuImg: that.selectedSku.img,
+          stock: that.selectedSku.stock,
+          spuId: that.goods.id,
+          categoryId: that.goods.categoryId,
+          categoryIdList: that.goods.categoryIds };
+
+        if (that.goods.groupShop) {
+          skuItem['groupShopId'] = that.goods.groupShop.id;
+        }
+        var skuList = [1];
+        skuList[0] = skuItem;
+        that.$api.globalData.skuList = skuList;
+        uni.navigateTo({
+          url: "/pages/order/create?takeway=buy" });
+
+      }
+    },
     //加入购物车
     addCart: function addCart(e) {
       var that = this;
@@ -396,7 +471,7 @@ __webpack_require__.r(__webpack_exports__);
         //添加到购物车
         that.$api.request('cart', 'addCartItem', {
           skuId: that.selectedSku.id,
-          num: 1 }).
+          num: that.goodsNum }).
         then(function (res) {
           that.$api.msg('添加购物车成功');
           that.closeModal();
@@ -481,16 +556,16 @@ __webpack_require__.r(__webpack_exports__);
 
                 res.data.items);case 7:case "end":return _context4.stop();}}}, _callee4);}))();
 
-    },
+    } }, "navToDetailPage", function navToDetailPage(
 
-    //详情
-    navToDetailPage: function navToDetailPage(item) {
-      //测试数据没有写id，用title代替
-      var id = item.id;
-      uni.navigateTo({
-        url: "/pages/product/detail?id=".concat(id) });
 
-    } } };exports.default = _default;
+  item) {
+    //测试数据没有写id，用title代替
+    var id = item.id;
+    uni.navigateTo({
+      url: "/pages/product/detail?id=".concat(id) });
+
+  }) };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),

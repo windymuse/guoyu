@@ -1,5 +1,6 @@
 package com.iotechn.unimall.data.dto;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import lombok.Data;
 
 import java.util.Date;
@@ -42,5 +43,10 @@ public class CouponDTO extends SuperDTO {
     private Date gmtStart;
 
     private Date gmtEnd;
+
+    /**
+     * 领取类型：1 直接领取 2 代码领取
+     */
+    private Integer gmtType;
 
 }

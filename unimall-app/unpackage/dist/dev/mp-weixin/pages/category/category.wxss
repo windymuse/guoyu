@@ -186,6 +186,7 @@ page,
 .product-detail {
   position: relative;
   text-align: center;
+  /* 底部操作菜单 */
 }
 .product-detail .close {
   position: absolute;
@@ -205,6 +206,7 @@ page,
 }
 .product-detail .info {
   margin-left: 50rpx;
+  margin-right: 50rpx;
   text-align: left;
 }
 .product-detail .box {
@@ -254,18 +256,6 @@ page,
   color: white;
   background-color: #28D7FE;
 }
-.product-detail .box .btn {
-  height: 80rpx;
-  background-color: #28D7FE;
-  width: 60%;
-  margin: 0 auto;
-  margin-top: 80rpx;
-  margin-bottom: 40rpx;
-  line-height: 80rpx;
-  border-radius: 40rpx;
-  color: white;
-  font-weight: bold;
-}
 .product-detail .box .attr-list {
   display: flex;
   flex-direction: column;
@@ -297,5 +287,81 @@ page,
 .product-detail .box .item-list .selected {
   background: #fbebee;
   color: #fa436a;
+}
+.product-detail .page-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.product-detail .page-bottom .p-b-btn {
+  position: relative;
+  top: -20rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  color: #606266;
+  width: 96rpx;
+  height: 80rpx;
+}
+.product-detail .page-bottom .p-b-btn .yticon {
+  font-size: 40rpx;
+  line-height: 48rpx;
+  color: #909399;
+}
+.product-detail .page-bottom .p-b-btn.active,
+.product-detail .page-bottom .p-b-btn.active .yticon {
+  color: #fa436a;
+}
+.product-detail .page-bottom .p-b-btn .icon-fenxiang2 {
+  font-size: 42rpx;
+  -webkit-transform: translateY(-2rpx);
+          transform: translateY(-2rpx);
+}
+.product-detail .page-bottom .p-b-btn .icon-shoucang {
+  font-size: 46rpx;
+}
+.product-detail .page-bottom .action-btn-group {
+  height: 80rpx;
+  background-color: #28D7FE;
+  /* width: 60%; */
+  margin: 0 auto;
+  margin-bottom: 40rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  height: 76rpx;
+  border-radius: 100px;
+  overflow: hidden;
+  box-shadow: 0 20rpx 40rpx -16rpx #fa436a;
+  box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
+  background: linear-gradient(to right, #ffac30, #fa436a, #F56C6C);
+  position: relative;
+}
+.product-detail .page-bottom .action-btn-group:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  height: 28rpx;
+  width: 0;
+  border-right: 1px solid rgba(255, 255, 255, 0.5);
+}
+.product-detail .page-bottom .action-btn-group .action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180rpx;
+  height: 100%;
+  font-size: 28rpx;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 

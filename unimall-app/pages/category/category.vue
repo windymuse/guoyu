@@ -56,7 +56,21 @@
 							</text>
 						</view>
 					</view>
-					<view class="btn" @click="addCart">加入购物袋</view>
+					<view class="page-bottom">
+						<view class="p-b-btn" @click="navToDetailPage(goods)">
+							<text class="yticon icon-gouwuche"></text>
+							<text>详情</text>
+						</view>
+						<view class="p-b-btn" :class="{active: goods.collect}" @click="toFavorite">
+							<text class="yticon icon-shoucang"></text>
+							<text>收藏</text>
+						</view>
+						<view class="action-btn-group btn">
+							<button type="primary" class=" action-btn no-border buy-now-btn" @click="buy">立即购买</button>
+							<button type="primary" class=" action-btn no-border add-cart-btn" @click="addCart">加入购物车</button>
+						</view>
+					</view>
+					
 				</view>
 		    </view>
 		</neil-modal>
@@ -230,6 +244,67 @@
 					}
 				}
 			},
+			//详情
+			navToDetailPage(item) {
+				//测试数据没有写id，用title代替
+				let id = item.id;
+				uni.navigateTo({
+					url: `/pages/product/detail?id=${id}`
+				})
+			},
+			//收藏
+			toFavorite() {
+				const that = this
+				if (that.goods.collect) {
+					//取消收藏
+					that.goods.collect = false
+					this.$api.request('collect', 'deleteCollect', {
+						spuId: that.goods.id
+					}).then(res => {
+
+					})
+				} else {
+					//添加收藏
+					that.goods.collect = true
+					this.$api.request('collect', 'addCollect', {
+						spuId: that.goods.id
+					})
+				}
+			},
+			// 直接购买
+			buy() {
+				const that = this
+				if (!that.selectedSku.id) {
+					that.specClass = 'none'
+					that.toggleSpec()
+					that.toggleCallback = that.buy
+				} else {
+					let skuItem = {
+						skuId: that.selectedSku.id,
+						num: that.goodsNum,
+						title: that.goods.title,
+						originalPrice: that.selectedSku.originalPrice,
+						price: that.selectedSku.price,
+						vipPrice: that.selectedSku.vipPrice,
+						skuTitle: that.selectedSku.title,
+						spuImg: that.goods.img,
+						skuImg: that.selectedSku.img,
+						stock: that.selectedSku.stock,
+						spuId: that.goods.id,
+						categoryId: that.goods.categoryId,
+						categoryIdList: that.goods.categoryIds
+					}
+					if (that.goods.groupShop) {
+						skuItem['groupShopId'] = that.goods.groupShop.id
+					}
+					let skuList = [1]
+					skuList[0] = skuItem
+					that.$api.globalData.skuList = skuList
+					uni.navigateTo({
+						url: `/pages/order/create?takeway=buy`
+					})
+				}
+			},
 			//加入购物车
 			addCart(e) {
 				const that = this
@@ -241,7 +316,7 @@
 					//添加到购物车
 					that.$api.request('cart', 'addCartItem', {
 						skuId: that.selectedSku.id,
-						num: 1
+						num: that.goodsNum
 					}).then(res => {
 						that.$api.msg('添加购物车成功')
 						that.closeModal()
@@ -552,6 +627,7 @@
 		
 		.info {
 			margin-left: 50upx;
+			margin-right: 50upx;
 			text-align: left;
 		}
 		
@@ -606,19 +682,6 @@
 				background-color: #28D7FE;
 			}
 			
-			.btn {
-				height: 80upx;
-				background-color: #28D7FE;
-				width: 60%;
-				margin: 0 auto;
-				margin-top: 80upx;
-				margin-bottom: 40upx;
-				line-height: 80upx;
-				border-radius: 40upx;
-				color: white;
-				font-weight: bold;
-			}
-			
 			
 			.attr-list {
 				display: flex;
@@ -653,6 +716,98 @@
 				.selected {
 					background: #fbebee;
 					color: $uni-color-primary;
+				}
+			}
+		}
+		
+		
+		
+		.btn {
+		}
+		
+		/* 底部操作菜单 */
+		.page-bottom {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			
+			position: relative;
+				
+			.p-b-btn {
+				position: relative;
+				top: -20upx;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				font-size: $font-sm;
+				color: $font-color-base;
+				width: 96upx;
+				height: 80upx;
+			
+				.yticon {
+					font-size: 40upx;
+					line-height: 48upx;
+					color: $font-color-light;
+				}
+			
+				&.active,
+				&.active .yticon {
+					color: $uni-color-primary;
+				}
+			
+				.icon-fenxiang2 {
+					font-size: 42upx;
+					transform: translateY(-2upx);
+				}
+			
+				.icon-shoucang {
+					font-size: 46upx;
+				}
+			}
+			
+			.action-btn-group {
+				
+				height: 80upx;
+				background-color: #28D7FE;
+				/* width: 60%; */
+				margin: 0 auto;
+				margin-bottom: 40upx;
+				line-height: 80upx;
+				border-radius: 40upx;
+				color: white;
+				font-weight: bold;
+				
+				display: flex;
+				height: 76upx;
+				border-radius: 100px;
+				overflow: hidden;
+				box-shadow: 0 20upx 40upx -16upx #fa436a;
+				box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
+				background: linear-gradient(to right, #ffac30, #fa436a, #F56C6C);
+				position: relative;
+			
+				&:after {
+					content: '';
+					position: absolute;
+					top: 50%;
+					right: 50%;
+					transform: translateY(-50%);
+					height: 28upx;
+					width: 0;
+					border-right: 1px solid rgba(255, 255, 255, .5);
+				}
+			
+				.action-btn {
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 180upx;
+					height: 100%;
+					font-size: $font-base;
+					padding: 0;
+					border-radius: 0;
+					background: transparent;
 				}
 			}
 		}

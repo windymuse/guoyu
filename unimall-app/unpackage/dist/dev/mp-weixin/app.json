@@ -23,7 +23,8 @@
         "pages/pay/pay",
         "pages/pay/success",
         "pages/notice/notice",
-        "pages/category/category"
+        "pages/category/category",
+        "pages/coupon/coupon"
     ],
     "subPackages": [],
     "window": {
