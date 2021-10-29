@@ -221,7 +221,7 @@
 	},
 	"tabBar": {
 		"color": "#C0C4CC",
-		"selectedColor": "#fa436a",
+		"selectedColor": "#174787",
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
@@ -255,7 +255,7 @@
 		"list": [
 			{
 				"name": "", //模式名称
-				"path": "/pages/user/user", //启动页面，必选
+				"path": "", //启动页面，必选
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]

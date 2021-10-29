@@ -27,9 +27,14 @@
 					<view class="t-list" v-if="titem.parentId === item.id && titem.goods.length > 0" v-for="titem in item.childrenList" :key="titem.id">
 						<text class="s-item title" >{{item.title}} > {{titem.title}}</text>
 						<view class="t-item" v-for="good in titem.goods" :key="good.id">
-							<image class="img" :src="good.img + '?x-oss-process=style/200px'"></image>
-							<text class="title">{{good.title}}</text>
-							<text class="price">￥ {{good.originalPrice / 100}}</text>
+							<image @click="navToDetailPage(good)" class="img" :src="good.img + '?x-oss-process=style/200px'"></image>
+							<text @click="navToDetailPage(good)" class="title">{{good.title}}</text>
+							<view class="price-box" @click="navToDetailPage(good)">
+								<text class="price-tip">¥</text>
+								<text class="price">{{isVip ? (good.vipPrice ? good.vipPrice : goods.vipPrice) / 100.0  + ' [VIP]': (good.price ? good.price : goods.price) / 100.0 }}</text>
+								<text v-if="(isVip ? (good.vipPrice ? good.vipPrice : goods.vipPrice) : (good.price ? good.price : goods.price)) < (good.price ? good.originalPrice : goods.originalPrice)"
+								 class="m-price">¥{{(good.price ? good.originalPrice : goods.originalPrice) / 100}}</text>
+							</view>
 							<view class="chooseBtn" @click="chooseThis(good)">选规格</view>
 						</view>
 					</view>
@@ -42,7 +47,14 @@
 		        <image class="img" :src="goods.img" mode="aspectFit"></image>
 		        <view class="info">{{goods.title}}</view>
 				<view class="box">
-					<view class="price">￥ {{goods.originalPrice / 100}}</view>
+					<view class="price-box">
+						<text class="price-tip">¥</text>
+						<text class="price">{{isVip ? (selectedSku.vipPrice ? selectedSku.vipPrice : goods.vipPrice) / 100.0  + ' [VIP]': (selectedSku.price ? selectedSku.price : goods.price) / 100.0 }}</text>
+						<text v-if="(isVip ? (selectedSku.vipPrice ? selectedSku.vipPrice : goods.vipPrice) : (selectedSku.price ? selectedSku.price : goods.price)) < (selectedSku.price ? selectedSku.originalPrice : goods.originalPrice)"
+						 class="m-price">¥{{(selectedSku.price ? selectedSku.originalPrice : goods.originalPrice) / 100}}</text>
+						<text v-if="(isVip ? (selectedSku.vipPrice ? selectedSku.vipPrice : goods.vipPrice) : (selectedSku.price ? selectedSku.price : goods.price)) < (selectedSku.price ? selectedSku.originalPrice : goods.originalPrice)"
+						 class="coupon-tip">{{parseInt((isVip? (selectedSku.vipPrice ? selectedSku.vipPrice : goods.vipPrice): (selectedSku.price ? selectedSku.price : goods.price)) / (selectedSku.originalPrice ? selectedSku.originalPrice : goods.originalPrice) * 100) / 10}}折</text>
+					</view>
 					<view class="sub" @click="numSub">-</view>
 					<view class="num">{{goodsNum}}</view>
 					<view class="add" @click="numAdd">+</view>
@@ -141,7 +153,6 @@
 					console.log('当前位置的纬度：' + res.latitude);
 					that.userConfig = res
 					
-					
 					that.$api.request('config', 'getMerchantConfig', {}, failres => {
 						that.$api.msg(failres.errmsg)
 					}).then(res => {
@@ -157,7 +168,7 @@
 				//根据经纬度判断距离
 				return d * Math.PI / 180.0;
 			},
-			 getDistance(lat1, lng1, lat2, lng2) {
+			getDistance(lat1, lng1, lat2, lng2) {
 				// lat1用户的纬度
 				// lng1用户的经度
 				// lat2商家的纬度
@@ -174,6 +185,7 @@
 				return s
 			},
 			chooseThis(good) {
+				console.log('good', good)
 				const that = this
 				uni.showLoading({
 					title: '正在加载'
@@ -462,7 +474,7 @@
 		  font-size: 28rpx;
 		  font-weight: bold;
 		  &.currentNum {
-		    background: #6a74c9;
+		    background: #174787;
 		    color: #ffffff;
 		  }
 		}
@@ -564,6 +576,35 @@
 			height: 0;
 		}
 	}
+	.price-box {
+		display: flex;
+		align-items: baseline;
+		height: 64upx;
+		padding: 10upx 0;
+		font-size: 26upx;
+		color: $uni-color-primary;
+	
+		.price {
+			font-size: $font-lg + 2upx;
+		}
+		
+		.m-price {
+			margin: 0 12upx;
+			color: $font-color-light;
+			text-decoration: line-through;
+		}
+		
+		.coupon-tip {
+			align-items: center;
+			padding: 4upx 10upx;
+			background: $uni-color-primary;
+			font-size: $font-sm;
+			color: #fff;
+			border-radius: 6upx;
+			line-height: 1;
+			transform: translateY(-4upx);
+		}
+	}
 	.t-item{
 		flex-shrink: 0;
 		display: flex;
@@ -587,18 +628,24 @@
 			position: absolute;
 			right: 20upx;
 			width: 300upx;
+			top: 25upx;
 		}
-		.price {
+/* 		.price {
 			position: absolute;
-			right: 30upx;
-			bottom: 50upx;
+			right: 160upx;
+			bottom: 40upx;
+		} */
+		.price-box {
+			position: absolute;
+			left: 180upx;
+			bottom: 40upx;
 		}
 		.chooseBtn {
 			position: absolute;
 			right: 0upx;
-			bottom: 0;
+			bottom: 40upx;
 			padding: 5upx 20upx;
-			background-color: #28D7FE;
+			background-color: #174787;
 			border-radius: 20upx;
 			color: white;
 		}
@@ -637,11 +684,6 @@
 			position: relative;
 			margin-top: 80upx;
 			
-			.price {
-				position: absolute;
-				left: 20upx;
-				top: 20upx;
-			}
 			
 			.sub {
 				position: absolute;
@@ -769,7 +811,7 @@
 			.action-btn-group {
 				
 				height: 80upx;
-				background-color: #28D7FE;
+				background-color: #174787;
 				/* width: 60%; */
 				margin: 0 auto;
 				margin-bottom: 40upx;
@@ -782,9 +824,9 @@
 				height: 76upx;
 				border-radius: 100px;
 				overflow: hidden;
-				box-shadow: 0 20upx 40upx -16upx #fa436a;
+				box-shadow: 0 20upx 40upx -16upx #174787;
 				box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
-				background: linear-gradient(to right, #ffac30, #fa436a, #F56C6C);
+				/* background: linear-gradient(to right, #ffac30, #fa436a, #F56C6C); */
 				position: relative;
 			
 				&:after {

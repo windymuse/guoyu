@@ -120,6 +120,39 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var m0 =
+    (_vm.isVip
+      ? _vm.selectedSku.vipPrice
+        ? _vm.selectedSku.vipPrice
+        : _vm.goods.vipPrice
+      : _vm.selectedSku.price
+      ? _vm.selectedSku.price
+      : _vm.goods.price) <
+    (_vm.selectedSku.price
+      ? _vm.selectedSku.originalPrice
+      : _vm.goods.originalPrice)
+      ? parseInt(
+          ((_vm.isVip
+            ? _vm.selectedSku.vipPrice
+              ? _vm.selectedSku.vipPrice
+              : _vm.goods.vipPrice
+            : _vm.selectedSku.price
+            ? _vm.selectedSku.price
+            : _vm.goods.price) /
+            (_vm.selectedSku.originalPrice
+              ? _vm.selectedSku.originalPrice
+              : _vm.goods.originalPrice)) *
+            100
+        )
+      : null
+  _vm.$mp.data = Object.assign(
+    {},
+    {
+      $root: {
+        m0: m0
+      }
+    }
+  )
 }
 var recyclableRender = false
 var staticRenderFns = []
@@ -154,6 +187,18 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 22));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}var neilModal = function neilModal() {__webpack_require__.e(/*! require.ensure | components/neil-modal/neil-modal */ "components/neil-modal/neil-modal").then((function () {return resolve(__webpack_require__(/*! @/components/neil-modal/neil-modal.vue */ 256));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -296,7 +341,6 @@ __webpack_require__.r(__webpack_exports__);
                   console.log('当前位置的纬度：' + res.latitude);
                   that.userConfig = res;
 
-
                   that.$api.request('config', 'getMerchantConfig', {}, function (failres) {
                     that.$api.msg(failres.errmsg);
                   }).then(function (res) {
@@ -329,6 +373,7 @@ __webpack_require__.r(__webpack_exports__);
       return s;
     },
     chooseThis: function chooseThis(good) {
+      console.log('good', good);
       var that = this;
       uni.showLoading({
         title: '正在加载' });

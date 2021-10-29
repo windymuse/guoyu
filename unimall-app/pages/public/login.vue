@@ -8,7 +8,7 @@
 			<view class="left-top-sign">LOGIN</view>
 			<view class="welcome">
 				<image class="img" src="../../static/guoyu_logo.jpg" mode=""></image>
-				<text class="info">一家只卖xxxxxxxxxxx的店</text>
+				<!-- <text class="info">一家只卖xxxxxxxxxxx的店</text> -->
 			</view>
 			<view v-if="loginType === 'phone'" class="input-content">
 				<view class="input-item">

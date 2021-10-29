@@ -40,7 +40,7 @@
     },
     "compileType": "miniprogram",
     "libVersion": "",
-    "appid": "wx7b755a09ea204f37",
+    "appid": "wxa0b874a5be64612b",
     "projectname": "国渔",
     "condition": {
         "search": {
@@ -56,9 +56,9 @@
             "list": [
                 {
                     "name": "",
+                    "path": "",
                     "query": "",
-                    "id": 0,
-                    "pathName": "/pages/user/user"
+                    "id": 0
                 }
             ]
         }

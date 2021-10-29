@@ -105,7 +105,7 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "wx7b755a09ea204f37",
+        "appid" : "wxa0b874a5be64612b",
         "setting" : {
             "urlCheck" : true
         },

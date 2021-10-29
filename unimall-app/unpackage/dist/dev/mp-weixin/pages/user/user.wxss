@@ -101,7 +101,7 @@
 .user-section .vip-card-box {
   display: flex;
   flex-direction: column;
-  height: 240rpx;
+  /* height: 240upx; */
   background: linear-gradient(left, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.8));
   border-radius: 16rpx 16rpx 0 0;
   overflow: hidden;

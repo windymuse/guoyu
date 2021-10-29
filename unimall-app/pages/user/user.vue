@@ -24,17 +24,17 @@
 					<image class="portrait" :src="userInfo.avatarUrl || '/static/missing-face.png'"></image>
 				</view>
 			</view>
-			<view class="vip-card-box">
+			<view v-if="hasLogin" class="vip-card-box">
 				<view class="b-btn">
 					当前等级折扣 {{currVipDegree.percent == 100 ? '无折扣' : currVipDegree / 10 + '折'}}
 				</view>
 				<view class="tit">
-					Lv{{userInfo.level}}
+					Lv{{userInfo.level || 0}}
 				</view>
 				<view class="progress-box">
 				  <progress :percent="upgradePercent" active stroke-width='10' border-radius='10' color="#478FFF" />
 				</view>
-				<text class="e-b">再消费{{moneyToNext}}元，即可升级为Lv{{userInfo.level + 1}}</text>
+				<text class="e-b">再消费{{moneyToNext || 0}}元，即可升级为Lv{{(userInfo.level || 0) + 1}}</text>
 			</view>
 		</view>
 		
@@ -456,7 +456,7 @@
 		.vip-card-box{
 			display:flex;
 			flex-direction: column;
-			height: 240upx;
+			/* height: 240upx; */
 			background: linear-gradient(left, rgba(0,0,0,.7), rgba(0,0,0,.8));
 			border-radius: 16upx 16upx 0 0;
 			overflow: hidden;

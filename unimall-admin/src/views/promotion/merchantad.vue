@@ -195,7 +195,7 @@ import { clearTreeEmptyChildren } from '@/utils/index'
 import Pagination from '@/components/Pagination'
 import ElOption from '../../../node_modules/element-ui/packages/select/src/option' // Secondary package based on el-pagination
 
-const adTypeMap = [{ value: 1, unionType: 3, name: '轮播' }, { value: 2, unionType: 1, name: '分类精选' }, { value: 3, unionType: 3, name: '横幅' }, { value: 4, unionType: 1, name: '首页轮播下5按钮' }, { value: '', name: '全部' }]
+const adTypeMap = [{ value: 1, unionType: 3, name: '轮播' }, { value: '', name: '全部' }]
 const adStatusMap = [{ value: 0, name: '冻结' }, { value: 1, name: '激活' }, { value: '', name: '全部' }]
 
 export default {

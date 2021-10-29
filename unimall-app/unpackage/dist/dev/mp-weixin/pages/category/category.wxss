@@ -49,7 +49,7 @@
   font-weight: bold;
 }
 .info-box .switchNums.currentNum {
-  background: #6a74c9;
+  background: #174787;
   color: #ffffff;
 }
 .info-box .ser-input {
@@ -145,6 +145,33 @@ page,
   flex: 99;
   height: 0;
 }
+.price-box {
+  display: flex;
+  align-items: baseline;
+  height: 64rpx;
+  padding: 10rpx 0;
+  font-size: 26rpx;
+  color: #fa436a;
+}
+.price-box .price {
+  font-size: 34rpx;
+}
+.price-box .m-price {
+  margin: 0 12rpx;
+  color: #909399;
+  text-decoration: line-through;
+}
+.price-box .coupon-tip {
+  align-items: center;
+  padding: 4rpx 10rpx;
+  background: #fa436a;
+  font-size: 24rpx;
+  color: #fff;
+  border-radius: 6rpx;
+  line-height: 1;
+  -webkit-transform: translateY(-4rpx);
+          transform: translateY(-4rpx);
+}
 .t-item {
   flex-shrink: 0;
   display: flex;
@@ -157,6 +184,11 @@ page,
   padding-bottom: 20rpx;
   position: relative;
   height: 200rpx;
+  /* 		.price {
+			position: absolute;
+			right: 160upx;
+			bottom: 40upx;
+		} */
 }
 .t-item .img {
   position: absolute;
@@ -168,18 +200,19 @@ page,
   position: absolute;
   right: 20rpx;
   width: 300rpx;
+  top: 25rpx;
 }
-.t-item .price {
+.t-item .price-box {
   position: absolute;
-  right: 30rpx;
-  bottom: 50rpx;
+  left: 180rpx;
+  bottom: 40rpx;
 }
 .t-item .chooseBtn {
   position: absolute;
   right: 0rpx;
-  bottom: 0;
+  bottom: 40rpx;
   padding: 5rpx 20rpx;
-  background-color: #28D7FE;
+  background-color: #174787;
   border-radius: 20rpx;
   color: white;
 }
@@ -214,11 +247,6 @@ page,
   margin: 0 20rpx;
   position: relative;
   margin-top: 80rpx;
-}
-.product-detail .box .price {
-  position: absolute;
-  left: 20rpx;
-  top: 20rpx;
 }
 .product-detail .box .sub {
   position: absolute;
@@ -325,7 +353,7 @@ page,
 }
 .product-detail .page-bottom .action-btn-group {
   height: 80rpx;
-  background-color: #28D7FE;
+  background-color: #174787;
   /* width: 60%; */
   margin: 0 auto;
   margin-bottom: 40rpx;
@@ -337,9 +365,9 @@ page,
   height: 76rpx;
   border-radius: 100px;
   overflow: hidden;
-  box-shadow: 0 20rpx 40rpx -16rpx #fa436a;
+  box-shadow: 0 20rpx 40rpx -16rpx #174787;
   box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);
-  background: linear-gradient(to right, #ffac30, #fa436a, #F56C6C);
+  /* background: linear-gradient(to right, #ffac30, #fa436a, #F56C6C); */
   position: relative;
 }
 .product-detail .page-bottom .action-btn-group:after {

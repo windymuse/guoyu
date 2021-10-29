@@ -21,8 +21,8 @@
 				 class="coupon-tip">{{parseInt((isVip? (selectedSku.vipPrice ? selectedSku.vipPrice : goods.vipPrice): (selectedSku.price ? selectedSku.price : goods.price)) / (selectedSku.originalPrice ? selectedSku.originalPrice : goods.originalPrice) * 100) / 10}}折</text>
 			</view>
 			<view class="bot-row">
-				<text>销量: {{goods.sales}}</text>
-				<text>库存: {{goods.stock}}</text>
+				<text>销量: {{goods.sales || 0}}</text>
+				<text>库存: {{goods.stock || 0}}</text>
 			</view>
 		</view>
 
@@ -183,7 +183,8 @@
 </template>
 
 <script>
-	import uParse from '@/components/u-parse/u-parse.vue';
+import uParse from '@/components/gaoyia-parse/parse.vue'
+	// import uParse from '@/components/u-parse/u-parse.vue';
 	export default {
 		components: {
 			uParse
@@ -1135,11 +1136,10 @@
 	}
 
 	.rich-img {
-		width: 100%;
 		height: auto;
 		margin: 0;
-		padding: 0;
-		line-height: 0px;
+		padding: 20upx;
+		/* line-height: 0px; */
 	}
 	
 	button::after {
