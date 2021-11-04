@@ -175,10 +175,24 @@
                         "promote:merchant:update",
                         "promote:merchant:query"
                     ],
-                    "title": "商铺信息"
+                    "title": "主店信息"
                 },
                 "name": "merchant",
                 "page": "/promotion/merchant"
+            },
+            {
+                "path": "merchantList",
+                "meta": {
+                    "noCache": true,
+                    "perms": [
+                        "promote:merchant:create",
+                        "promote:merchant:update",
+                        "promote:merchant:query"
+                    ],
+                    "title": "分店信息"
+                },
+                "name": "merchantList",
+                "page": "/promotion/merchantList"
             }
         ],
         "meta": {

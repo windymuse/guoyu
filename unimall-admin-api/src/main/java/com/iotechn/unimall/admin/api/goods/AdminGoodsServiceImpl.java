@@ -75,7 +75,8 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
             Column.create().column("category_id").as("categoryId"),
             Column.create().column("freight_template_id").as("freightTemplateId"),
             Column.create().column("unit"),
-            Column.create().column("status")};
+            Column.create().column("status"),
+            Column.create().column("deliver_limit").as("deliverLimit")};
 
     /**
      * 后台低频接口， 无需缓存
@@ -247,6 +248,7 @@ public class AdminGoodsServiceImpl implements AdminGoodsService {
         imgMapper.delete(new EntityWrapper<ImgDO>().eq("biz_id", spuDO.getId()).eq("biz_type", BizType.GOODS.getCode()));
         //插入IMG
         insertSpuImg(spuDTO, spuDO.getId(), now);
+        // 清除旧缓存
         goodsBizService.clearGoodsCache(spuDTO.getId());
         pluginUpdateInvoke(spuDTO.getId());
 

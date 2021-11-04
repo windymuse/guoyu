@@ -64,6 +64,10 @@
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">免运费</text>
 			</view>
+			<view v-if="orderReqeust.freightPrice < 0" class="yt-list-cell b-b">
+				<text class="cell-tit clamp">运费</text>
+				<text class="cell-tip">超出配送范围</text>
+			</view>
 			<view v-if="orderReqeust.freightPrice > 0" class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">¥ {{orderReqeust.freightPrice / 100.0}}</text>
@@ -76,13 +80,19 @@
 		
 
 		<!-- 底部 -->
-		<view class="footer">
+		<view class="footer" v-if="orderReqeust.freightPrice >= 0">
 			<view class="price-content">
 				<text>实付款</text>
 				<text class="price-tip">￥</text>
 				<text class="price">{{(orderReqeust.totalPrice - (orderReqeust.coupon?orderReqeust.coupon.discount:0) + orderReqeust.freightPrice) / 100.0}}</text>
 			</view>
 			<text class="submit" @click="submit">提交订单</text>
+		</view>
+		<view class="footer" v-else>
+			<view class="price-content">
+				<text>请修改收货地址</text>
+			</view>
+			<text class="submit" @click="changeAddress">修改收货地址</text>
 		</view>
 
 		<!-- 优惠券面板 -->
@@ -186,6 +196,12 @@
 
 		},
 		methods: {
+			changeAddress() {
+				// 修改收货地址
+				uni.navigateTo({
+					url: '/pages/address/list?source=1'
+				})
+			},
 			//显示优惠券面板
 			toggleMask(type) {
 				let timer = type === 'show' ? 10 : 300;

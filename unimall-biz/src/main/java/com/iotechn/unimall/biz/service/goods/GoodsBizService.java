@@ -110,7 +110,8 @@ public class GoodsBizService {
             Column.create().column("category_id").as("categoryId"),
             Column.create().column("freight_template_id").as("freightTemplateId"),
             Column.create().column("unit"),
-            Column.create().column("status")};
+            Column.create().column("status"),
+            Column.create().column("deliver_limit").as("deliverLimit")};
 
     public Page<SpuDTO> getGoodsPage(Integer pageNo, Integer pageSize, Long categoryId, String orderBy, Boolean isAsc, String title) throws ServiceException {
         Wrapper<SpuDO> wrapper = new EntityWrapper<SpuDO>();
@@ -184,7 +185,7 @@ public class GoodsBizService {
         Page<SpuDTO> page = new Page<>(spuDTOList, pageNo, pageSize, count);
         if (StringUtils.isEmpty(title)) {
             //若关键字为空，制作缓存
-            cacheComponent.putObj(CA_SPU_PAGE_PREFIX + categoryId + "_" + pageNo + "_" + pageSize + "_" + orderBy + "_" + isAsc, page, Const.CACHE_ONE_DAY);
+            cacheComponent.putObj(CA_SPU_PAGE_PREFIX + categoryId + "_" + pageNo + "_" + pageSize + "_" + orderBy + "_" + isAsc, page, Const.CACHE_ONE_HOUR);
         }
         return page;
     }

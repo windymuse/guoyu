@@ -30,9 +30,17 @@ public class FreightTemplateDO extends SuperDO{
     @TableField("delivery_deadline")
     private Integer deliveryDeadline;
 
-    //0包邮 -1永不包邮，正数表示满好多包邮
+    //0包邮 -1永不包邮，正数表示满多少包邮，-2按距离包邮
     @TableField("default_free_price")
     private Integer defaultFreePrice;
+
+    // 最大免费配送距离
+    @TableField("deliver_distance_free")
+    private Integer deliverDistanceFree;
+
+    // 最大配送距离
+    @TableField("deliver_distance_max")
+    private Integer deliverDistanceMax;
 
     @TableField("default_first_num")
     private Integer defaultFirstNum;

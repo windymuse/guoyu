@@ -73,4 +73,11 @@ public class SpuDTO extends SuperDTO {
 
     private Integer status;
 
+    /**
+     * 配送限制
+     * 0 无限制
+     * 1 不得出城，只在同城配送
+     */
+    private Integer deliverLimit;
+
 }

@@ -16,8 +16,9 @@ public class ConfigDTO extends SuperDTO {
     private String logoUrl;
     private String description;
     private String address;
-    private String longitude;
-    private String latitude;
+    private Double longitude;
+    private Double latitude;
+    private String slogan;
     private Integer showType;
     private Integer status;
 }

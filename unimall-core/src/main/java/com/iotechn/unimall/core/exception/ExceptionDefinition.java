@@ -397,7 +397,11 @@ public class ExceptionDefinition {
     public static final ServiceExceptionDefinition MEMBER_LEVEL_NAME_EXIST =
             new ServiceExceptionDefinition(54002, "会员等级称号已经存在，不能添加");
 
+    public static final ServiceExceptionDefinition MALL_INFORMATION_MISSING =
+            new ServiceExceptionDefinition(55001, "店铺信息缺失，不能添加");
 
+    public static final ServiceExceptionDefinition MALL_NAME_EXIST =
+            new ServiceExceptionDefinition(54002, "店铺名称已经存在，不能添加");
 
 
 

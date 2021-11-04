@@ -28,7 +28,7 @@
 						<text class="s-item title" >{{item.title}} > {{titem.title}}</text>
 						<view class="t-item" v-for="good in titem.goods" :key="good.id">
 							<image @click="navToDetailPage(good)" class="img" :src="good.img + '?x-oss-process=style/200px'"></image>
-							<text @click="navToDetailPage(good)" class="title">{{good.title}}</text>
+							<text @click="navToDetailPage(good)" class="title">{{good.title}} {{good.deliverLimit == 1 ? '(仅同城配送)' : ''}}</text>
 							<view class="price-box" @click="navToDetailPage(good)">
 								<text class="price-tip">¥</text>
 								<text class="price">{{isVip ? (good.vipPrice ? good.vipPrice : goods.vipPrice) / 100.0  + ' [VIP]': (good.price ? good.price : goods.price) / 100.0 }}</text>
@@ -344,14 +344,14 @@
 				const that = this
 				this.$api.request('category', 'categoryList').then(async res => {
 					that.rawData = res.data
-					that.flist = res.data
+					that.flist = res.data || []
 					that.currentId = res.data[0].id
-					that.slist = res.data[0].childrenList
+					that.slist = res.data[0].childrenList || []
 					
 					for (let i = 0; i < that.flist.length; i++) {
-						let curr_i_data = that.flist[i].childrenList
+						let curr_i_data = that.flist[i].childrenList || []
 						for (let j = 0; j < curr_i_data.length; j++) {
-							let curr_j_data = curr_i_data[j].childrenList
+							let curr_j_data = curr_i_data[j].childrenList || []
 							for (let k = 0; k < curr_j_data.length; k++) {
 								let cate3 = curr_j_data[k]
 								res = await that.loadGoods(cate3.id)
@@ -370,10 +370,10 @@
 			},
 			//一级分类点击
 			tabtap(item){
-				this.currentId = item.id;
 				this.currentId = item.id
 				this.slist = item.childrenList
 				this.tabScrollTop = this.tabScrollTop === 0 ? 1 : 0
+				this.$forceUpdate()
 			},
 			navToList(tid){
 				uni.navigateTo({

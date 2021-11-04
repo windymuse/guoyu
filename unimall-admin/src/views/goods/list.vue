@@ -87,6 +87,14 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="是否限制配送" width="130" prop="deliverLimit">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.deliverLimit == 0 ? 'success' : 'info' "
+          >{{ scope.row.deliverLimit == 0 ? '无限制' : '仅配送同城' }}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column
         align="center"
         max-width="300"
@@ -95,7 +103,7 @@
         prop="description"
       />
 
-      <el-table-column align="center" label="操作" width="250" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="250" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button v-permission="['operation:goods:edit']" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button v-permission="['operation:goods:edit']" v-if=" scope.row.status == 1" type="warning" size="mini" @click="freezeOrActivationBtn(scope.row,'freeze')">下架</el-button>

@@ -2199,13 +2199,13 @@ function dateFormat(time) {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.def = def;var dev = {
-  baseUrl: 'http://127.0.0.1:18080',
-  // baseUrl: 'http://192.168.8.188:8081',
-  // baseUrl: 'https://guoyu.windymuse.cn',
-  h5Appid: 'wx0fd4343a4bd62ff6'
-  // debug: true
-};
+Object.defineProperty(exports, "__esModule", { value: true });exports.def = def;var _dev;function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var dev = (_dev = {
+  baseUrl: 'http://127.0.0.1:18080' }, _defineProperty(_dev, "baseUrl",
+
+'https://guoyu.windymuse.cn'), _defineProperty(_dev, "h5Appid",
+'wx0fd4343a4bd62ff6'), _dev);
+
+
 
 function def() {
   return dev;

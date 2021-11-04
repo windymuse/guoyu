@@ -88,4 +88,9 @@ public class OrderDTO extends SuperDTO {
 
     private ShipTraceDTO shipTraceDTO;
 
+    /**
+     * 派送限制
+     */
+    private Integer deliverLimit;
+
 }

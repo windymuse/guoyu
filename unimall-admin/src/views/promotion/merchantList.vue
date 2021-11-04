@@ -6,7 +6,7 @@
         v-model="listQuery.status"
         style="width: 200px"
         class="filter-item"
-        placeholder="请选择广告状态"
+        placeholder="请选择分店状态"
       >
         <el-option v-for="(key,index) in adStatusMap" :key="index" :label="key.name" :value="key.value" />
       </el-select>
@@ -14,7 +14,7 @@
         v-model="listQuery.adType"
         style="width: 200px"
         class="filter-item"
-        placeholder="请选择广告类型"
+        placeholder="请选择分店类型"
       >
         <el-option v-for="(key,index) in adTypeMap" :key="index" :label="key.name" :value="key.value" />
       </el-select>
@@ -45,39 +45,31 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="广告ID" prop="id" sortable />
+      <el-table-column align="center" label="分店ID" prop="id" sortable />
 
-      <el-table-column align="center" label="广告标题" prop="title" />
+      <el-table-column align="center" label="店铺名" prop="title" />
 
-      <el-table-column align="center" label="广告类型" prop="adType">
+      <el-table-column align="center" label="店铺logo" prop="logoUrl">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.adType | adTypeFilter }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="广告状态" prop="status">
-        <template slot-scope="scope">
-          <el-tag>{{ scope.row.status | adStatusFilter }}</el-tag>
+          <img v-if="scope.row.logoUrl" :src="scope.row.logoUrl" width="80" >
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="广告图片" prop="imgUrl">
-        <template slot-scope="scope">
-          <img v-if="scope.row.imgUrl" :src="scope.row.imgUrl" width="80" >
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="活动链接" prop="url" />
+      <el-table-column align="center" label="店铺地址" prop="address" />
+      <el-table-column align="center" label="店铺描述" prop="description" />
+      <el-table-column align="center" label="店铺经度" prop="longitude" />
+      <el-table-column align="center" label="店铺维度" prop="latitude" />
 
       <el-table-column align="center" label="操作" width="200" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
-            v-permission="['promote:advertisement:update']"
+            v-permission="['promote:mall:update']"
             type="primary"
             size="mini"
             @click="handleUpdate(scope.row)"
           >编辑</el-button>
           <el-button
-            v-permission="['promote:advertisement:delete']"
+            v-permission="['promote:mall:delete']"
             type="danger"
             size="mini"
             @click="handleDelete(scope.row)"
@@ -105,13 +97,13 @@
         label-width="100px"
         style="width: 400px; margin-left:50px;"
       >
-        <el-form-item label="隐藏的广告id" prop="id" hidden>
+        <el-form-item label="隐藏的分店id" prop="id" hidden>
           <el-input v-model="dataForm.id" />
         </el-form-item>
-        <el-form-item label="广告标题" prop="title">
+        <el-form-item label="分店标题" prop="title">
           <el-input v-model="dataForm.title" />
         </el-form-item>
-        <el-form-item label="广告图片" prop="imgUrl">
+        <el-form-item label="分店图片" prop="logoUrl">
           <el-upload
             :headers="headers"
             :action="uploadPath"
@@ -121,29 +113,21 @@
             class="avatar-uploader"
             accept=".jpg, .jpeg, .png, .gif"
           >
-            <img v-if="dataForm.imgUrl" ref="adImg" :src="dataForm.imgUrl" class="avatar">
+            <img v-if="dataForm.logoUrl" ref="adImg" :src="dataForm.logoUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon" />
           </el-upload>
         </el-form-item>
-        <el-form-item label="广告类型" prop="adType">
-          <el-select v-model="dataForm.adType" placeholder="请选择">
-            <el-option v-for="(key, index) in adTypeMap" :key="index" :label="key.name" :value="key.value" />
-          </el-select>
+        <el-form-item label="分店地址" prop="address">
+          <el-input v-model="dataForm.address" />
         </el-form-item>
-        <el-form-item label="广告状态" prop="status">
-          <el-select v-model="dataForm.status" placeholder="请选择">
-            <el-option v-for="(key, index) in adStatusMap" :key="index" :label="key.name" :value="key.value" />
-          </el-select>
+        <el-form-item label="分店描述" prop="description">
+          <el-input v-model="dataForm.description" />
         </el-form-item>
-        <el-form-item label="活动链接">
-          <el-cascader
-            :options="options"
-            :props="{ checkStrictly: true }"
-            v-model="linkUnion"
-            placeholder="关联类目、商品"
-            filterable
-            @change="handleLink"
-          />
+        <el-form-item label="分店经度" prop="longitude">
+          <el-input v-model="dataForm.longitude" />
+        </el-form-item>
+        <el-form-item label="分店维度" prop="latitude">
+          <el-input v-model="dataForm.latitude" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -187,7 +171,7 @@
 </style>
 
 <script>
-import { listAd, createAd, updateAd, deleteAd, getImageColor } from '@/api/merchantad'
+import { listMall, createMall, updateMall, deleteMall } from '@/api/mall'
 import { spuTree } from '@/api/goods'
 import { uploadPath } from '@/api/storage'
 import { getToken } from '@/utils/auth'
@@ -233,10 +217,11 @@ export default {
         id: undefined,
         adType: undefined,
         title: undefined,
-        url: '',
-        imgUrl: undefined,
-        status: undefined,
-        color: undefined
+        logoUrl: undefined,
+        address: '',
+        description: '',
+        longitude: undefined,
+        latitude: undefined
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -245,10 +230,7 @@ export default {
         create: '创建'
       },
       rules: {
-        title: [{ required: true, message: '广告标题不能为空', trigger: 'blur' }],
-        imgUrl: [{ required: true, message: '广告图片不能为空', trigger: 'blur' }],
-        adType: [{ required: true, message: '请选择广告类型', trigger: 'blur' }],
-        status: [{ required: true, message: '请选择广告状态', trigger: 'blur' }]
+        title: [{ required: true, message: '分店标题不能为空', trigger: 'blur' }]
       },
       downloadLoading: false
     }
@@ -266,10 +248,11 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      listAd(this.listQuery)
+      listMall(this.listQuery)
         .then(response => {
           this.list = response.data.data.items
           this.total = response.data.data.total
+          console.log(response.data.data.items)
           this.listLoading = false
         })
         .catch(() => {
@@ -335,8 +318,8 @@ export default {
     },
     createData() {
       this.$refs['dataForm'].validate(valid => {
-        if (valid && this.checkAdType()) {
-          createAd(this.dataForm)
+        if (valid) {
+          createMall(this.dataForm)
             .then(response => {
               this.getList()
               this.dialogFormVisible = false
@@ -370,13 +353,13 @@ export default {
           if (item.unionType === 1 && this.linkUnion.length === 4) {
             this.$notify.error({
               title: '失败',
-              message: '此类广告只能关联三级类目'
+              message: '此类分店只能关联三级类目'
             })
             return false
           } else if (this.unionType === 2 && this.linkUnion.length === 3) {
             this.$notify.error({
               title: '失败',
-              message: '此类广告只能关联商品'
+              message: '此类分店只能关联商品'
             })
             return false
           }
@@ -389,9 +372,9 @@ export default {
       this.dataForm = Object.assign({}, row)
       this.refreshOptions()
       this.dialogStatus = 'update'
-      if (this.dataForm.url.indexOf('tid') >= 0) {
-        this.linkUnion = 'C_' + this.dataForm.url.replace(/[^0-9]/ig, '')
-      } else { this.linkUnion = 'G_' + this.dataForm.url.replace(/[^0-9]/ig, '') }
+      // if (this.dataForm.url.indexOf('tid') >= 0) {
+      //   this.linkUnion = 'C_' + this.dataForm.url.replace(/[^0-9]/ig, '')
+      // } else { this.linkUnion = 'G_' + this.dataForm.url.replace(/[^0-9]/ig, '') }
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
@@ -399,8 +382,8 @@ export default {
     },
     updateData() {
       this.$refs['dataForm'].validate(valid => {
-        if (valid && this.checkAdType()) {
-          updateAd(this.dataForm)
+        if (valid) {
+          updateMall(this.dataForm)
             .then(() => {
               for (const v of this.list) {
                 if (v.id === this.dataForm.id) {
@@ -412,7 +395,7 @@ export default {
               this.dialogFormVisible = false
               this.$notify.success({
                 title: '成功',
-                message: '更新广告成功'
+                message: '更新分店成功'
               })
             })
             .catch(response => {
@@ -425,12 +408,12 @@ export default {
       })
     },
     handleDelete(row) {
-      this.$confirm('此操作将永久删除该广告--' + row.title + '--, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该分店--' + row.title + '--, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteAd(row.id, row.adType)
+        deleteMall(row.id, row.adType)
           .then(response => {
             this.$notify.success({
               title: '成功',
@@ -451,27 +434,23 @@ export default {
     },
     // 上传图片了处理图片
     uploadSuccessHandle(e, file) {
-      const that = this
-      this.dataForm.imgUrl = e.url
+      console.log(e)
+      console.log(file)
+      this.dataForm.logoUrl = e.url
       this.dialogFormVisible = false
       this.dialogFormVisible = true
-      const img = new Image()
-      // 加载完成执行
-      img.src = e.url
-      img.setAttribute('crossOrigin', 'anonymous')
-      img.src = e.url + '?time=' + new Date().valueOf()
-      img.onload = function(e) {
-        var canvas = that.$refs.canvas
-        that.dataForm.color = getImageColor(canvas, img)
-      }
     },
     onBeforeUpload(file) {
       const isIMAGE = file.type === 'image/jpeg' || 'image/gif' || 'image/png' || 'image/jpg'
+      const isLt1M = file.size / 1024 / 1024 < 1
 
       if (!isIMAGE) {
         this.$message.error('上传文件只能是图片格式!')
       }
-      return isIMAGE
+      if (!isLt1M) {
+        this.$message.error('上传文件大小不能超过 1MB!')
+      }
+      return isIMAGE && isLt1M
     }
   }
 }

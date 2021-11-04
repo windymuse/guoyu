@@ -25,6 +25,10 @@ public class AddressDO extends SuperDO{
     private String county;
     //详细地址
     private String address;
+    //经度
+    private Double longitude;
+    //维度
+    private Double latitude;
     //是否是默认地址
     @TableField("default_address")
     private Integer defaultAddress;

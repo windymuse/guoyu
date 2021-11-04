@@ -8,6 +8,8 @@
           fr.template_name as templateName,
           fr.spu_location as spuLocation,
           fr.default_free_price as defaultFreePrice,
+          fr.deliver_distance_free as deliverDistancefree,
+          fr.deliver_distance_max as deliverDistanceMax,
           fr.delivery_deadline as deliveryDeadline,
           fr.default_first_num as defaultFirstNum,
           fr.default_first_money as defaultFirstMoney,

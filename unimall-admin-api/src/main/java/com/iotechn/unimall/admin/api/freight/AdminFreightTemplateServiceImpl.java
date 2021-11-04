@@ -51,9 +51,9 @@ public class AdminFreightTemplateServiceImpl implements AdminFreightTemplateServ
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean addFreightTemplate(String templateName, String spuLocation, Integer deliveryDeadline, Integer defaultFreePrice, Integer defaultFirstNum, Integer defaultFirstPrice, Integer defaultContinueNum, Integer defaultContinuePrice, List freightTemplateCarriageDOList, Long adminId) throws ServiceException {
+    public boolean addFreightTemplate(String templateName, String spuLocation, Integer deliveryDeadline, Integer defaultFreePrice, Integer deliverDistanceFree, Integer deliverDistanceMax, Integer defaultFirstNum, Integer defaultFirstPrice, Integer defaultContinueNum, Integer defaultContinuePrice, List freightTemplateCarriageDOList, Long adminId) throws ServiceException {
         Date now = new Date();
-        FreightTemplateDO freightTemplateDO = new FreightTemplateDO(templateName, spuLocation, deliveryDeadline, defaultFreePrice, defaultFirstNum, defaultFirstPrice, defaultContinueNum, defaultContinuePrice);
+        FreightTemplateDO freightTemplateDO = new FreightTemplateDO(templateName, spuLocation, deliveryDeadline, defaultFreePrice, deliverDistanceFree, deliverDistanceMax, defaultFirstNum, defaultFirstPrice, defaultContinueNum, defaultContinuePrice);
         freightTemplateDO.setGmtCreate(now);
         freightTemplateDO.setGmtUpdate(now);
         int judgeSQL = freightTemplateMapper.insert(freightTemplateDO); //插入模板主表
@@ -77,23 +77,23 @@ public class AdminFreightTemplateServiceImpl implements AdminFreightTemplateServ
         if (spuMapper.selectCount(new EntityWrapper<SpuDO>().eq("freight_template_id", templateId)) > 0) {
             throw new AdminServiceException(ExceptionDefinition.FREIGHT_SPU_QUERY_HAS);
         }
-        if (freightTemplateMapper.delete(new EntityWrapper<FreightTemplateDO>().eq("id", templateId)) <= 0) {
+        Integer num = freightTemplateMapper.deleteById(templateId);
+        if (num <= 0) {
             throw new AdminServiceException(ExceptionDefinition.FREIGHT_TEMPLATE_DELETE_FAILED);
         }
-        if (freightTemplateCarriageMapper.delete(
+        freightTemplateCarriageMapper.delete(
                 new EntityWrapper<FreightTemplateCarriageDO>()
-                        .eq("template_id", templateId)) > 0) {
-            cacheComponent.delPrefixKey(GoodsBizService.CA_SPU_PREFIX);
-            return true;
-        }
-        throw new AdminServiceException(ExceptionDefinition.FREIGHT_TEMPLATE_UPDATE_FAILED);
+                        .eq("template_id", templateId));
+        cacheComponent.delPrefixKey(GoodsBizService.CA_SPU_PREFIX);
+//        throw new AdminServiceException(ExceptionDefinition.FREIGHT_TEMPLATE_UPDATE_FAILED);
+        return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateFreightTemplate(Long templateId, String templateName, String spuLocation, Integer deliveryDeadline, Integer defaultFreePrice, Integer defaultFirstNum, Integer defaultFirstPrice, Integer defaultContinueNum, Integer defaultContinuePrice, List freightTemplateCarriageDOList, Long adminId) throws ServiceException {
+    public boolean updateFreightTemplate(Long templateId, String templateName, String spuLocation, Integer deliveryDeadline, Integer defaultFreePrice, Integer deliverDistanceFree, Integer deliverDistanceMax, Integer defaultFirstNum, Integer defaultFirstPrice, Integer defaultContinueNum, Integer defaultContinuePrice, List freightTemplateCarriageDOList, Long adminId) throws ServiceException {
         Date now = new Date();
-        FreightTemplateDO freightTemplateDO = new FreightTemplateDO(templateName, spuLocation, deliveryDeadline, defaultFreePrice, defaultFirstNum, defaultFirstPrice, defaultContinueNum, defaultContinuePrice);
+        FreightTemplateDO freightTemplateDO = new FreightTemplateDO(templateName, spuLocation, deliveryDeadline, defaultFreePrice, deliverDistanceFree, deliverDistanceMax, defaultFirstNum, defaultFirstPrice, defaultContinueNum, defaultContinuePrice);
         freightTemplateDO.setId(templateId);
         freightTemplateDO.setGmtUpdate(now);
         if (freightTemplateMapper.updateById(freightTemplateDO) <= 0) {    //如果主表修改失败

@@ -26,11 +26,11 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean addAddress(String province, String city, String county, String address, Integer defaultAddress, Long userId, String phone, String consignee) throws ServiceException {
+    public Boolean addAddress(String province, String city, String county, String address, Double longitude, Double latitude, Integer defaultAddress, Long userId, String phone, String consignee) throws ServiceException {
         Integer addressNum = addressMapper.selectCount(new EntityWrapper<AddressDO>().eq("user_id", userId));
         AddressDO addressDO = null;
         if (addressNum == 0) {
-            addressDO = new AddressDO(province, city, county, address, 1, userId, phone, consignee);
+            addressDO = new AddressDO(province, city, county, address, longitude, latitude, 1, userId, phone, consignee);
         } else {
             if (defaultAddress != 0) {
                 AddressDO preDefault = new AddressDO();
@@ -41,9 +41,9 @@ public class AddressServiceImpl implements AddressService {
                                 .eq("default_address", 1)) > 0)) {
                     throw new AppServiceException(ExceptionDefinition.ADDRESS_QUERY_FAILED);
                 }
-                addressDO = new AddressDO(province, city, county, address, 1, userId, phone, consignee);
+                addressDO = new AddressDO(province, city, county, address, longitude, latitude, 1, userId, phone, consignee);
             } else {
-                addressDO = new AddressDO(province, city, county, address, 0, userId, phone, consignee);
+                addressDO = new AddressDO(province, city, county, address, longitude, latitude, 0, userId, phone, consignee);
             }
         }
         Date now = new Date();
@@ -86,8 +86,8 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Boolean updateAddress(Long addressId, String province, String city, String county, String address, Integer defaultAddress, Long userId, String phone, String consignee) throws ServiceException {
-        AddressDO addressDO = new AddressDO(province, city, county, address, defaultAddress, userId, phone, consignee);
+    public Boolean updateAddress(Long addressId, String province, String city, String county, String address, Double longitude, Double latitude, Integer defaultAddress, Long userId, String phone, String consignee) throws ServiceException {
+        AddressDO addressDO = new AddressDO(province, city, county, address, longitude, latitude, defaultAddress, userId, phone, consignee);
         Date now = new Date();
         if (defaultAddress != 0) {
             defaultAddress = 1;

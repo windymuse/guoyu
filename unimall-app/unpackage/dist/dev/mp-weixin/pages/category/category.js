@@ -532,14 +532,14 @@ __webpack_require__.r(__webpack_exports__);
                 that = _this3;
                 _this3.$api.request('category', 'categoryList').then( /*#__PURE__*/function () {var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(res) {var i, curr_i_data, j, curr_j_data, k, cate3;return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:
                             that.rawData = res.data;
-                            that.flist = res.data;
+                            that.flist = res.data || [];
                             that.currentId = res.data[0].id;
-                            that.slist = res.data[0].childrenList;
+                            that.slist = res.data[0].childrenList || [];
 
                             i = 0;case 5:if (!(i < that.flist.length)) {_context2.next = 26;break;}
-                            curr_i_data = that.flist[i].childrenList;
+                            curr_i_data = that.flist[i].childrenList || [];
                             j = 0;case 8:if (!(j < curr_i_data.length)) {_context2.next = 23;break;}
-                            curr_j_data = curr_i_data[j].childrenList;
+                            curr_j_data = curr_i_data[j].childrenList || [];
                             k = 0;case 11:if (!(k < curr_j_data.length)) {_context2.next = 20;break;}
                             cate3 = curr_j_data[k];_context2.next = 15;return (
                               that.loadGoods(cate3.id));case 15:res = _context2.sent;
@@ -559,9 +559,9 @@ __webpack_require__.r(__webpack_exports__);
     //一级分类点击
     tabtap: function tabtap(item) {
       this.currentId = item.id;
-      this.currentId = item.id;
       this.slist = item.childrenList;
       this.tabScrollTop = this.tabScrollTop === 0 ? 1 : 0;
+      this.$forceUpdate();
     },
     navToList: function navToList(tid) {
       uni.navigateTo({

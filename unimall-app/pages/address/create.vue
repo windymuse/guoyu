@@ -19,7 +19,7 @@
 		</view>
 		<view class="row b-b"> 
 			<text class="tit">详细</text>
-			<input class="input" type="text" v-model="addressData.address" placeholder="街道、楼号、门牌" placeholder-class="placeholder" />
+			<input @blur="getLonLat" class="input" type="text" v-model="addressData.address" placeholder="街道、楼号、门牌" placeholder-class="placeholder" />
 		</view>
 		
 		<view class="row default-row">
@@ -43,7 +43,9 @@
 					county: '',
 					address: '',
 					defaultAddress: 0,
-					def: false
+					def: false,
+					longitude: 0,
+					latitude: 0
 				},
 				lotusAddressData:{
 					visible:false,
@@ -86,7 +88,24 @@
 
 				}
 			},
-			
+			getLonLat() {
+				let address = `${this.addressData.province} ${this.addressData.city} ${this.addressData.county} ${this.addressData.address}`
+				console.log(address)
+				uni.request({
+				    url: 'https://restapi.amap.com/v3/geocode/geo?key=28dc0c243f7be02e9787ca8a5f26a50a&address=' + address,
+				    success: (res) => {
+				        console.log(res.data);
+						let datas = res.data.geocodes
+						if (datas.length > 0) {
+							console.log(datas[0].location)
+							let loc = datas[0].location.split(',')
+							this.addressData.longitude = loc[0]
+							this.addressData.latitude = loc[1]
+						}
+						
+				    }
+				});
+			},
 			//提交
 			confirm(){
 				const that = this
@@ -113,6 +132,16 @@
 				}
 				if(!data.address){
 					that.$api.msg('请输入详细地址');
+					return
+				}
+				
+				if(!data.longitude){
+					that.$api.msg('请输入有效的详细地址');
+					return
+				}
+				
+				if(!data.latitude){
+					that.$api.msg('请输入有效的详细地址');
 					return
 				}
 				

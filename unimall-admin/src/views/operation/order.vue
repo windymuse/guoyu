@@ -91,6 +91,14 @@
         <template slot-scope="scope">{{ scope.row.gmtCreate | formatTime }}</template>
       </el-table-column>
 
+      <el-table-column align="center" label="是否限制配送" width="130" prop="deliverLimit">
+        <template slot-scope="scope">
+          <el-tag
+            :type="scope.row.deliverLimit == 0 ? 'success' : 'info' "
+          >{{ scope.row.deliverLimit == 0 ? '无限制' : '仅配送同城' }}</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" width="100" label="物流渠道" prop="shipCode">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.shipCode | shipCodeFilter }}</el-tag>
@@ -101,7 +109,7 @@
 
       <el-table-column align="center" width="150" label="备注" prop="mono"/>
 
-      <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="300" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             v-permission="['operation:order:detail']"
@@ -170,7 +178,7 @@
         <el-form-item label="收货信息">
           <span>（收货人）{{ orderDetail.consignee }}</span>
           <span>（手机号）{{ orderDetail.phone }}</span>
-          <span>（地址）{{ orderDetail.province }}{{ orderDetail.city }}{{ orderDetail.county }}{{ orderDetail.address }}{{ orderDetail.address }}</span>
+          <span>（地址）{{ orderDetail.province }} {{ orderDetail.city }} {{ orderDetail.county }} {{ orderDetail.address }}</span>
         </el-form-item>
         <el-form-item label="商品信息">
           <el-table :data="orderDetail.skuList" size="small" border fit highlight-current-row>

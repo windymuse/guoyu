@@ -188,14 +188,21 @@ var _vuex = __webpack_require__(/*! vuex */ 7);function _interopRequireDefault(o
       loginType: 'wechat',
       phone: '',
       password: '',
-      logining: false };
+      logining: false,
+      merchantConfig: {} };
 
   },
   onShow: function onShow() {
     this.$api.logout();
   },
   onLoad: function onLoad(options) {
-
+    var that = this;
+    that.$api.request('config', 'getMerchantConfig', {}, function (failres) {
+      that.$api.msg(failres.errmsg);
+    }).then(function (res) {
+      console.log('商户信息', res.data);
+      that.merchantConfig = res.data;
+    });
   },
   methods: _objectSpread(_objectSpread({},
   (0, _vuex.mapMutations)(['login'])), {}, {

@@ -32,6 +32,9 @@
         <el-form-item label="维度" prop="latitude">
           <el-input v-model="dataForm.latitude" />
         </el-form-item>
+        <el-form-item label="标语" prop="slogan">
+          <el-input v-model="dataForm.slogan" />
+        </el-form-item>
         <!-- <el-form-item label="展示方式" prop="showType">
           <el-radio-group v-model="dataForm.showType">
             <el-radio :label="1">商品列表</el-radio>
@@ -128,7 +131,8 @@ export default {
           { validator: validateLongitude, trigger: 'change' }],
         latitude: [
           { required: true, validator: validateLatitude, trigger: 'blur' },
-          { validator: validateLatitude, trigger: 'change' }]
+          { validator: validateLatitude, trigger: 'change' }],
+        slogan: [{ required: true, message: '商铺标语不能为空', trigger: 'blur' }]
       },
       listLoading: false
     }

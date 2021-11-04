@@ -8,7 +8,7 @@
 			<view class="left-top-sign">LOGIN</view>
 			<view class="welcome">
 				<image class="img" src="../../static/guoyu_logo.jpg" mode=""></image>
-				<!-- <text class="info">一家只卖xxxxxxxxxxx的店</text> -->
+				<text class="info">{{ merchantConfig.slogan }}</text>
 			</view>
 			<view v-if="loginType === 'phone'" class="input-content">
 				<view class="input-item">
@@ -56,14 +56,21 @@
 				loginType: 'wechat',
 				phone: '',
 				password: '',
-				logining: false
+				logining: false,
+				merchantConfig: {}
 			}
 		},
 		onShow() {
 			this.$api.logout()
 		},
 		onLoad(options) {
-			
+			const that = this
+			that.$api.request('config', 'getMerchantConfig', {}, failres => {
+				that.$api.msg(failres.errmsg)
+			}).then(res => {
+				console.log('商户信息', res.data)
+				that.merchantConfig = res.data
+			})
 		},
 		methods: {
 			...mapMutations(['login']),

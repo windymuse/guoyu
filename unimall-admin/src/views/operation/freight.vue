@@ -24,8 +24,7 @@
     >
       <el-table-column align="center" label="模板编号" prop="freightTemplateDO.id" />
 
-      <el-table-column align="center" label="模板名称" width="300" prop="freightTemplateDO.templateName" />
-      <el-table-column align="center" label="宝贝地址" prop="freightTemplate.DOspuLocation" />
+      <el-table-column align="center" label="模板名称" prop="freightTemplateDO.templateName" />
 
       <el-table-column align="center" label="发货期限" prop="freightTemplateDO.deliveryDeadline">
         <template slot-scope="scope">{{ scope.row.freightTemplateDO.deliveryDeadline }}天</template>
@@ -33,6 +32,8 @@
       <el-table-column align="center" label="默认包邮门栏" prop="freightTemplateDO.defaultFreePrice" >
         <template slot-scope="scope">{{ scope.row.freightTemplateDO.defaultFreePrice | defaultFreePriceFilter }}</template>
       </el-table-column>
+      <el-table-column align="center" label="免费配送距离(公里)" prop="freightTemplateDO.deliverDistanceFree" />
+      <el-table-column align="center" label="最大配送距离(公里)" prop="freightTemplateDO.deliverDistanceMax" />
       <el-table-column align="center" label="默认计费首次发货数量" prop="freightTemplateDO.defaultFirstNum" >
         <template slot-scope="scope">{{ scope.row.freightTemplateDO.defaultFirstNum }}件</template>
       </el-table-column>
@@ -46,7 +47,7 @@
         <template slot-scope="scope">{{ scope.row.freightTemplateDO.defaultContinueMoney }}元</template>
       </el-table-column>
       <el-table-column align="center" label="指定地区数量" prop="freightTemplateCarriageDOList.length"/>
-      <el-table-column align="center" label="操作" width="300" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="200" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <!-- <el-button
             v-permission="['operation:freight:query']"
@@ -102,12 +103,23 @@
               <el-radio :label="-1">坚决不包邮</el-radio>
               <el-radio :label="0">卖家承担包邮</el-radio>
               <el-radio :label="1">设定满额包邮</el-radio>
+              <el-radio :label="-2">按距离包邮</el-radio>
             </el-radio-group>
           </template>
         </el-form-item>
         <el-form-item v-if="dataForm.isFree === 1" label="默认包邮额度" prop="defaultFreePrice">
           <el-input v-model.number="dataForm.defaultFreePrice" placeholder="默认包邮额度">
             <template slot="append">元</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item v-if="dataForm.isFree === -2" label="免费配送距离" prop="deliverDistanceFree">
+          <el-input v-model.number="dataForm.deliverDistanceFree" placeholder="免费配送距离">
+            <template slot="append">公里</template>
+          </el-input>
+        </el-form-item>
+        <el-form-item v-if="dataForm.isFree === -2" label="最大配送距离" prop="deliverDistanceMax">
+          <el-input v-model.number="dataForm.deliverDistanceMax" placeholder="最大配送距离">
+            <template slot="append">公里</template>
           </el-input>
         </el-form-item>
         <el-form-item label="计费首次数量" prop="defaultFirstNum">
@@ -226,8 +238,10 @@ export default {
   components: { Pagination },
   filters: {
     defaultFreePriceFilter(code) {
-      if (code < 0) {
+      if (code === -1) {
         return '不包邮'
+      } else if (code === -2) {
+        return '按距离包邮'
       } else if (code === 0) {
         return '包邮'
       } else {
@@ -295,6 +309,8 @@ export default {
         templateName: [{ required: true, message: '模板名称不能为空', trigger: 'blur' }],
         deliveryDeadline: [{ required: true, message: '发货期限不能为空', trigger: 'blur' }, { pattern: /^[0-9]*$/, message: '请输入整数' }, { validator: isNum, trigger: 'blur' }],
         defaultFreePrice: [{ required: true, message: '包邮门栏额度不能为空', trigger: 'blur' }, { pattern: /^[0-9]*$/, message: '请输入整数' }, { validator: isPrice, trigger: 'blur' }],
+        deliverDistanceFree: [{ required: true, message: '免费配送距离不能为空', trigger: 'blur' }, { pattern: /^[0-9]*$/, message: '请输入整数' }, { validator: isPrice, trigger: 'blur' }],
+        deliverDistanceMax: [{ required: true, message: '最大配送距离不能为空', trigger: 'blur' }, { pattern: /^[0-9]*$/, message: '请输入整数' }, { validator: isPrice, trigger: 'blur' }],
         defaultFirstNum: [{ required: true, message: '首次计费数量不能为空', trigger: 'blur' }, { pattern: /^[0-9]*$/, message: '请输入整数' }, { validator: isNum, trigger: 'blur' }],
         defaultFirstPrice: [{ required: true, message: '首次计费价格不能为空', trigger: 'blur' }, { pattern: /^[0-9]*$/, message: '请输入整数' }, { validator: isPrice, trigger: 'blur' }],
         defaultContinueNum: [{ required: true, message: '续件计费数量不能为空', trigger: 'blur' }, { pattern: /^[0-9]*$/, message: '请输入整数' }, { validator: isNum, trigger: 'blur' }],
@@ -432,6 +448,7 @@ export default {
     // 打开修改模态框
     updateBtn(row) {
       this.resetData()
+      console.log(row)
       this.dataForm = Object.assign({}, {
         templateId: row.freightTemplateDO.id,
         templateName: row.freightTemplateDO.templateName,
@@ -443,6 +460,8 @@ export default {
         defaultContinuePrice: row.freightTemplateDO.defaultContinueMoney,
         defaultContinueNum: row.freightTemplateDO.defaultContinueNum,
         freightTemplateCarriageDOList: row.freightTemplateCarriageDOList,
+        deliverDistanceFree: row.freightTemplateDO.deliverDistanceFree,
+        deliverDistanceMax: row.freightTemplateDO.deliverDistanceMax,
         isFree: row.freightTemplateDO.defaultFreePrice > 0 ? 1 : row.freightTemplateDO.defaultFreePrice
       })
 

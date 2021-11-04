@@ -78,7 +78,7 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         }
         List<OrderDO> orderDOS = orderMapper.selectPage(new RowBounds((pageNo - 1) * pageSize, pageSize), wrapper);
         Integer count = orderMapper.selectCount(wrapper);
-        return new Page<OrderDO>(orderDOS, pageNo, pageSize, count);
+        return new Page<>(orderDOS, pageNo, pageSize, count);
     }
 
     @Override

@@ -35,4 +35,9 @@ public class OrderRequestDTO {
 
     private Integer freightPrice;
 
+    /**
+     * 派送限制
+     */
+    private Integer deliverLimit;
+
 }

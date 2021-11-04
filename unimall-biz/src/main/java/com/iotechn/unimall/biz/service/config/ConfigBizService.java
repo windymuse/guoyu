@@ -70,10 +70,13 @@ public class ConfigBizService {
                     configDTO.setAddress(configDO.getValueWorth());
                     break;
                 case "longitude":
-                    configDTO.setLongitude(configDO.getValueWorth());
+                    configDTO.setLongitude(Double.parseDouble(configDO.getValueWorth()));
                     break;
                 case "latitude":
-                    configDTO.setLatitude(configDO.getValueWorth());
+                    configDTO.setLatitude(Double.parseDouble(configDO.getValueWorth()));
+                    break;
+                case "slogan":
+                    configDTO.setSlogan(configDO.getValueWorth());
                     break;
                 case "showType":
                     configDTO.setShowType(Integer.parseInt(configDO.getValueWorth()));

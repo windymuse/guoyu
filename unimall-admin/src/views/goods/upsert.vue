@@ -39,6 +39,13 @@
           </el-radio-group>
         </el-form-item>
 
+        <el-form-item label="配送限制" prop="deliverLimit">
+          <el-radio-group v-model="goods.deliverLimit">
+            <el-radio :label="0">无限制</el-radio>
+            <el-radio :label="1">仅配送同城</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
         <el-form-item label="商品图片">
           <el-upload
             :action="uploadPath"
@@ -275,6 +282,9 @@ export default {
       rules: {
         status: [
           { required: true, message: '请选择商品状态', trigger: 'blur' }
+        ],
+        deliverLimit: [
+          { required: true, message: '请选择配送限制', trigger: 'blur' }
         ],
         title: [
           { required: true, message: '商品名称不能为空', trigger: 'blur' }

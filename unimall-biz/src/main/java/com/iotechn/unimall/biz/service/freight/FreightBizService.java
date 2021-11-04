@@ -1,12 +1,14 @@
 package com.iotechn.unimall.biz.service.freight;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.iotechn.unimall.biz.service.config.ConfigBizService;
 import com.iotechn.unimall.core.exception.ExceptionDefinition;
 import com.iotechn.unimall.core.exception.AppServiceException;
 import com.iotechn.unimall.core.exception.ServiceException;
 import com.iotechn.unimall.data.domain.AddressDO;
 import com.iotechn.unimall.data.domain.FreightTemplateCarriageDO;
 import com.iotechn.unimall.data.domain.FreightTemplateDO;
+import com.iotechn.unimall.data.dto.ConfigDTO;
 import com.iotechn.unimall.data.dto.freight.ShipTraceDTO;
 import com.iotechn.unimall.data.dto.freight.FreightTemplateDTO;
 import com.iotechn.unimall.data.dto.order.OrderRequestDTO;
@@ -14,6 +16,10 @@ import com.iotechn.unimall.data.dto.order.OrderRequestSkuDTO;
 import com.iotechn.unimall.data.mapper.AddressMapper;
 import com.iotechn.unimall.data.mapper.FreightTemplateCarriageMapper;
 import com.iotechn.unimall.data.mapper.FreightTemplateMapper;
+import org.gavaghan.geodesy.Ellipsoid;
+import org.gavaghan.geodesy.GeodeticCalculator;
+import org.gavaghan.geodesy.GeodeticCurve;
+import org.gavaghan.geodesy.GlobalCoordinates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +47,9 @@ public class FreightBizService {
 
     @Autowired
     private ShipTraceQuery shipTraceQuery;
+
+    @Autowired
+    private ConfigBizService configBizService;
 
     //根据传入的订单数据，计算邮费
     public Integer getFreightMoney(OrderRequestDTO orderRequestDTO) {
@@ -87,20 +96,21 @@ public class FreightBizService {
         AddressDO addressDO = addressMapper.selectById(orderRequestDTO.getAddressId());
         Integer discount = orderRequestDTO.getCoupon() != null ? orderRequestDTO.getCoupon().getDiscount() : 0;
         for (Long key : freightNum.keySet()) {
-            totalMoney = totalMoney + getMoney(freightDTO.get(key), freightNum.get(key), addressDO == null ? "" : addressDO.getProvince(), freightMoney.get(key) - discount);
+            totalMoney = totalMoney + getMoney(freightDTO.get(key), freightNum.get(key), addressDO, freightMoney.get(key) - discount);
         }
         return totalMoney;
     }
 
     //根据传入的运费模板信息\使用同一模板商品数量\快递省份地址\使用同一模板商品总价减使用的优惠卷，计算这类商品在该订单中的运费
-    private Integer getMoney(FreightTemplateDTO freightTemplateDTO, Integer num, String province, Integer moneySubDiscount) {
-
+    private Integer getMoney(FreightTemplateDTO freightTemplateDTO, Integer num, AddressDO addressDO, Integer moneySubDiscount) {
+        String province = addressDO.getAddress() ==  null ? "" : addressDO.getProvince();
         List<FreightTemplateCarriageDO> freightTemplateCarriageDOList = freightTemplateDTO.getFreightTemplateCarriageDOList();
 
         //先遍历是否是属于非默认运费规则，如果是，计算并返回值
         for (FreightTemplateCarriageDO freightTemplateCarriageDO : freightTemplateCarriageDOList) {
             //邮寄地址省份在其中
             if (freightTemplateCarriageDO.getDesignatedArea().contains(province)) {
+
                 //如果包邮返回0
                 if (freightTemplateCarriageDO.getFreePrice() == 0) {
                     return 0;
@@ -130,12 +140,44 @@ public class FreightBizService {
         //如果使用默认运费规则
         FreightTemplateDO freightTemplateDO = freightTemplateDTO.getFreightTemplateDO();
 
-        if (freightTemplateDO.getDefaultFreePrice() == 0) {
-            return 0;
+        if (freightTemplateDO.getDefaultFreePrice() == -200) {
+            // 如果是按距离包邮
+            ConfigDTO merchantConfig = configBizService.getMerchantConfig();
+            Double mallLon = merchantConfig.getLongitude();
+            Double mallLat = merchantConfig.getLatitude();
+
+            Double userLon = addressDO.getLongitude();
+            Double userLat = addressDO.getLatitude();
+
+
+            GlobalCoordinates source = new GlobalCoordinates(mallLat, mallLon);
+            GlobalCoordinates target = new GlobalCoordinates(userLat, userLon);
+
+            Double distanceInMeter = getDistanceMeter(source, target, Ellipsoid.Sphere);
+            System.out.println("distance: " + distanceInMeter.toString() + "m");
+            System.out.println(freightTemplateDO.getDeliverDistanceFree());
+            System.out.println(freightTemplateDO.getDeliverDistanceMax());
+
+            if (distanceInMeter < freightTemplateDO.getDeliverDistanceFree().doubleValue() * 1000) {
+                // 如果在免费配送距离内，价格为0
+                return 0;
+            } else if (distanceInMeter > freightTemplateDO.getDeliverDistanceMax().doubleValue() * 1000) {
+                // 如果超出配送范围，价格为-1，表示无法配送
+                return -1;
+            }
+        } else {
+            // 非按距离包邮
+
+            if (freightTemplateDO.getDefaultFreePrice() == 0) {
+                // 包邮
+                return 0;
+            }
+            if (freightTemplateDO.getDefaultFreePrice() > 0 && moneySubDiscount >= freightTemplateDO.getDefaultFreePrice()) {
+                // 优惠券完全抵扣
+                return 0;
+            }
         }
-        if (freightTemplateDO.getDefaultFreePrice() > 0 && moneySubDiscount >= freightTemplateDO.getDefaultFreePrice()) {
-            return 0;
-        }
+
 
         Integer open = freightTemplateDO.getDefaultFirstMoney();
         num = num - freightTemplateDO.getDefaultFirstNum();
@@ -151,6 +193,12 @@ public class FreightBizService {
             open = open + freightTemplateDO.getDefaultContinueMoney() * (num / freightTemplateDO.getDefaultContinueNum());
         }
         return open;
+    }
+    public static double getDistanceMeter(GlobalCoordinates gpsFrom, GlobalCoordinates gpsTo, Ellipsoid ellipsoid){
+        //创建GeodeticCalculator，调用计算方法，传入坐标系、经纬度用于计算距离
+        GeodeticCurve geoCurve = new GeodeticCalculator().calculateGeodeticCurve(ellipsoid, gpsFrom, gpsTo);
+
+        return geoCurve.getEllipsoidalDistance();
     }
 
     public FreightTemplateDTO getTemplateById(Long templateId) throws ServiceException {

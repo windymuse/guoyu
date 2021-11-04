@@ -73,4 +73,11 @@ public class SpuDO extends SuperDO {
      */
     private Integer status;
 
+    /**
+     * 配送限制
+     * 0 无限制
+     * 1 不得出城，只在同城配送
+     */
+    @TableField("deliver_limit")
+    private Integer deliverLimit;
 }

@@ -103,5 +103,11 @@ public class OrderDO extends SuperDO {
     @TableField("gmt_confirm")
     private Date gmtConfirm;
 
+    /**
+     * 派送限制
+     */
+    @TableField("deliver_limit")
+    private Integer deliverLimit;
+
 
 }
