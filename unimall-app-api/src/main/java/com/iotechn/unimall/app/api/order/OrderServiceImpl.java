@@ -259,6 +259,8 @@ public class OrderServiceImpl implements OrderService {
                     orderDO.setCounty(addressDO.getCounty());
                     orderDO.setAddress(addressDO.getAddress());
                 }
+                // 设置是否为自取单
+                orderDO.setSelfTake(orderRequest.getSelfTake());
                 orderMapper.insert(orderDO);
 
                 //扣除用户优惠券

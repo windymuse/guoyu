@@ -42,6 +42,12 @@ public interface AdminOrderService {
             @HttpParam(name = "shipNo", type = HttpParamType.COMMON, description = "运单号") String shipNo,
             @NotNull @HttpParam(name = "adminId", type = HttpParamType.ADMIN_ID, description = "管理员Id") Long adminId) throws ServiceException;
 
+
+    @HttpMethod(description = "到店取货", permission = "operation:order:ship", permissionParentName = "运营管理", permissionName = "订单管理")
+    public String take(
+            @NotNull @HttpParam(name = "orderNo", type = HttpParamType.COMMON, description = "订单号") String orderNo,
+            @NotNull @HttpParam(name = "adminId", type = HttpParamType.ADMIN_ID, description = "管理员Id") Long adminId) throws ServiceException;
+
     @HttpMethod(description = "详情", permission = "operation:order:detail", permissionParentName = "运营管理", permissionName = "订单管理")
     public OrderDTO detail(
             @NotNull @HttpParam(name = "orderId", type = HttpParamType.COMMON, description = "订单Id") Long orderNo,

@@ -91,21 +91,22 @@
         <template slot-scope="scope">{{ scope.row.gmtCreate | formatTime }}</template>
       </el-table-column>
 
-      <el-table-column align="center" label="是否限制配送" width="130" prop="deliverLimit">
+      <!-- <el-table-column align="center" label="是否限制配送" width="130" prop="deliverLimit">
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.deliverLimit == 0 ? 'success' : 'info' "
           >{{ scope.row.deliverLimit == 0 ? '无限制' : '仅配送同城' }}</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column align="center" width="100" label="物流渠道" prop="shipCode">
+      <el-table-column align="center" width="150" label="物流渠道" prop="shipCode">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.shipCode | shipCodeFilter }}</el-tag>
+          <el-tag v-if="! scope.row.selfTake">{{ scope.row.shipCode | shipCodeFilter }}</el-tag>
+          <el-tag v-else>自取</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" width="150" label="物流单号" prop="shipCode"/>
+      <el-table-column align="center" width="150" label="物流单号" prop="shipNo"/>
 
       <el-table-column align="center" width="150" label="备注" prop="mono"/>
 
@@ -126,11 +127,18 @@
           >配送单</el-button>
           <el-button
             v-permission="['operation:order:ship']"
-            v-if="scope.row.status===20"
+            v-if="scope.row.status===20 && !scope.row.selfTake"
             type="primary"
             size="mini"
             @click="handleShip(scope.row)"
           >发货</el-button>
+          <el-button
+            v-permission="['operation:order:ship']"
+            v-if="scope.row.status===20 && scope.row.selfTake"
+            type="primary"
+            size="mini"
+            @click="confirmTake(scope.row)"
+          >已取走</el-button>
           <el-button
             v-permission="['operation:order:refund']"
             v-if="scope.row.status===60"
@@ -253,7 +261,7 @@
 </style>
 
 <script>
-import { listOrder, shipOrder, refundOrder, detailOrder, getExcelInfo } from '@/api/order'
+import { listOrder, shipOrder, takeOrder, refundOrder, detailOrder, getExcelInfo } from '@/api/order'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import checkPermission from '@/utils/permission' // 权限判断函数
 
@@ -442,6 +450,28 @@ export default {
           }
         }
       })
+    },
+    confirmTake(row) {
+      const takeForm = {
+        orderNo: row.orderNo
+      }
+      takeOrder(takeForm)
+        .then(response => {
+          this.shipSubmiting = false
+          this.shipDialogVisible = false
+          this.$notify.success({
+            title: '成功',
+            message: '确认已被取走！'
+          })
+          this.getList()
+        })
+        .catch(response => {
+          this.shipSubmiting = false
+          this.$notify.error({
+            title: '失败',
+            message: response.data.errmsg
+          })
+        })
     },
     handleRefund(row) {
       this.refundForm.orderNo = row.orderNo

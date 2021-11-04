@@ -109,5 +109,10 @@ public class OrderDO extends SuperDO {
     @TableField("deliver_limit")
     private Integer deliverLimit;
 
+    /**
+     * 是否自取
+     */
+    @TableField("self_take")
+    private Boolean selfTake;
 
 }

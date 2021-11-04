@@ -40,4 +40,9 @@ public class OrderRequestDTO {
      */
     private Integer deliverLimit;
 
+    /**
+     * 是否自取
+     */
+    private Boolean selfTake;
+
 }

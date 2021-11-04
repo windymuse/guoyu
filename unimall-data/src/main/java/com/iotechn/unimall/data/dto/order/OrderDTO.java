@@ -93,4 +93,8 @@ public class OrderDTO extends SuperDTO {
      */
     private Integer deliverLimit;
 
+    /**
+     * 是否自取
+     */
+    private Boolean selfTake;
 }

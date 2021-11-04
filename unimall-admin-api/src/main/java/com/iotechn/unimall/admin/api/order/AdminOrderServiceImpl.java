@@ -147,6 +147,10 @@ public class AdminOrderServiceImpl implements AdminOrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String ship(String orderNo, String shipCode, String shipNo, Long adminId) throws ServiceException {
+        System.out.println(shipCode);
+        System.out.println(shipCode);
+        System.out.println(shipCode);
+        System.out.println(shipCode);
         orderBizService.checkOrderExist(orderNo, null);
         OrderDO updateOrderDO = new OrderDO();
         Date now = new Date();
@@ -156,7 +160,24 @@ public class AdminOrderServiceImpl implements AdminOrderService {
         if (!"NONE".equals(shipCode)) {
             updateOrderDO.setShipCode(shipCode);
             updateOrderDO.setShipNo(shipNo);
+        } else {
+            updateOrderDO.setShipCode(shipCode);
         }
+        //流转订单状态
+        orderBizService.changeOrderStatus(orderNo, OrderStatusType.WAIT_STOCK.getCode(), updateOrderDO);
+        return "ok";
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String take(String orderNo, Long adminId) throws ServiceException {
+        orderBizService.checkOrderExist(orderNo, null);
+        OrderDO updateOrderDO = new OrderDO();
+        Date now = new Date();
+        updateOrderDO.setGmtUpdate(now);
+        updateOrderDO.setGmtShip(now);
+        updateOrderDO.setStatus(OrderStatusType.WAIT_APPRAISE.getCode());
         //流转订单状态
         orderBizService.changeOrderStatus(orderNo, OrderStatusType.WAIT_STOCK.getCode(), updateOrderDO);
         return "ok";

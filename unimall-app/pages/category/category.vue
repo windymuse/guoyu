@@ -114,7 +114,7 @@
 				slist: [],
 				tlist: [],
 				rawData: [],
-				selectOpen:["自取","外卖"],
+				selectOpen:["外卖", "自取"],
 				deliverType: 1,
 				goods: {},
 				goodsNum: 1,
@@ -312,6 +312,8 @@
 					let skuList = [1]
 					skuList[0] = skuItem
 					that.$api.globalData.skuList = skuList
+					// 是否自取
+					that.$api.globalData.selfTake = that.deliverType
 					uni.navigateTo({
 						url: `/pages/order/create?takeway=buy`
 					})

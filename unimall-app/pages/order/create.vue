@@ -73,6 +73,10 @@
 				<text class="cell-tip">¥ {{orderReqeust.freightPrice / 100.0}}</text>
 			</view>
 			<view class="yt-list-cell desc-cell">
+				<text class="cell-tit clamp">是否自取</text>
+				<switch class="cell-tip cell-right" :checked="orderReqeust.selfTake" v-model="orderReqeust.selfTake" @change="changeSelfTake" />
+			</view>
+			<view class="yt-list-cell desc-cell">
 				<text class="cell-tit clamp">备注</text>
 				<input class="desc" type="text" v-model="orderReqeust.mono" placeholder="请填写备注信息" placeholder-class="placeholder" />
 			</view>
@@ -133,7 +137,8 @@
 					mono: '',
 					takeWay: '',
 					freightPrice: 0,
-					addressId: undefined
+					addressId: undefined,
+					selfTake: 0
 				},
 				skuCategoryPriceMap: {},
 				maskState: 0, //优惠券面板显示状态
@@ -162,6 +167,7 @@
 				that.orderReqeust.takeWay = option.takeway
 			}
 			that.orderReqeust.skuList = that.$api.globalData.skuList;
+			that.orderReqeust.selfTake = that.$api.globalData.selfTake;
 			let totalOriginalPrice = 0
 			let totalPrice = 0
 			let skuCategoryPriceMap = {}
@@ -196,6 +202,10 @@
 
 		},
 		methods: {
+			changeSelfTake(e) {
+				console.log(e.detail.value)
+				this.orderReqeust.selfTake = e.detail.value ? 1 : 0
+			},
 			changeAddress() {
 				// 修改收货地址
 				uni.navigateTo({
@@ -469,11 +479,16 @@
 			&.red {
 				color: $base-color;
 			}
+			
+			&.cell-right {
+				position: absolute;
+				right: 10upx;
+			}
 		}
 
 		&.desc-cell {
 			.cell-tit {
-				max-width: 90upx;
+				max-width: 120upx;
 			}
 		}
 

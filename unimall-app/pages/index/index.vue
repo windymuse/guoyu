@@ -16,12 +16,12 @@
 		
 		<!-- 外卖 -->
 		<view class="wm-section">
-			<view class="container" @click="navigateToPage('/pages/category/category', 0)">
+			<view class="container" @click="navigateToPage('/pages/category/category', 1)">
 				<view class="title">门店自取</view>
 				<view class="info">下单免排队</view>
 				<image src="https://guoyu-admin.windymuse.cn/static/img/%E9%97%A8%E5%BA%97%E8%87%AA%E5%8F%96.jpg" class="img" mode=""></image>
 			</view>
-			<view class="container" @click="navigateToPage('/pages/category/category', 1)">
+			<view class="container" @click="navigateToPage('/pages/category/category', 0)">
 				<view class="title">外卖</view>
 				<view class="info">无接触配送，安全到家</view>
 				<image src="https://guoyu-admin.windymuse.cn/static/img/%E5%A4%96%E5%8D%96.jpg" class="img" mode=""></image>
