@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.iotechn.unimall.data.mapper.AppraiseMapper">
+<mapper namespace="com.windymuse.unimall.data.mapper.AppraiseMapper">
 
 
-    <select id="selectUserAllAppraise" resultType="com.iotechn.unimall.data.dto.appraise.AppraiseResponseDTO">
+    <select id="selectUserAllAppraise" resultType="com.windymuse.unimall.data.dto.appraise.AppraiseResponseDTO">
         select
             a.id as id,
             a.gmt_create as gmtCreate,
@@ -32,7 +32,7 @@
             limit #{offset},#{size}
     </select>
 
-    <select id="selectSpuAllAppraise" resultType="com.iotechn.unimall.data.dto.appraise.AppraiseResponseDTO">
+    <select id="selectSpuAllAppraise" resultType="com.windymuse.unimall.data.dto.appraise.AppraiseResponseDTO">
         select
             a.id as id,
             a.gmt_create as gmtCreate,
@@ -61,7 +61,7 @@
             limit #{offset},#{size}
     </select>
 
-    <select id="selectOneById" resultType="com.iotechn.unimall.data.dto.appraise.AppraiseResponseDTO">
+    <select id="selectOneById" resultType="com.windymuse.unimall.data.dto.appraise.AppraiseResponseDTO">
         select
             a.id as id,
             a.gmt_create as gmtCreate,
@@ -88,7 +88,7 @@
             and a.id = #{appraiseId}
     </select>
 
-    <select id="selectAppraiseCondition" resultType="com.iotechn.unimall.data.dto.appraise.AppraiseResponseDTO">
+    <select id="selectAppraiseCondition" resultType="com.windymuse.unimall.data.dto.appraise.AppraiseResponseDTO">
         select
         a.id as id,
         a.gmt_create as gmtCreate,

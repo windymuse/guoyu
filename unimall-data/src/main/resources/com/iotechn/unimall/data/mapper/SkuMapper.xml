@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.iotechn.unimall.data.mapper.SkuMapper">
+<mapper namespace="com.windymuse.unimall.data.mapper.SkuMapper">
 
     <update id="decSkuStock">
         UPDATE unimall_sku SET stock = stock - #{stock}, freeze_stock = freeze_stock + #{stock} WHERE id = #{skuId}
     </update>
 
-    <select id="getSkuDTOById" resultType="com.iotechn.unimall.data.dto.goods.SkuDTO">
+    <select id="getSkuDTOById" resultType="com.windymuse.unimall.data.dto.goods.SkuDTO">
         SELECT
             k.id,
             k.spu_id AS spuId,

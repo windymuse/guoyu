@@ -8,7 +8,7 @@
 		<version>2.2.1.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.iotechn</groupId>
+	<groupId>com.windymuse</groupId>
 	<artifactId>unimall-plugin-core</artifactId>
 	<version>0.0.1-RELEASE</version>
 	<name>unimall-plugin-core</name>
@@ -27,13 +27,13 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.iotechn</groupId>
+			<groupId>com.windymuse</groupId>
 			<artifactId>unimall-biz</artifactId>
 			<version>0.0.1-RELEASE</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.iotechn</groupId>
+			<groupId>com.windymuse</groupId>
 			<artifactId>unimall-core</artifactId>
 			<version>0.0.1-RELEASE</version>
 		</dependency>

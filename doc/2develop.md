@@ -4,7 +4,7 @@
 
 ---
 
-unimall项目Gitee地址：[https://gitee.com/iotechn/unimall](https://gitee.com/iotechn/unimall)
+unimall项目Gitee地址：[https://gitee.com/windymuse/unimall](https://gitee.com/windymuse/unimall)
 
 本文档不包含 unimall部署方式，部署方式请参考 Gitee 项目根目录 README.md
 
@@ -56,7 +56,7 @@ Service内不能抛出ServiceException以外的受检异常。若方法内含有
 
 首先定义一个HelloWordService试试水。
 
-首先在 unimall-app-api 模块创建com.iotechn.unimall.app.api.hello包。并创建好HelloService接口。
+首先在 unimall-app-api 模块创建com.windymuse.unimall.app.api.hello包。并创建好HelloService接口。
 
     @HttpOpenApi(group = "hello", description = "Hello服务")
     public interface HelloService {

@@ -10,7 +10,7 @@
 		</view>
 		<view class="row b-b">
 			<text class="tit">邮箱</text>
-			<text class="tiv">unimall@iotechn.com</text>
+			<text class="tiv">unimall@windymuse.com</text>
 		</view>
 		<text class="tcp">由重庆驽驹科技有限公司开发</text>
 	</view>

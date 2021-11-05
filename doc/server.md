@@ -81,7 +81,7 @@ Unimall运行需要第三方SDK，这些SDK由服务提供商提供，一般会�
     ### 阿里云短信配置 ###
     sms.aliyun.accessId=LTAIawEsRQ5noKqG
     sms.aliyun.accessKey=mSvqeIm1qyEwaI0AWu2TXTXgYMcqxg
-    sms.aliyun.signature=iotechn
+    sms.aliyun.signature=windymuse
     sms.aliyun.register-template-id=SMS_171851519
     sms.aliyun.bind-phone-template-id=SMS_171851519
     sms.aliyun.reset-password-template-id=SMS_171851519
@@ -101,35 +101,35 @@ Unimall运行需要第三方SDK，这些SDK由服务提供商提供，一般会�
     ########################################################
     ### 微信APP信息
     ########################################################
-    com.iotechn.unimall.wx.mini.app-id=wx19cccd16936e1a91
-    com.iotechn.unimall.wx.mini.app-secret=6c91b5af08e39b06b428d8fac333d9c9
+    com.windymuse.unimall.wx.mini.app-id=wx19cccd16936e1a91
+    com.windymuse.unimall.wx.mini.app-secret=6c91b5af08e39b06b428d8fac333d9c9
     
-    com.iotechn.unimall.wx.app.app-id=wx6e1355f89b03fd2e
-    com.iotechn.unimall.wx.app.app-secret=013972cce59f480f6ac0890422f1aefd
+    com.windymuse.unimall.wx.app.app-id=wx6e1355f89b03fd2e
+    com.windymuse.unimall.wx.app.app-secret=013972cce59f480f6ac0890422f1aefd
     
     ########################################################
     ### 微信商户信息
     ########################################################
-    com.iotechn.unimall.wx.mch-id=1538757851
+    com.windymuse.unimall.wx.mch-id=1538757851
     #自己设置的32位码
-    com.iotechn.unimall.wx.mch-key=aIt5Vw3cJCXMZS4L5h14kIyDsoXBzo5I
-    com.iotechn.unimall.wx.notify-url=http://unimall.free.idcfengye.com/cb/wxpay
-    com.iotechn.unimall.wx.key-path=/Users/rize/cert/1538757851_20190609_cert/apiclient_cert.p12
+    com.windymuse.unimall.wx.mch-key=aIt5Vw3cJCXMZS4L5h14kIyDsoXBzo5I
+    com.windymuse.unimall.wx.notify-url=http://unimall.free.idcfengye.com/cb/wxpay
+    com.windymuse.unimall.wx.key-path=/Users/rize/cert/1538757851_20190609_cert/apiclient_cert.p12
     
     
     ########################################################
     ### 快递查询配置
     ########################################################
-    com.iotechn.ship.query.kdn.app-key=1552340
-    com.iotechn.ship.query.kdn.business-id=db73dd78-990f-4fc8-ae18-83d0dacf7556
+    com.windymuse.ship.query.kdn.app-key=1552340
+    com.windymuse.ship.query.kdn.business-id=db73dd78-990f-4fc8-ae18-83d0dacf7556
     
     ########################################################
     ### 运行环境配置
     ########################################################
     #机器编号
-    com.iotechn.unimall.machine-no=01
+    com.windymuse.unimall.machine-no=01
     #运行环境 1.开发环境 2.测试环境 3.生产环境
-    com.iotechn.unimall.env=1
+    com.windymuse.unimall.env=1
 
 配置文件位于 /unimall-launcher/src/main/resources/application-prd.properties 将这些信息配置好，就可以了。
 

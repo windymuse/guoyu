@@ -61,7 +61,8 @@
                         "appid" : "wx6e1355f89b03fd2e",
                         "appsecret" : "73b5a5c361a32518a88c45e4c5643153"
                     }
-                }
+                },
+                "share" : {}
             },
             "icons" : {
                 "ios" : {
@@ -107,7 +108,8 @@
         "usingComponents" : true,
         "appid" : "wxa0b874a5be64612b",
         "setting" : {
-            "urlCheck" : true
+            "urlCheck" : true,
+            "minified" : false
         },
         "permission" : {
             "scope.userLocation" : {

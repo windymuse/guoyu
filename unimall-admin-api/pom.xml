@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>com.iotechn</groupId>
+		<groupId>com.windymuse</groupId>
 		<artifactId>unimall</artifactId>
 		<version>0.0.1-RELEASE</version>
 	</parent>
-	<groupId>com.iotechn</groupId>
+	<groupId>com.windymuse</groupId>
 	<artifactId>unimall-admin-api</artifactId>
 	<version>0.0.1-RELEASE</version>
 	<name>unimall-admin-api</name>
@@ -31,35 +31,35 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>iotechn-release</id>
+			<id>windymuse-release</id>
 			<name>unimall maven</name>
-			<url>http://maven.iotechn.com/repository/maven-releases/</url>
+			<url>http://maven.windymuse.com/repository/maven-releases/</url>
 		</repository>
 	</repositories>
 
 	<dependencies>
 
 		<dependency>
-			<groupId>com.iotechn</groupId>
+			<groupId>com.windymuse</groupId>
 			<artifactId>unimall-core</artifactId>
 			<version>0.0.1-RELEASE</version>
 		</dependency>
 
 		<!-- 插件核心依赖 勿删 -->
 		<dependency>
-			<groupId>com.iotechn</groupId>
+			<groupId>com.windymuse</groupId>
 			<artifactId>unimall-plugin-core</artifactId>
 			<version>0.0.1-RELEASE</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.iotechn</groupId>
+			<groupId>com.windymuse</groupId>
 			<artifactId>unimall-data</artifactId>
 			<version>0.0.1-RELEASE</version>
 		</dependency>
 
 		<dependency>
-			<groupId>com.iotechn</groupId>
+			<groupId>com.windymuse</groupId>
 			<artifactId>unimall-biz</artifactId>
 			<version>0.0.1-RELEASE</version>
 		</dependency>

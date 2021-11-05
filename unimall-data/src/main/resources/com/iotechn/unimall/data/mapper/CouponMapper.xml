@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.iotechn.unimall.data.mapper.CouponMapper">
+<mapper namespace="com.windymuse.unimall.data.mapper.CouponMapper">
 
     <update id="decCoupon">
         update unimall_coupon set surplus = surplus - 1 where id = #{couponId}
     </update>
 
-    <select id="getUserCouponsCount" resultType="com.iotechn.unimall.data.model.KVModel">
+    <select id="getUserCouponsCount" resultType="com.windymuse.unimall.data.model.KVModel">
         SELECT
             coupon_id AS `key`,
             count( coupon_id ) AS `value`
@@ -23,7 +23,7 @@
     </select>
 
 
-    <select id="getAdminCouponList" resultType="com.iotechn.unimall.data.dto.CouponAdminDTO">
+    <select id="getAdminCouponList" resultType="com.windymuse.unimall.data.dto.CouponAdminDTO">
         SELECT
           c.id AS id,
           c.title AS title,
@@ -67,7 +67,7 @@
         limit #{offset},#{limit}
     </select>
 
-    <select id="getActiveCoupons" resultType="com.iotechn.unimall.data.dto.CouponDTO">
+    <select id="getActiveCoupons" resultType="com.windymuse.unimall.data.dto.CouponDTO">
         SELECT
             c.id,
             c.title,

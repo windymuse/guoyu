@@ -6,7 +6,7 @@ QQ讨论群：656676341 (进群前，请在网页右上角点star)
 
 #### 优先更新地址
 
-https://gitee.com/iotechn/unimall
+https://gitee.com/windymuse/unimall
 
 #### 用户端系统演示
 
@@ -22,7 +22,7 @@ https://gitee.com/iotechn/unimall
 
 #### 后台端系统演示
 
-- 后台演示地址: [http://admin.unimall.iotechn.com:9527](http://admin.unimall.iotechn.com:9527)
+- 后台演示地址: [http://admin.unimall.windymuse.com:9527](http://admin.unimall.windymuse.com:9527)
 - 登录名:guest   密码:123456   验证码:666666 (guest仅有只读权限)
 
 ![后端演示0](snapshoot/backend0.png)
@@ -68,11 +68,11 @@ Unimall使用前后分离的设计、后端采用Java编写，前端均适用vue
 |  Redis   |  4.0.1（其他也可以）   |
 |  Nginx  |  只要Web容器就可以了  |
 
-请参考 [CentOS7.4 安装 MySQL5.7](https://github.com/iotechn/document-basic/blob/master/CentOS7.4_Install_MySQL5.7.md)
+请参考 [CentOS7.4 安装 MySQL5.7](https://github.com/windymuse/document-basic/blob/master/CentOS7.4_Install_MySQL5.7.md)
 
-请参考 [CentOS 安装 JDK8](https://github.com/iotechn/document-basic/blob/master/CentOS_Install_JDK8.md)
+请参考 [CentOS 安装 JDK8](https://github.com/windymuse/document-basic/blob/master/CentOS_Install_JDK8.md)
 
-请参照CentOS [安装 NodeJs 8.15.0](https://github.com/iotechn/document-basic/blob/master/CentOS_Install_NodeJS_8.15.0.md)
+请参照CentOS [安装 NodeJs 8.15.0](https://github.com/windymuse/document-basic/blob/master/CentOS_Install_NodeJS_8.15.0.md)
 
 Redis安装可直接使用yum安装 
 	

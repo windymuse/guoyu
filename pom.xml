@@ -9,7 +9,7 @@
 		<version>2.1.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.iotechn</groupId>
+	<groupId>com.windymuse</groupId>
 	<artifactId>unimall</artifactId>
 	<version>0.0.1-RELEASE</version>
 	<name>unimall</name>
@@ -136,9 +136,9 @@
 	<!-- 发布maven私服 -->
 	<!--<distributionManagement>-->
 		<!--<repository>-->
-			<!--<id>iotechn-release</id>-->
+			<!--<id>windymuse-release</id>-->
 			<!--<name>unimall maven</name>-->
-			<!--<url>http://maven.iotechn.com/repository/maven-releases/</url>-->
+			<!--<url>http://maven.windymuse.com/repository/maven-releases/</url>-->
 		<!--</repository>-->
 	<!--</distributionManagement>-->
 

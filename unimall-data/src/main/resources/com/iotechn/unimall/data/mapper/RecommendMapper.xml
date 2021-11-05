@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.iotechn.unimall.data.mapper.RecommendMapper">
+<mapper namespace="com.windymuse.unimall.data.mapper.RecommendMapper">
 
-    <select id="getRecommendByType" resultType="com.iotechn.unimall.data.dto.RecommendDTO">
+    <select id="getRecommendByType" resultType="com.windymuse.unimall.data.dto.RecommendDTO">
 
         SELECT
           re.id as id,
@@ -24,7 +24,7 @@
         limit #{offset},#{pageSize}
     </select>
 
-    <select id="getAllRecommend" resultType="com.iotechn.unimall.data.dto.RecommendDTO">
+    <select id="getAllRecommend" resultType="com.windymuse.unimall.data.dto.RecommendDTO">
 
         SELECT
         re.id as id,

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.iotechn.unimall.data.mapper.CollectMapper">
+<mapper namespace="com.windymuse.unimall.data.mapper.CollectMapper">
 
 
-    <select id="getCollectAll" resultType="com.iotechn.unimall.data.dto.CollectDTO">
+    <select id="getCollectAll" resultType="com.windymuse.unimall.data.dto.CollectDTO">
      SELECT
             c.id as id,
             c.user_id as userId,
@@ -29,7 +29,7 @@
             #{offset},#{size}
     </select>
 
-    <select id="getCollectById" resultType="com.iotechn.unimall.data.dto.CollectDTO">
+    <select id="getCollectById" resultType="com.windymuse.unimall.data.dto.CollectDTO">
      SELECT
             c.id as id,
             c.user_id as userId,

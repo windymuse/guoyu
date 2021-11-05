@@ -111,6 +111,9 @@
 			border-radius: 4upx;
 			padding: 4upx 10upx;
 			line-height: 1;
+			width: 90upx;
+			margin-left: -10upx;
+			text-align: center;
 		}
 
 		.address {
