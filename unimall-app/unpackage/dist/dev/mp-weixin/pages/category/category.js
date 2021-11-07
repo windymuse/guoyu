@@ -279,6 +279,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 {
   data: function data() {
     return {
@@ -560,8 +563,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     //一级分类点击
     tabtap: function tabtap(item) {
+      console.log('tabtap ', item);
       this.currentId = item.id;
-      this.slist = item.childrenList;
+      this.slist = item.childrenList || [];
       this.tabScrollTop = this.tabScrollTop === 0 ? 1 : 0;
       this.$forceUpdate();
     },

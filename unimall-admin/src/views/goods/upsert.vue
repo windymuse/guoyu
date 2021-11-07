@@ -7,23 +7,19 @@
           <el-input v-model="goods.title" />
         </el-form-item>
         <el-form-item label="原始价格" prop="originalPriceRaw">
-          <el-input v-model="goods.originalPriceRaw" placeholder="0.00">
+          <el-input v-model.number="goods.originalPriceRaw" placeholder="0.00">
             <template slot="append">元</template>
           </el-input>
         </el-form-item>
         <el-form-item label="当前价格" prop="priceRaw">
-          <el-input v-model="goods.priceRaw" placeholder="0.00">
+          <el-input v-model.number="goods.priceRaw" placeholder="0.00">
             <template slot="append">元</template>
           </el-input>
         </el-form-item>
         <el-form-item label="VIP价格" prop="vipPriceRaw">
-          <el-input v-model="goods.vipPriceRaw" placeholder="0.00">
+          <el-input v-model.number="goods.vipPriceRaw" placeholder="0.00">
             <template slot="append">元</template>
           </el-input>
-        </el-form-item>
-
-        <el-form-item label="剩余库存" prop="stock">
-          <el-input v-model="goods.stock" :disabled="true" placeholder="0"/>
         </el-form-item>
 
         <el-form-item label="运费模板" prop="freightTemplate">
@@ -137,22 +133,22 @@
             </el-upload>
           </el-form-item>
           <el-form-item label="原始价格" prop="originalPriceRaw">
-            <el-input v-model="skuForm.originalPriceRaw" placeholder="0.00">
+            <el-input v-model.number="skuForm.originalPriceRaw" placeholder="0.00">
               <template slot="append">元</template>
             </el-input>
           </el-form-item>
           <el-form-item label="当前价格" prop="priceRaw">
-            <el-input v-model="skuForm.priceRaw" placeholder="0.00">
+            <el-input v-model.number="skuForm.priceRaw" placeholder="0.00">
               <template slot="append">元</template>
             </el-input>
           </el-form-item>
           <el-form-item label="VIP价格" prop="vipPriceRaw">
-            <el-input v-model="skuForm.vipPriceRaw" placeholder="0.00">
+            <el-input v-model.number="skuForm.vipPriceRaw" placeholder="0.00">
               <template slot="append">元</template>
             </el-input>
           </el-form-item>
           <el-form-item label="库存" prop="stock">
-            <el-input v-model="skuForm.stock" />
+            <el-input v-model.number="skuForm.stock" />
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -289,17 +285,17 @@ export default {
         title: [
           { required: true, message: '商品名称不能为空', trigger: 'blur' }
         ],
-        // description: [
-        //   { required: true, message: '商品描述不能为空', trigger: 'blur' }
-        // ],
         priceRaw: [
-          { required: true, message: '商品现价不能为空', trigger: 'blur' }
+          { required: true, message: '商品现价不能为空', trigger: 'blur' },
+          { type: 'number', min: 0, message: '价格必须为正数字值' }
         ],
         originalPriceRaw: [
-          { required: true, message: '商品原价不能为空', trigger: 'blur' }
+          { required: true, message: '商品原价不能为空', trigger: 'blur' },
+          { type: 'number', min: 0, message: '价格必须为正数字值' }
         ],
         vipPriceRaw: [
-          { required: true, message: '商品ViP价格不能为空', trigger: 'blur' }
+          { required: true, message: '商品ViP价格不能为空', trigger: 'blur' },
+          { type: 'number', min: 0, message: '价格必须为正数字值' }
         ],
         unit: [
           { required: true, message: '物件单位不能为空', trigger: 'blur' }
@@ -314,16 +310,20 @@ export default {
           { required: true, message: '类型名称不能为空', trigger: 'blur' }
         ],
         priceRaw: [
-          { required: true, message: '类型现价不能为空', trigger: 'blur' }
+          { required: true, message: '类型现价不能为空', trigger: 'blur' },
+          { type: 'number', min: 0, message: '价格必须为正数字值' }
         ],
         originalPriceRaw: [
-          { required: true, message: '类型原价不能为空', trigger: 'blur' }
+          { required: true, message: '类型原价不能为空', trigger: 'blur' },
+          { type: 'number', min: 0, message: '价格必须为正数字值' }
         ],
         vipPriceRaw: [
-          { required: true, message: '类型VIP价格不能为空', trigger: 'blur' }
+          { required: true, message: '类型VIP价格不能为空', trigger: 'blur' },
+          { type: 'number', min: 0, message: '价格必须为正数字值' }
         ],
         stock: [
-          { required: true, message: '类型库存不能为空', trigger: 'blur' }
+          { required: true, message: '类型库存不能为空', trigger: 'blur' },
+          { type: 'number', min: 0, message: '库存不能小于0', trigger: 'blur' }
         ]
       },
       attrRules: {

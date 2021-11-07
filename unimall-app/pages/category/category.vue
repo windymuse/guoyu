@@ -21,10 +21,10 @@
 					{{item.title}}
 				</view>
 			</scroll-view>
-			<scroll-view scroll-with-animation scroll-y class="right-aside" :scroll-top="tabScrollTop">
+			<scroll-view v-if="slist.length > 0" scroll-with-animation scroll-y class="right-aside" :scroll-top="tabScrollTop">
 				<view v-for="item in slist" :key="item.id" class="s-list" :id="'main-'+item.id">
 					<!-- <text class="s-item" >{{item.title}}</text> -->
-					<view class="t-list" v-if="titem.parentId === item.id && titem.goods.length > 0" v-for="titem in item.childrenList" :key="titem.id">
+					<view class="t-list" v-if="titem.parentId === item.id && item.childrenList && titem.goods.length > 0" v-for="titem in item.childrenList" :key="titem.id">
 						<text class="s-item title" >{{item.title}} > {{titem.title}}</text>
 						<view class="t-item" v-for="good in titem.goods" :key="good.id">
 							<image @click="navToDetailPage(good)" class="img" :src="good.img + '?x-oss-process=style/200px'"></image>
@@ -40,6 +40,9 @@
 					</view>
 				</view>
 			</scroll-view>
+			<view v-else class="right-aside">
+				该分类下暂时无上架商品
+			</view>
 		</view>
 		<neil-modal :show="modalShow" @close="closeModal" :show-cancel="false" :show-confirm="false">
 		    <view class="product-detail">
@@ -372,8 +375,9 @@
 			},
 			//一级分类点击
 			tabtap(item){
+				console.log('tabtap ', item)
 				this.currentId = item.id
-				this.slist = item.childrenList
+				this.slist = item.childrenList || []
 				this.tabScrollTop = this.tabScrollTop === 0 ? 1 : 0
 				this.$forceUpdate()
 			},

@@ -275,6 +275,8 @@ public class ApiManager implements InitializingBean,ApplicationContextAware {
                 }
             }
         }
+        // 排序
+        Collections.sort(groups, Comparator.comparing(ApiDocumentModel.Group::getName));
         apiDocumentModelCache = apiDocumentModel;
         return apiDocumentModel;
     }

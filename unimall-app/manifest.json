@@ -62,7 +62,8 @@
                         "appsecret" : "73b5a5c361a32518a88c45e4c5643153"
                     }
                 },
-                "share" : {}
+                "share" : {},
+                "maps" : {}
             },
             "icons" : {
                 "ios" : {
