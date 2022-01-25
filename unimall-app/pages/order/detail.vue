@@ -21,7 +21,7 @@
 		<view class="goods-section">
 			<!-- 商品列表 -->
 			<view v-for="(item, index) in orderDetail.skuList" :key="index" class="g-item">
-				<image :src="item.img + '?x-oss-process=style/200px'"></image>
+				<image :src="item.img + '/200px'"></image>
 				<view class="right">
 					<text class="title clamp">{{item.spuTitle}}</text>
 					<text class="spec">{{item.title}}</text>
@@ -97,6 +97,16 @@
 		onLoad(option) {
 			this.orderId = option.orderid
 			this.loadData()
+		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
 		},
 		methods: {
 			//显示优惠券面板

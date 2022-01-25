@@ -39,6 +39,61 @@
 		
 		
 
+		<!-- 分类推荐楼层 -->
+		<view v-if="categoryPickList.length > 0" class="f-header m-t">
+			<image src="/static/temp/h1.png"></image>
+			<view class="tit-box">
+				<text class="tit">分类精选</text>
+				<text class="tit2">Competitive Products For You</text>
+			</view>
+		</view>
+		<view v-if="categoryPickList.length > 0" v-for="(item, index) in categoryPickList" :key="index" class="hot-floor">
+			<view class="floor-img-box">
+				<image class="floor-img" :src="item.imgUrl" mode="scaleToFill"></image>
+			</view>
+			<scroll-view class="floor-list" scroll-x>
+				<view class="scoll-wrapper">
+					<view 
+						v-for="(spuItem, skuIndex) in item.data" :key="skuIndex"
+						class="floor-item"
+						@click="navToDetailPage(spuItem.id)"
+					>
+						<image :src="spuItem.img + '/200px'" mode="aspectFill"></image>
+						<text class="title clamp">{{spuItem.title}}</text>
+						<text class="price">￥{{(isVip ? spuItem.vipPrice : spuItem.price) / 100 }}</text>
+					</view>
+					<view @click="naviageToPage(item.url)" class="more">
+						<text>查看全部</text>
+						<text>More+</text>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+		
+		<!-- 销量top -->
+		<view class="f-header m-t">
+			<image src="/static/temp/h1.png"></image>
+			<view class="tit-box">
+				<text class="tit">热销宝贝</text>
+				<text class="tit2">Hot Sale</text>
+			</view>
+		</view>
+		
+		<view class="guess-section">
+			<view 
+				v-for="(item, index) in salesTop" :key="index"
+				class="guess-item"
+				@click="navToDetailPage(item.id)"
+			>
+				<view class="image-wrapper">
+					<image :src="item.img + '/400px'" mode="aspectFill"></image>
+				</view>
+				<text class="title clamp">{{item.title}}</text>
+				<text class="price">￥{{isVip ? (item.vipPrice / 100 + ' [VIP]') : item.price / 100}}</text>
+			</view>
+		</view>
+		
+		
 	</view>
 </template>
 
@@ -103,6 +158,15 @@
 			}
 			//#endif
 			this.loadData()
+		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商'
+			}
+		},
+		onShareTimeline() {
+			return {}
 		},
 		methods: {
 			async loadData() {
@@ -629,6 +693,7 @@
 		flex-wrap:wrap;
 		padding: 0 30upx;
 		background: #fff;
+		margin-bottom: 120upx;
 		.guess-item{
 			display:flex;
 			flex-direction: column;

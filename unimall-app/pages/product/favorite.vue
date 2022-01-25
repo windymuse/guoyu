@@ -6,7 +6,7 @@
 			<block v-for="(item, index) in favoriteList" :key="index">
 				<view class="favorite-item" :class="{'b-b': index!==favoriteList.length-1}">
 					<view class="image-wrapper">
-						<image :src="item.img + '?x-oss-process=style/200px'" :class="[item.loaded]" mode="aspectFill" lazy-load @load="onImageLoad('favoriteList', index)"
+						<image :src="item.img + '/200px'" :class="[item.loaded]" mode="aspectFill" lazy-load @load="onImageLoad('favoriteList', index)"
 						 @error="onImageError('favoriteList', index)"></image>
 					</view>
 					<view class="item-right">
@@ -57,6 +57,16 @@
 		//加载更多
 		onReachBottom() {
 			this.loadData();
+		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
 		},
 		methods: {
 			//获取收藏列表

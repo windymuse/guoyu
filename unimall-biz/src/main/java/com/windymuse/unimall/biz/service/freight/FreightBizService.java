@@ -23,6 +23,7 @@ import org.gavaghan.geodesy.GlobalCoordinates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -91,8 +92,15 @@ public class FreightBizService {
                 freightDTO.put(templateId, tempDTO);
             }
         }
-
+        // 自取，运费为0
+        if (orderRequestDTO.getSelfTake() == Boolean.TRUE) {
+            return 0;
+        }
         Integer totalMoney = 0;
+        // 非自取，但是没有地址，应拒绝该订单
+        if (null == orderRequestDTO.getAddressId() || orderRequestDTO.getAddressId() == 0) {
+            return -1;
+        }
         AddressDO addressDO = addressMapper.selectById(orderRequestDTO.getAddressId());
         Integer discount = orderRequestDTO.getCoupon() != null ? orderRequestDTO.getCoupon().getDiscount() : 0;
         for (Long key : freightNum.keySet()) {
@@ -153,7 +161,26 @@ public class FreightBizService {
             GlobalCoordinates source = new GlobalCoordinates(mallLat, mallLon);
             GlobalCoordinates target = new GlobalCoordinates(userLat, userLon);
 
-            Double distanceInMeter = getDistanceMeter(source, target, Ellipsoid.Sphere);
+            // 采用多种计算方法，取最长，减少判断误差
+            Double distanceInMeter;
+
+            Double[] meters = new Double[7];
+
+            meters[0] = getDistanceMeter(source, target, Ellipsoid.Sphere);
+            meters[1] = getDistanceMeter(source, target, Ellipsoid.WGS84);
+            meters[2] = getDistanceMeter(source, target, Ellipsoid.GRS67);
+            meters[3] = getDistanceMeter(source, target, Ellipsoid.GRS80);
+            meters[4] = getDistanceMeter(source, target, Ellipsoid.WGS72);
+            meters[5] = getDistanceMeter(source, target, Ellipsoid.Clarke1858);
+            meters[6] = getDistanceMeter(source, target, Ellipsoid.Clarke1880);
+
+            Arrays.sort(meters);
+
+            distanceInMeter = meters[6];
+            System.out.println("distances: ");
+            for (Double meter : meters) {
+                System.out.println(meter);
+            }
             System.out.println("distance: " + distanceInMeter.toString() + "m");
             System.out.println(freightTemplateDO.getDeliverDistanceFree());
             System.out.println(freightTemplateDO.getDeliverDistanceMax());

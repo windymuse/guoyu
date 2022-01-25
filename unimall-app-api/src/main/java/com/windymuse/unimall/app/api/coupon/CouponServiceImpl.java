@@ -99,24 +99,26 @@ public class CouponServiceImpl implements CouponService {
                     }
                 }
 
-                // 检查兑换码有效性
-                System.out.println(code);
-                CouponCodeDO couponCodeDO = couponCodeMapper.selectCouponCodeByCode(code);
+                // 有兑换码时，检查兑换码有效性
+                if (null != code) {
+                    CouponCodeDO couponCodeDO = couponCodeMapper.selectCouponCodeByCode(code);
 
-                if (couponCodeDO == null) {
-                    // 兑换码不存在
-                    throw new AppServiceException(ExceptionDefinition.COUPON_CODE_NOT_FOUND);
-                }
-                System.out.println(couponCodeDO.getCouponId());
-                System.out.println(couponId);
-                System.out.println(couponCodeDO.getCouponId().equals(couponId));
-                if (!couponCodeDO.getCouponId().equals(couponId)) {
-                    // 兑换码不属于该优惠券
-                    throw new AppServiceException(ExceptionDefinition.COUPON_CODE_ERROR);
-                }
-                if (couponCodeDO.getStatus() == 2) {
-                    // 兑换码已被使用
-                    throw new AppServiceException(ExceptionDefinition.COUPON_CODE_USED);
+                    if (couponCodeDO == null) {
+                        // 兑换码不存在
+                        throw new AppServiceException(ExceptionDefinition.COUPON_CODE_NOT_FOUND);
+                    }
+                    if (!couponCodeDO.getCouponId().equals(couponId)) {
+                        // 兑换码不属于该优惠券
+                        throw new AppServiceException(ExceptionDefinition.COUPON_CODE_ERROR);
+                    }
+                    if (couponCodeDO.getStatus() == 2) {
+                        // 兑换码已被使用
+                        throw new AppServiceException(ExceptionDefinition.COUPON_CODE_USED);
+                    }
+                    // 更新兑换码状态
+                    couponCodeDO.setStatus(2);
+                    couponCodeDO.setUserId(userId);
+                    couponCodeMapper.updateById(couponCodeDO);
                 }
 
                 //领取优惠券
@@ -140,10 +142,6 @@ public class CouponServiceImpl implements CouponService {
 
                 userCouponMapper.insert(userCouponDO);
 
-                // 更新兑换码状态
-                couponCodeDO.setStatus(2);
-                couponCodeDO.setUserId(userId);
-                couponCodeMapper.updateById(couponCodeDO);
 
 
                 return "ok";

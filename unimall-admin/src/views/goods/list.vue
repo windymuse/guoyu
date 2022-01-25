@@ -309,3 +309,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.v-modal {
+  z-index: 1998 !important;
+}
+</style>

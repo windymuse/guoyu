@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
     <el-row>
-      <el-col :span="4">
+      <el-col :span="5">
         <el-row class="panel-group">
           <el-col class="card-panel-col">
             <div class="card-panel" @click="handleSetLineChartData('newVisitis')">
@@ -35,10 +35,10 @@
         </el-row>
       </el-col>
       <el-col :span="9">
-        <div id="orderChart" class="chart" style="height: 400px; padding: 20px; padding-left: 80px"/>
+        <div id="orderChart" class="chart" style="height: 380px; padding-left: 80px"/>
       </el-col>
-      <el-col :span="9">
-        <div id="sumChart" class="chart" style="height: 400px; padding: 30px"/>
+      <el-col :span="10">
+        <div id="sumChart" class="chart" style="height: 380px;"/>
       </el-col>
     </el-row>
     <el-row>

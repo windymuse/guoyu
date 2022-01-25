@@ -23,11 +23,11 @@
 
 							<scroll-view v-if="item.skuList.length > 1" class="goods-box" scroll-x>
 								<view v-for="(skuItem, skuIndex) in item.skuList" :key="skuIndex" class="goods-item">
-									<image class="goods-img" :src="skuItem.img + '?x-oss-process=style/200px'" mode="aspectFill"></image>
+									<image class="goods-img" :src="skuItem.img + '/200px'" mode="aspectFill"></image>
 								</view>
 							</scroll-view>
 							<view v-if="item.skuList.length === 1" class="goods-box-single" v-for="(skuItem, skuIndex) in item.skuList" :key="skuIndex">
-								<image class="goods-img" :src="skuItem.img + '?x-oss-process=style/200px'" mode="aspectFill"></image>
+								<image class="goods-img" :src="skuItem.img + '/200px'" mode="aspectFill"></image>
 								<view class="right">
 									<text class="title clamp">{{skuItem.spuTitle}}</text>
 									<text class="attr-box">{{skuItem.title}} x {{skuItem.num}}</text>
@@ -161,6 +161,16 @@
 
 		},
 
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
 		methods: {
 			//获取订单列表
 			loadData(source) {

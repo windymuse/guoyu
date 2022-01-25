@@ -4,6 +4,7 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
+import com.windymuse.unimall.data.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,16 +28,20 @@ public class AliyunStorageBizServiceImpl implements StorageBizService {
     @Value("${oss.aliyun.oss.basekUrl}")
     private String baseUrl;
 
+//    @Autowired
+//    private OSSClient ossClient;
+
     @Autowired
-    private OSSClient ossClient;
+    private StorageService storageService;
 
     @Override
     public String upload(String fileName, InputStream is, long contentLength, String contentType) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentLength(contentLength);
         objectMetadata.setContentType(contentType);
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, is, objectMetadata);
-        ossClient.putObject(putObjectRequest);
+//        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, is, objectMetadata);
+//        ossClient.putObject(putObjectRequest);
+        storageService.store(is, objectMetadata.getContentLength(), objectMetadata.getContentType(), fileName);
         return baseUrl + fileName;
     }
 }

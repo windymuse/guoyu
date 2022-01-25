@@ -4,7 +4,7 @@
 			<swiper indicator-dots circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in goods.imgList" :key="index">
 					<view class="image-wrapper">
-						<image :src="item + '?x-oss-process=style/600px'" class="loaded" mode="aspectFit"></image>
+						<image :src="item + '/600px'" class="loaded" mode="aspectFit"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -22,6 +22,7 @@
 			</view>
 			<view class="bot-row">
 				<text>销量: {{goods.sales || 0}}</text>
+				<text>销售单位: {{goods.unit || ''}}</text>
 				<text>库存: {{goods.stock || 0}}</text>
 			</view>
 		</view>
@@ -53,6 +54,11 @@
 			<view v-if="couponList.length > 0" @click="toggleMask('show')" class="c-row b-b">
 				<text class="tit">优惠券</text>
 				<text class="con t-r red">领取优惠券</text>
+				<text class="yticon icon-you"></text>
+			</view>
+			<view @click="createsShareImage" class="c-row b-b">
+				<text class="tit">推荐商品给好友</text>
+				<text class="con t-r red"></text>
 				<text class="yticon icon-you"></text>
 			</view>
 			<view class="c-row b-b">
@@ -147,12 +153,12 @@
 		<!-- 规格-模态层弹窗 -->
 		<view class="popup spec" :class="specClass" @touchmove.stop.prevent="stopPrevent">
 			<!-- 遮罩层 -->
-			<view class="mask"></view>
+			<view class="mask"  @click.stop="hideSpec"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent">
 				<view class="a-t">
-					<image v-if="goods.img" :src="(selectedSku.img?selectedSku.img:goods.img) + '?x-oss-process=style/200px'"></image>
+					<image v-if="goods.img" :src="(selectedSku.img?selectedSku.img:goods.img) + '/200px'"></image>
 					<view class="right">
-						<text class="price">¥{{isVip ? (selectedSku.vipPrice / 100.0 + ' [VIP]') : selectedSku.price / 100.0}}</text>
+						<text class="price">¥ {{isVip ? (selectedSku.vipPrice * goodsNum / 100.0 + ' [VIP]') : selectedSku.price * goodsNum / 100.0}}</text>
 						<text class="stock">库存：{{selectedSku.stock}}件</text>
 						<view class="selected">
 							已选：
@@ -179,15 +185,18 @@
 				<button class="btn" @click="toggleSpec">完成</button>
 			</view>
 		</view>
+		<shareImages style="width: 0; height: 0; opacity: 0;" ref="canvas" :canvasWidth="canvasWidth" :canvasHeight="canvasHeight" :shareTitle="shareTitle" :goodsTitle="goodsTitle" :goodsPrice="goodsPrice" :goodsOriginalPrice="goodsOriginalPrice" :shareImage="shareImageUrl" :qrSize="qrSize" :qrUrl="qrUrl" @success="shareSuccess"></shareImages>
 	</view>
 </template>
 
 <script>
 import uParse from '@/components/gaoyia-parse/parse.vue'
+import shareImages from '@/components/hj-placard/shareImages.vue'
 	// import uParse from '@/components/u-parse/u-parse.vue';
 	export default {
 		components: {
-			uParse
+			uParse,
+			shareImages
 		},
 		data() {
 			return {
@@ -207,19 +216,47 @@ import uParse from '@/components/gaoyia-parse/parse.vue'
 				couponList: [],
 				submiting: false,
 				goodsNum: 1,
+				
+				// 二维码
+				canvasImages:'',
+				canvasWidth:375,    // 宽度
+				canvasHeight:650,   // 高度
+				shareTitle:'限时秒杀',     // 分享标题
+				goodsTitle:'商品标题',        // 商品宣传标题
+				goodsPrice: 0.0, // 商品秒杀价
+				goodsOriginalPrice: 0.0, // 商品日常价
+				shareImage:'',   // 背景图片
+				qrSize: 100,    // 二维码大小
+				qrUrl: '',  // 生成二维码的链接
+				shareImageUrl: ''
 			};
 		},
 		onShow() {
 			this.isVip = this.$api.isVip()
 		},
-		onLoad(options) {
+		async onLoad(options) {
+			console.log('onLoad', options)
+			let id = options.id
+			let gid = options.gid
+			if (options.scene != null) {
+				console.log('start scene process')
+				const scene = decodeURIComponent(options.scene)
+				let temp = scene.split('&')
+				id = temp[0]
+				if (temp.length > 1) {
+					gid = temp[1]
+				}
+			}
+			console.log('id', id)
+			console.log('gid', gid)
 			const that = this
 			uni.showLoading({
 				title: '正在加载'
 			})
+			await that.getQRCode(id, gid)
 			that.$api.request('goods', 'getGoods', {
-				spuId: options.id,
-				groupShopId: options.gid ? options.gid : ''
+				spuId: id,
+				groupShopId: gid ? gid : ''
 			}, failres => {
 				that.$api.msg(failres.errmsg)
 				uni.hideLoading()
@@ -252,14 +289,91 @@ import uParse from '@/components/gaoyia-parse/parse.vue'
 				path: '/pages/product/detail?id=' + this.goods.id + (this.goods.groupShop ? '&gid=' + this.goods.groupShop.id : '')
 			}
 		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
 		methods: {
+			async getQRCode(id, gid) {
+				const that = this
+				that.$api.request('goods', 'getQRCode', {
+					spuId: id,
+					groupShopId: gid ? gid : ''
+				}, failres => {
+					that.$api.msg(failres.errmsg)
+				}).then(res => {
+					console.log(res)
+					if (res.data) {
+						that.qrUrl = res.data.url
+						console.log(that.qrUrl)
+					}
+				})
+			},
+			// 生成分享图片
+			async createsShareImage(){
+				
+				this.goodsTitle = this.goods.title
+				this.goodsPrice = this.goods.price
+				this.goodsOriginalPrice = this.goods.originalPrice
+				
+				// 先获取图片素材
+				let imgSrc = this.goods.imgList[0] + '/600px'
+				this.shareImageUrl = imgSrc
+				console.log(imgSrc, this.shareImageUrl)
+				
+				this.$forceUpdate()
+				
+				setTimeout(async () => {
+					
+					// console.log(this.$refs.canvas)
+					if (this.canvasImages && this.canvasImages.length > 0) {
+						this.previewHandle()
+					} else {
+						
+						await this.$refs.canvas.canvasCreate();
+						this.previewHandle()
+					}
+				}, 100)
+				
+			},
+			// 预览图片
+			previewHandle(){
+				// console.log(this.canvasImages)
+				uni.previewImage({
+					urls: [this.canvasImages],
+				});
+			},
+			// 回调图片地址
+			shareSuccess(e){
+				// console.log('地址',e)
+				this.canvasImages = e
+			},
+			// 分享
+			onShareAppMessage(res) {
+				// if (res.from === 'button') {
+				//  console.log(res.target)
+				// }
+				return {
+					title: 'canvas图片分享',
+					path: this.canvasImages
+				}
+			},
+			
 			
 			numSub() {
 				if (this.goodsNum > 1)
 					this.goodsNum --
 			},
 			numAdd() {
-				this.goodsNum ++
+				if (this.goodsNum + 1 <= this.selectedSku.stock) {
+					this.goodsNum ++
+				}
 			},
 			toggleMask(type) {
 				let timer = type === 'show' ? 10 : 300;
@@ -279,6 +393,11 @@ import uParse from '@/components/gaoyia-parse/parse.vue'
 					that.couponList[index].nowCount++
 					that.toggleMask()
 				})
+			},
+			hideSpec() {
+				if (this.specClass === 'show') {
+						this.specClass = 'none';
+				}
 			},
 			//规格弹窗开关
 			toggleSpec(e) {

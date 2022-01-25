@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "neil-modal": "/components/neil-modal/neil-modal"
+  }
+}

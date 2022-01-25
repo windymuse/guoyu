@@ -138,7 +138,6 @@
         <el-form-item label="活动链接">
           <el-cascader
             :options="options"
-            :props="{ checkStrictly: true }"
             v-model="linkUnion"
             placeholder="关联类目、商品"
             filterable

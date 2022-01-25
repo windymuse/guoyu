@@ -15,7 +15,7 @@
 		<view class="goods-list">
 			<view v-for="(item, index) in goodsList" :key="index" class="goods-item" @click="navToDetailPage(item)">
 				<view class="image-wrapper">
-					<image :src="item.img + '?x-oss-process=style/400px'" mode="aspectFill"></image>
+					<image :src="item.img + '/400px'" mode="aspectFill"></image>
 				</view>
 				<text class="title clamp">{{item.title}}</text>
 				<view class="price-box">
@@ -76,6 +76,16 @@
 		//加载更多
 		onReachBottom() {
 			this.loadData();
+		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
 		},
 		methods: {
 			//加载商品 ，带下拉刷新和上滑加载

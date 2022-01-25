@@ -15,6 +15,7 @@ import com.windymuse.unimall.data.model.Page;
 @HttpOpenApi(group = "goods", description = "商品服务")
 public interface GoodsService {
 
+    // 注解
     @HttpMethod(description = "搜索Goods列表")
     public Page<SpuDTO> getGoodsPage(
             @HttpParam(name = "pageNo", type = HttpParamType.COMMON, description = "页码", valueDef = "1") Integer pageNo,
@@ -26,6 +27,12 @@ public interface GoodsService {
 
     @HttpMethod(description = "获取商品详情")
     public SpuDTO getGoods(
+            @NotNull @HttpParam(name = "spuId", type = HttpParamType.COMMON, description = "商品Id") Long spuId,
+            @HttpParam(name = "groupShopId", type = HttpParamType.COMMON, description = "团购Id") Long groupShopId,
+            @HttpParam(name = "userId", type = HttpParamType.USER_ID, description = "用户Id") Long userId) throws ServiceException;
+
+    @HttpMethod(description = "获取页面二维码")
+    public Object getQRCode(
             @NotNull @HttpParam(name = "spuId", type = HttpParamType.COMMON, description = "商品Id") Long spuId,
             @HttpParam(name = "groupShopId", type = HttpParamType.COMMON, description = "团购Id") Long groupShopId,
             @HttpParam(name = "userId", type = HttpParamType.USER_ID, description = "用户Id") Long userId) throws ServiceException;

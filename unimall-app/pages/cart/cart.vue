@@ -21,7 +21,7 @@
 						:class="{'b-b': index!==cartList.length-1}"
 					>
 						<view class="image-wrapper">
-							<image :src="(item.skuImg?item.skuImg:item.spuImg) + '?x-oss-process=style/200px'" 
+							<image :src="(item.skuImg?item.skuImg:item.spuImg) + '/200px'" 
 								:class="loadedItemIds.has(item.id) ? 'loaded': ''"
 								mode="aspectFill" 
 								lazy-load 
@@ -36,8 +36,8 @@
 						</view>
 						<view class="item-right">
 							<text class="clamp title">{{item.title}}</text>
-							<text class="attr">{{item.skuTitle}}{{item.num > item.stock?(' (库存不足 剩余:' + item.stock + ')') : ''}}</text>
-							<text class="price"><text v-if="item.originalPrice > item.price" style="text-decoration:line-through">¥{{isVip ? (item.vipPrice / 100 + '[VIP]') : item.originalPrice / 100.0}}</text> ¥{{item.price / 100.0}}</text>
+							<text class="attr">{{item.skuTitle}} {{item.deliverLimit == 1 ? '(仅同城配送)' : ''}} {{item.num > item.stock?(' (库存不足 剩余:' + item.stock + ')') : ''}}</text>
+							<text class="price"><text v-if="item.originalPrice > item.price" style="text-decoration:line-through; margin-right: 20upx;">¥{{isVip ? (item.vipPrice / 100 + '[VIP]') : item.originalPrice / 100.0}}</text> ¥{{item.price / 100.0}}</text>
 							<uni-number-box 
 								class="step"
 								:min="1" 
@@ -46,6 +46,7 @@
 								:index="index"
 								@eventChange="numberChange"
 							></uni-number-box>
+							<text class="unit">{{item.unit}}</text>
 						</view>
 						<text class="del-btn yticon icon-fork" @click="deleteCartItem(index)"></text>
 					</view>
@@ -93,6 +94,7 @@
 				allChecked: false, //全选状态  true|false
 				empty: false, //空白页现实  true|false
 				cartList: [],
+				startNumberChange: 0,
 				loadedItemIds: new Set()
 			};
 		},
@@ -114,6 +116,16 @@
 		computed:{
 			...mapState(['hasLogin'])
 		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
 		methods: {
 			//请求数据
 			async loadData(){
@@ -124,6 +136,7 @@
 					})
 					that.cartList = res.data
 					that.calcTotal();  //计算总价
+					console.log('cart list', that.cartList)
 				})
 			},
 			//监听image加载完成
@@ -157,6 +170,11 @@
 			//数量
 			numberChange(data){
 				const that = this
+				// 函数调用锁，避免短时间内重复调用此函数
+				if (this.startNumberChange == 1) {
+					return
+				}
+				this.startNumberChange = 1
 				that.$api.request('cart','updateCartItemNum', {
 					cartId: that.cartList[data.index].id,
 					num: data.number
@@ -166,9 +184,11 @@
 						icon: 'none'
 					});
 					that.cartList[data.index].num = that.cartList[data.index].num
+					that.startNumberChange = 0
 				}).then(res => {
 					that.cartList[data.index].num = data.number;
 					that.calcTotal();
+					that.startNumberChange = 0
 				})
 			},
 			//删除
@@ -322,10 +342,15 @@
 				height: 50upx;
 				line-height:50upx;
 			}
+			.unit {
+				position: absolute;
+				bottom: 20upx;
+				left: 300upx;
+			}
 		}
 		.del-btn{
 			padding:4upx 10upx;
-			font-size:34upx; 
+			font-size:34upx;
 			height: 50upx;
 			color: $font-color-light;
 		}

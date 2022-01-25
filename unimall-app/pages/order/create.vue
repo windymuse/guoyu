@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 地址 -->
-		<navigator url="/pages/address/list?source=1" class="address-section">
+		<navigator v-if="! orderReqeust.selfTake" url="/pages/address/list?source=1" class="address-section">
 			<view class="order-content">
 				<text class="yticon icon-shouhuodizhi"></text>
 				<view class="cen">
@@ -20,9 +20,9 @@
 		<view class="goods-section">
 			<!-- 商品列表 -->
 			<view v-for="(item, index) in orderReqeust.skuList" :key="index" class="g-item">
-				<image :src="(item.skuImg?item.skuImg:item.spuImg) + '?x-oss-process=style/200px'"></image>
+				<image :src="(item.skuImg?item.skuImg:item.spuImg) + '/200px'"></image>
 				<view class="right">
-					<text class="title clamp">{{ (item.groupShopId ? '[团购]' : '') + item.title}}</text>
+					<text class="title clamp">{{ (item.groupShopId ? '[团购]' : '') + item.title}} {{item.deliverLimit == 1 ? '(仅同城配送)' : ''}}</text>
 					<text class="spec">{{item.skuTitle}}</text>
 					<view class="price-box">
 						<text class="price"><text v-if="(isVip ? item.vipPrice : item.price) < item.originalPrice" 
@@ -52,6 +52,10 @@
 				<text class="cell-tit clamp">商品金额</text>
 				<text class="cell-tip">￥{{orderReqeust.totalOriginalPrice / 100.0}}</text>
 			</view>
+			<view class="yt-list-cell b-b" v-if="currVipDegree.percent < 100">
+				<text class="cell-tit clamp">会员折扣</text>
+				<text class="cell-tip">{{currVipDegree.percent == 100 ? '无折扣' : currVipDegree.percent + '折'}}</text>
+			</view>
 			<view v-if="orderReqeust.totalOriginalPrice - orderReqeust.totalPrice > 0" class="yt-list-cell b-b">
 				<text class="cell-tit clamp">折扣金额</text>
 				<text class="cell-tip red">-￥{{(orderReqeust.totalOriginalPrice - orderReqeust.totalPrice) / 100.0}}</text>
@@ -66,7 +70,7 @@
 			</view>
 			<view v-if="orderReqeust.freightPrice < 0" class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
-				<text class="cell-tip">超出配送范围</text>
+				<text class="cell-tip">未选择配送地址或超出配送范围</text>
 			</view>
 			<view v-if="orderReqeust.freightPrice > 0" class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
@@ -84,19 +88,30 @@
 		
 
 		<!-- 底部 -->
-		<view class="footer" v-if="orderReqeust.freightPrice >= 0">
+		<!-- 	营业时间，自取或非自取，可配送
+				或者 非营业时间，非自取，可配送-->
+		<view class="footer" v-if="(inBusinessHour && orderReqeust.freightPrice >= 0) || (!inBusinessHour && !orderReqeust.selfTake && orderReqeust.freightPrice >= 0)">
 			<view class="price-content">
 				<text>实付款</text>
 				<text class="price-tip">￥</text>
-				<text class="price">{{(orderReqeust.totalPrice - (orderReqeust.coupon?orderReqeust.coupon.discount:0) + orderReqeust.freightPrice) / 100.0}}</text>
+				<text class="price">{{(orderReqeust.totalPrice - (orderReqeust.coupon ? orderReqeust.coupon.discount : 0) + orderReqeust.freightPrice) / 100.0}}</text>
 			</view>
 			<text class="submit" @click="submit">提交订单</text>
 		</view>
-		<view class="footer" v-else>
+		<!-- 	营业时间，自取或非自取，不可配送
+				或者 非营业时间，非自取，不可配送-->
+		<view class="footer" v-else-if="inBusinessHour || (!inBusinessHour && !orderReqeust.selfTake)">
 			<view class="price-content">
 				<text>请修改收货地址</text>
 			</view>
 			<text class="submit" @click="changeAddress">修改收货地址</text>
+		</view>
+		<!-- 	非营业时间，自取或者不可配送 -->
+		<view class="footer" v-else>
+			<view class="price-content">
+				<text>不在营业时间</text>
+			</view>
+			<text class="submit" @click="backtoCart">返回购物车</text>
 		</view>
 
 		<!-- 优惠券面板 -->
@@ -126,9 +141,13 @@
 </template>
 
 <script>
+    import {
+        mapState
+    } from 'vuex';
 	export default {
 		data() {
 			return {
+				currVipDegree: {},
 				orderReqeust: {
 					skuList: [],
 					totalOriginalPrice: 0,
@@ -153,16 +172,24 @@
 					address: '',
 					defaultAddress: false,
 				},
-				submiting: false
+				submiting: false,
+				merchantConfig: {}
 			}
 		},
 		onShow() {
 			this.isVip = this.$api.isVip()
 		},
-		onLoad(option) {
+		async onLoad(option) {
+			const that = this
+			await this.loadMemberLevel()
+			that.$api.request('config', 'getMerchantConfig', {}, failres => {
+				that.$api.msg(failres.errmsg)
+			}).then(res => {
+				console.log('商户信息', res.data)
+				that.merchantConfig = res.data
+			})
 			//商品数据
 			this.isVip = this.$api.isVip()
-			const that = this
 			if (option.takeway) {
 				that.orderReqeust.takeWay = option.takeway
 			}
@@ -185,7 +212,8 @@
 			})
 			that.skuCategoryPriceMap = skuCategoryPriceMap
 			that.orderReqeust.totalOriginalPrice = totalOriginalPrice
-			that.orderReqeust.totalPrice = totalPrice
+			// 会员打折
+			that.orderReqeust.totalPrice = totalPrice * that.currVipDegree.percent / 100
 			that.$api.request('coupon', 'getUserCoupons').then(res => {
 				that.couponList = res.data
 			})
@@ -199,12 +227,70 @@
 				//若是团购商品，则携带上团购信息
 				that.orderReqeust.groupShopId = that.orderReqeust.skuList[0].groupShopId
 			}
-
+			console.log('order request', this.orderReqeust)
+		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
+		computed: {
+			...mapState(['hasLogin','userInfo']),
+			inBusinessHour() {
+				// 如果营业时间数据还没有加载
+				if (!this.merchantConfig.startTime) {
+					return false
+				}
+				let nowDate = new Date()
+				// 小时数 0-23
+				let nowHour = nowDate.getHours()
+				// 分钟数 0-59
+				let nowMunite = nowDate.getMinutes()
+				let startTime = this.merchantConfig.startTime.split(':')
+				let endTime = this.merchantConfig.endTime.split(':')
+				// 如果早于营业时间
+				if (nowHour + 1 < startTime[0] || (nowHour + 1 == startTime[0] && nowMunite + 1 < startTime[1])) {
+					return false
+				}
+				// 如果晚于营业时间
+				if (nowHour + 1 > endTime[0] || (nowHour + 1 == endTime[0] && nowMunite + 1 > endTime[1])) {
+					return false
+				}
+				// 正常营业
+				return true
+			}
 		},
 		methods: {
+			async loadMemberLevel() {
+				const that = this
+				const res = await that.$api.request('member_level', 'getMemberLevel',{
+					degree: that.userInfo.level,
+					page: 1,
+					limit: 1
+				}, failres => {
+					that.$api.msg(failres.errmsg)
+				})
+				let data = res.data
+				console.log('curr level', data)
+				if (data && data.length > 0) {
+					this.currVipDegree = data[0]
+					console.log('curr vip degree', this.currVipDegree)
+				}
+			},
+			backtoCart() {
+				uni.reLaunch({
+					url: '/pages/cart/cart'
+				})
+			},
 			changeSelfTake(e) {
 				console.log(e.detail.value)
 				this.orderReqeust.selfTake = e.detail.value ? 1 : 0
+				this.calcFreightPrice()
 			},
 			changeAddress() {
 				// 修改收货地址
@@ -240,10 +326,17 @@
 				if (that.submiting) {
 					return
 				}
-				that.submiting = true
+				// 有地址id，说明需要地址
 				if (that.addressData.id) {
 					that.orderReqeust.addressId = that.addressData.id
 				}
+				// 非自取订单，无地址，不可提交
+				console.log(that.orderReqeust.selfTake, that.addressData.id)
+				if (!that.orderReqeust.selfTake && !that.addressData.id) {
+					that.$api.msg('非自取订单需要指定取货地址')
+					return
+				}
+				that.submiting = true
 				that.$api.request('order', 'takeOrder', {
 					orderRequest : JSON.stringify(that.orderReqeust),
 					channel: uni.getSystemInfoSync().platform

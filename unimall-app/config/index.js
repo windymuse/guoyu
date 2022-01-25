@@ -1,7 +1,8 @@
 const dev = {
-	baseUrl: 'http://127.0.0.1:18080',
+	// baseUrl: 'http://127.0.0.1:18080',
 	// baseUrl: 'http://192.168.8.188:8081',
-	// baseUrl: 'https://guoyu.windymuse.cn',
+	baseUrl: 'https://guoyu.windymuse.cn',
+	// baseUrl: 'https://api.guoyuxiansheng.com',
 	h5Appid: 'wx0fd4343a4bd62ff6',
 	// debug: true
 }

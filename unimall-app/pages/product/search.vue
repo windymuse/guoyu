@@ -77,6 +77,16 @@
 			//引用mSearch组件，如不需要删除即可
 			mSearch
 		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
 		methods: {
 			init() {
 				this.loadDefaultKeyword();

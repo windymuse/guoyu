@@ -82,6 +82,21 @@
                 "page": "/goods/category"
             },
             {
+                "path": "groupShop",
+                "meta": {
+                    "noCache": true,
+                    "perms": [
+                        "operation:groupShop:create",
+                        "operation:groupShop:query",
+                        "admin:groupShop:update",
+                        "operation:groupShop:delete"
+                    ],
+                    "title": "团购商品"
+                },
+                "name": "goodsGroupShop",
+                "page": "/goods/groupshop"
+            },
+            {
                 "path": "upsert",
                 "hidden": true,
                 "meta": {

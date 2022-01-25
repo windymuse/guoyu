@@ -21,13 +21,13 @@
 					{{item.title}}
 				</view>
 			</scroll-view>
-			<scroll-view v-if="slist.length > 0" scroll-with-animation scroll-y class="right-aside" :scroll-top="tabScrollTop">
+			<scroll-view v-if="slist.length > 0 && slist[0].childrenList" scroll-with-animation scroll-y class="right-aside" :scroll-top="tabScrollTop">
 				<view v-for="item in slist" :key="item.id" class="s-list" :id="'main-'+item.id">
 					<!-- <text class="s-item" >{{item.title}}</text> -->
 					<view class="t-list" v-if="titem.parentId === item.id && item.childrenList && titem.goods.length > 0" v-for="titem in item.childrenList" :key="titem.id">
 						<text class="s-item title" >{{item.title}} > {{titem.title}}</text>
 						<view class="t-item" v-for="good in titem.goods" :key="good.id">
-							<image @click="navToDetailPage(good)" class="img" :src="good.img + '?x-oss-process=style/200px'"></image>
+							<image @click="navToDetailPage(good)" class="img" :src="good.img + '/200px'"></image>
 							<text @click="navToDetailPage(good)" class="title">{{good.title}} {{good.deliverLimit == 1 ? '(仅同城配送)' : ''}}</text>
 							<view class="price-box" @click="navToDetailPage(good)">
 								<text class="price-tip">¥</text>
@@ -38,10 +38,15 @@
 							<view class="chooseBtn" @click="chooseThis(good)">选规格</view>
 						</view>
 					</view>
+<!-- 					<view v-else-if="showNoGoods" class="no-goods">
+						该分类下暂时无上架商品
+					</view> -->
 				</view>
 			</scroll-view>
-			<view v-else class="right-aside">
-				该分类下暂时无上架商品
+			<view v-else-if="showNoGoods" class="right-aside">
+				<view class="no-goods">
+					该分类下暂时无上架商品
+				</view>
 			</view>
 		</view>
 		<neil-modal :show="modalShow" @close="closeModal" :show-cancel="false" :show-confirm="false">
@@ -124,7 +129,9 @@
 				selectedSku: {},
 				selectedSkuIndex: -1,
 				merchantConfig: {},
-				userConfig: {}
+				userConfig: {},
+				// 是否显示无商品文字
+				showNoGoods: false
 			}
 		},
 		components: {
@@ -164,6 +171,16 @@
 					})
 				}
 			})
+		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
 		},
 		methods: {
 			// 计算距离函数
@@ -352,6 +369,7 @@
 					that.flist = res.data || []
 					that.currentId = res.data[0].id
 					that.slist = res.data[0].childrenList || []
+					that.showNoGoods = false
 					
 					for (let i = 0; i < that.flist.length; i++) {
 						let curr_i_data = that.flist[i].childrenList || []
@@ -361,10 +379,10 @@
 								let cate3 = curr_j_data[k]
 								res = await that.loadGoods(cate3.id)
 								cate3.goods = res
-								
 							}
 						}
 					}
+					that.showNoGoods = true
 					console.log('flist 2')
 					console.log(that.flist)
 					console.log(that.flist[0].childrenList[0].childrenList[0])
@@ -558,6 +576,10 @@
 		background-color: white;
 		min-height: 1000upx;
 		padding-bottom: 40upx;
+		
+		.no-goods {
+			margin: 40upx;
+		}
 	}
 	.s-item{
 		display: flex;

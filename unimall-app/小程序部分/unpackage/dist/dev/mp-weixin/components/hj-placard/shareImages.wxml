@@ -1,0 +1,1 @@
+<view style="position:fixed;z-index:-9999;"><canvas style="{{'width:'+(canvasWidth+'px')+';'+('height:'+(canvasHeight+'px')+';')}}" canvas-id="{{canvasID}}"></canvas><block wx:if="{{qrCode==''}}"><view><q-r-code class="vue-ref" vue-id="37fe814e-1" data-ref="qrcode" bind:__l="__l"></q-r-code></view></block></view>

@@ -10,12 +10,14 @@ import com.windymuse.unimall.core.exception.AdminServiceException;
 import com.windymuse.unimall.core.exception.ExceptionDefinition;
 import com.windymuse.unimall.core.exception.ServiceException;
 import com.windymuse.unimall.data.component.LockComponent;
+import com.windymuse.unimall.data.domain.MemberLevelDO;
 import com.windymuse.unimall.data.domain.OrderDO;
 import com.windymuse.unimall.data.domain.OrderSkuDO;
 import com.windymuse.unimall.data.domain.UserDO;
 import com.windymuse.unimall.data.dto.order.OrderDTO;
 import com.windymuse.unimall.data.enums.OrderStatusType;
 import com.windymuse.unimall.data.enums.UserLoginType;
+import com.windymuse.unimall.data.mapper.MemberLevelMapper;
 import com.windymuse.unimall.data.mapper.OrderMapper;
 import com.windymuse.unimall.data.mapper.OrderSkuMapper;
 import com.windymuse.unimall.data.mapper.UserMapper;
@@ -59,6 +61,9 @@ public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private MemberLevelMapper memberLevelMapper;
 
     @Value("${com.windymuse.unimall.wx.mini.app-id}")
     private String wxMiNiAppid;
@@ -127,6 +132,26 @@ public class AdminOrderServiceImpl implements AdminOrderService {
                         throw new AdminServiceException(wxPayRefundResult.getReturnMsg(),
                                 ExceptionDefinition.THIRD_PART_SERVICE_EXCEPTION.getCode());
                     }
+                    // 扣除相应积分
+                    // 更新用户的积分和会员等级
+                    userDO.setPoints(userDO.getPoints() - (orderDO.getPayPrice() - orderDO.getFreightPrice()));
+                    // 获取当前级别的会员等级信息
+                    List<MemberLevelDO> currMemberLevelList = memberLevelMapper.getMemberLevelList(null, null, userDO.getLevel(), null, null, 0, 100);
+                    if (currMemberLevelList.size() > 0) {
+                        MemberLevelDO memberLevelDO = currMemberLevelList.get(0);
+                        System.out.println();
+                        System.out.println("curr level");
+                        System.out.println(memberLevelDO.getDegree());
+                        System.out.println(memberLevelDO.getMoney());
+                        System.out.println();
+                        System.out.println();
+                        // 低于升级门槛，降级
+                        if (userDO.getPoints() < memberLevelDO.getMoney()) {
+                            userDO.setLevel(memberLevelDO.getDegree() - 1);
+                        }
+                    }
+                    userMapper.updateById(userDO);
+
                     return "ok";
                 } else {
                     throw new AdminServiceException(ExceptionDefinition.PARAM_CHECK_FAILED);

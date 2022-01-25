@@ -5,6 +5,7 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.*;
 import com.windymuse.unimall.core.util.GeneratorUtil;
+import com.windymuse.unimall.data.storage.StorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +51,9 @@ public class FileUploadController implements InitializingBean {
     private String baseUrl;
     @Autowired
     private OSSClient ossClient;
+
+    @Autowired
+    private StorageService storageService;
 
     private String host;
 
@@ -120,13 +126,51 @@ public class FileUploadController implements InitializingBean {
         objectMetadata.setContentType(file.getContentType());
         String ext = FilenameUtils.getExtension(file.getOriginalFilename());
         String uuid = GeneratorUtil.genFileName();
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, "bg/" + uuid+"."+ext, file.getInputStream(), objectMetadata);
-        ossClient.putObject(putObjectRequest);
+//        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, "bg/" + uuid+"."+ext, file.getInputStream(), objectMetadata);
+//        ossClient.putObject(putObjectRequest);
+        String url = storageService.store(file.getInputStream(), objectMetadata.getContentLength(), objectMetadata.getContentType(), "bg/" + uuid+"."+ext);
         Map<String, Object> data = new HashMap<>();
-        data.put("url", baseUrl + "bg/" + uuid +"."+ext);
+        data.put("url", url);
         data.put("errno", 200);
         data.put("errmsg", "成功");
         return data;
+    }
+
+
+    /**
+     * 返回文件测试
+     * @param response
+     * @return
+     * @throws IOException
+     */
+    @GetMapping("/test")
+    @ResponseBody
+    public void test(HttpServletResponse response) throws IOException {
+        String file = "E:\\gy000387.xlsx";
+        try {
+            FileInputStream inputStream = new FileInputStream(file);
+            byte[] data = new byte[inputStream.available()];
+            inputStream.read(data);
+            String diskfilename = "gy000387.xlsx";
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + diskfilename + "\"");
+            System.out.println("data.length " + data.length);
+            response.setContentLength(data.length);
+            response.setHeader("Content-Range", "" + Integer.valueOf(data.length - 1));
+            response.setHeader("Accept-Ranges", "bytes");
+            response.setHeader("Etag", "W/\"9767057-1323779115364\"");
+            OutputStream os = response.getOutputStream();
+
+            os.write(data);
+            //先声明的流后关掉！
+            os.flush();
+            os.close();
+            inputStream.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
     }
 
 

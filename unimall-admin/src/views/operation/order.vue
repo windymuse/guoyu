@@ -14,6 +14,7 @@
         v-model="listQuery.status"
         style="width: 200px"
         class="filter-item"
+        clearable
         placeholder="请选择订单状态"
       >
         <el-option v-for="(key, value) in statusMap" :key="key" :label="key" :value="value" />
@@ -44,15 +45,29 @@
         default-time="00:00:00"
         placeholder="选择结束日期"
       />
-      <el-select
+      <!-- <el-select
         v-model="downData.status"
         style="width: 200px"
         class="filter-item"
         placeholder="待出库"
       >
         <el-option v-for="(key, value) in statusMap" :key="key" :label="key" :value="value" />
-      </el-select>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="downExcelBtn">导出</el-button>
+      </el-select> -->
+      <!-- <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="downExcelBtn">导出</el-button> -->
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="daySalesBtn">日销售汇总</el-button>
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="someDaySales">指定日期销售汇总</el-button>
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="newSomeDaySales">商品流水(新格式)</el-button>
+
+      <el-date-picker
+        v-model="downData.time"
+        type="datetime"
+        style="width: 200px"
+        class="filter-item"
+        default-time="00:00:00"
+        placeholder="选择汇总日期"
+      />
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="newGoodsSales">商品日汇总表(新格式)</el-button>
+
     </div>
 
     <!-- 查询结果 -->
@@ -65,7 +80,11 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" width="180" label="订单编号" prop="orderNo" />
+      <el-table-column
+        type="selection"
+        width="55"/>
+      <el-table-column align="center" width="180" label="订单编号" prop="orderNoGY" />
+      <!-- <el-table-column align="center" width="180" label="订单编号" prop="orderNo" /> -->
 
       <el-table-column align="center" width="80" label="用户ID" prop="userId" />
 
@@ -110,7 +129,7 @@
 
       <el-table-column align="center" width="150" label="备注" prop="mono"/>
 
-      <el-table-column align="center" label="操作" width="300" fixed="right" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" width="400" fixed="right" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             v-permission="['operation:order:detail']"
@@ -146,6 +165,18 @@
             size="mini"
             @click="handleRefund(scope.row)"
           >退款</el-button>
+          <el-button
+            v-permission="['operation:excel:create']"
+            type="primary"
+            size="mini"
+            @click="getSalesConfirmation(scope.row)"
+          >确认单</el-button>
+          <!-- <el-button
+            v-permission="['operation:excel:create']"
+            type="primary"
+            size="mini"
+            @click="getShunFengRoute(scope.row)"
+          >顺丰</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -254,6 +285,23 @@
         <el-button :disabled="refundSubmiting" type="primary" @click="confirmRefund">确定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 销售确认单对话框 -->
+    <el-dialog :visible.sync="salesConfirmDialogVisible" title="销售确认单">
+      <el-link :href="salesConfirmUrl" class="button el-button" style="padding: 20px 40px">点击下载</el-link>
+      <div slot="footer" class="dialog-footer">
+        <el-button :disabled="shipSubmiting" type="primary" @click="salesConfirmDialogVisible = false">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 日销售汇总单对话框 -->
+    <el-dialog :visible.sync="daySalesDialogVisible" title="下载EXCEL">
+      <el-link :href="daySalesUrl" class="button el-button" style="padding: 20px 40px">点击下载</el-link>
+      <div slot="footer" class="dialog-footer">
+        <el-button :disabled="shipSubmiting" type="primary" @click="daySalesDialogVisible = false">确定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -262,6 +310,8 @@
 
 <script>
 import { listOrder, shipOrder, takeOrder, refundOrder, detailOrder, getExcelInfo } from '@/api/order'
+import { createSaleConfirmation, createDaySales, createSomeDaySales, createNewSomeDaySales, createNewGoodsSales } from '@/api/excel'
+import { createOrder, getRoute } from '@/api/delivery'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import checkPermission from '@/utils/permission' // 权限判断函数
 
@@ -337,7 +387,8 @@ export default {
       downData: {
         status: '',
         gmtStart: undefined,
-        gmtEnd: undefined
+        gmtEnd: undefined,
+        time: undefined
       },
       shipCodeMap,
       list: undefined,
@@ -384,7 +435,11 @@ export default {
         orderNo: [
           { required: true, message: '请使用非IE浏览器重试', trigger: 'blur' }
         ]
-      }
+      },
+      salesConfirmDialogVisible: false,
+      salesConfirmUrl: '',
+      daySalesDialogVisible: false,
+      daySalesUrl: ''
     }
   },
   created() {
@@ -396,7 +451,13 @@ export default {
       this.listLoading = true
       listOrder(this.listQuery)
         .then(response => {
-          this.list = response.data.data.items
+          this.list = response.data.data.items.map(val => {
+            // orderNoGY gy+6位编号
+            return {
+              ...val,
+              orderNoGY: `gy${(Array(6).join(0) + val.id).slice(-6)}`
+            }
+          })
           this.total = response.data.data.total
           this.listLoading = false
         })
@@ -563,6 +624,114 @@ export default {
             message: response.data.errmsg
           })
         })
+    },
+    // 日销售汇总表
+    async daySalesBtn() {
+      const res = await createDaySales()
+      this.daySalesUrl = res.data.data.url
+      this.daySalesDialogVisible = true
+    },
+    async someDaySales() {
+      if (!this.downData.gmtStart) {
+        this.$notify.error({
+          title: '失败',
+          message: '请选择开始日期'
+        })
+        return
+      }
+      if (!this.downData.gmtEnd) {
+        this.$notify.error({
+          title: '失败',
+          message: '请选择结束日期'
+        })
+        return
+      }
+      const res = await createSomeDaySales({
+        startDay: this.downData.gmtStart,
+        endDay: this.downData.gmtEnd
+      })
+      this.daySalesUrl = res.data.data.url
+      this.daySalesDialogVisible = true
+    },
+    async newSomeDaySales() {
+      if (!this.downData.gmtStart) {
+        this.$notify.error({
+          title: '失败',
+          message: '请选择开始日期'
+        })
+        return
+      }
+      if (!this.downData.gmtEnd) {
+        this.$notify.error({
+          title: '失败',
+          message: '请选择结束日期'
+        })
+        return
+      }
+      const res = await createNewSomeDaySales({
+        startDay: this.downData.gmtStart,
+        endDay: this.downData.gmtEnd
+      })
+      this.daySalesUrl = res.data.data.url
+      this.daySalesDialogVisible = true
+    },
+    async newGoodsSales() {
+      if (!this.downData.time) {
+        this.$notify.error({
+          title: '失败',
+          message: '请选择汇总日期'
+        })
+        return
+      }
+      const res = await createNewGoodsSales({
+        startDay: this.downData.time,
+        endDay: this.getNextDate(this.downData.time, 1)
+      })
+      this.daySalesUrl = res.data.data.url
+      this.daySalesDialogVisible = true
+    },
+
+    // date 代表指定的日期，格式：2018-09-27
+    // day 传-1表始前一天，传1表始后一天
+    // JS获取指定日期的前一天，后一天
+    getNextDate(date, day) {
+      var dd = new Date(date)
+      dd.setDate(dd.getDate() + day)
+      var y = dd.getFullYear()
+      var m = dd.getMonth() + 1 < 10 ? '0' + (dd.getMonth() + 1) : dd.getMonth() + 1
+      var d = dd.getDate() < 10 ? '0' + dd.getDate() : dd.getDate()
+      return y + '-' + m + '-' + d
+    },
+    async getSalesConfirmation(row) {
+      const res = await createSaleConfirmation({
+        orderId: row.id
+      })
+      console.log(row)
+      console.log(res)
+      this.salesConfirmUrl = res.data.data.url
+      this.salesConfirmDialogVisible = true
+    },
+    async createShunFengOrder(row) {
+      const res = await createOrder({
+        orderId: row.id
+      })
+      console.log(row)
+      console.log(res.data.data)
+      if (res.data.data) {
+        const data = JSON.parse(res.data.data.data.apiResultData)
+        console.log(data)
+      }
+    },
+    async getShunFengRoute(row) {
+      console.log(row)
+      const res = await getRoute({
+        orderId: row.id
+      })
+      console.log(res.data.data)
+      if (res.data.data) {
+        const data = JSON.parse(res.data.data.data.apiResultData)
+        console.log(data)
+      }
     },
     handleDownload(data) {
       import('@/vendor/Export2Excel').then(excel => {

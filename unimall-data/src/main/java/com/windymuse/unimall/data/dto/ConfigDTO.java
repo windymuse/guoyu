@@ -2,6 +2,8 @@ package com.windymuse.unimall.data.dto;
 
 import lombok.Data;
 
+import java.sql.Time;
+
 /**
  * Created with IntelliJ IDEA.
  * Description:
@@ -21,4 +23,6 @@ public class ConfigDTO extends SuperDTO {
     private String slogan;
     private Integer showType;
     private Integer status;
+    private String startTime;
+    private String endTime;
 }

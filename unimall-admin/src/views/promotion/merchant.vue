@@ -35,6 +35,19 @@
         <el-form-item label="标语" prop="slogan">
           <el-input v-model="dataForm.slogan" />
         </el-form-item>
+        <el-form-item label="开始营业时间" prop="startTime">
+          <!-- <el-input v-model="dataForm.startTime" /> -->
+          <el-time-picker v-model="dataForm.startTime" placeholder="选择时间" format="HH:mm" value-format="HH:mm" />
+        </el-form-item>
+        <el-form-item label="结束营业时间" prop="endTime">
+          <el-time-picker
+            v-model="dataForm.endTime"
+            :picker-options="{ selectableRange:`${dataForm.startTime ? dataForm.startTime +':00' : '00:00:00'}-23:59:00`}"
+            :disabled="!dataForm.startTime"
+            placeholder="选择时间"
+            format="HH:mm"
+            value-format="HH:mm" />
+        </el-form-item>
         <!-- <el-form-item label="展示方式" prop="showType">
           <el-radio-group v-model="dataForm.showType">
             <el-radio :label="1">商品列表</el-radio>
@@ -119,7 +132,9 @@ export default {
         address: undefined,
         longitude: undefined,
         latitude: undefined,
-        showType: 1
+        showType: 1,
+        startTime: undefined,
+        endTime: undefined
       },
       rules: {
         //     showType: [{ required: true, message: '商铺展示类型不能为空', trigger: 'blur' }],
@@ -132,7 +147,10 @@ export default {
         latitude: [
           { required: true, validator: validateLatitude, trigger: 'blur' },
           { validator: validateLatitude, trigger: 'change' }],
-        slogan: [{ required: true, message: '商铺标语不能为空', trigger: 'blur' }]
+        slogan: [{ required: true, message: '商铺标语不能为空', trigger: 'blur' }],
+        startTime: [{ required: true, message: '开始营业时间不能为空', trigger: 'blur' }],
+        endTime: [
+          { required: true, message: '结束营业时间不能为空', trigger: 'blur' }]
       },
       listLoading: false
     }

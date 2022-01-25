@@ -15,7 +15,7 @@
 			<input placeholder="请选择城市" disabled="true" :value="addressData.province + ' ' + addressData.city + ' ' + addressData.county" @click="lotusAddressData.visible = true" class="input">
 				<lotus-address v-on:choseVal="choseValue" :lotusAddressData="lotusAddressData"></lotus-address>
 			</input>
-			<text class="yticon icon-shouhuodizhi"></text>
+			<!-- <text class="yticon icon-shouhuodizhi"></text> -->
 		</view>
 		<view class="row b-b"> 
 			<text class="tit">详细</text>
@@ -65,6 +65,16 @@
 			uni.setNavigationBarTitle({
 				title
 			})
+		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
 		},
 		methods: {
 			switchChange(e){

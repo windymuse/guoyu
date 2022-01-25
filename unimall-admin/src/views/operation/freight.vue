@@ -107,8 +107,8 @@
             </el-radio-group>
           </template>
         </el-form-item>
-        <el-form-item v-if="dataForm.isFree === 1" label="默认包邮额度" prop="defaultFreePrice">
-          <el-input v-model.number="dataForm.defaultFreePrice" placeholder="默认包邮额度">
+        <el-form-item v-if="dataForm.isFree === 1" label="最低包邮门槛" prop="defaultFreePrice">
+          <el-input v-model.number="dataForm.defaultFreePrice" placeholder="最低包邮门槛">
             <template slot="append">元</template>
           </el-input>
         </el-form-item>

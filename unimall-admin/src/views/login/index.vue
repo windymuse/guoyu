@@ -9,9 +9,9 @@
         </div>
         <img
           class="img"
-          src="@/assets/avatar.png"
+          src="@/assets/guoyu_logo.jpg"
           alt="">
-        <p class="title"> 开源商城后台登录</p>
+        <p class="title"> 国渔商贸后台登录</p>
       </div>
       <div class="login-border">
         <div class="login-main">
@@ -54,25 +54,6 @@
                   class="icon-mima"/>
               </el-input>
             </el-form-item>
-            <el-form-item prop="code">
-              <el-input
-                v-model="loginForm.verifyCode"
-                placeholder="输入验证码"
-                size="small"
-                auto-complete="off"
-                @keyup.enter.native="handleLogin">
-                <i
-                  slot="prefix"
-                  class="icon-yanzhengma"
-                  style="margin-top:6px;"/>
-                <template slot="append">
-                  <span
-                    :class="[{display:!show}]"
-                    class="msg-text"
-                    @click="sendShortMsg">{{ show ? '验证码' : count }}</span>
-                </template>
-              </el-input>
-            </el-form-item>
             <el-form-item>
               <el-button
                 type="primary"
@@ -98,7 +79,8 @@
         </div>
       </div>
     </div>
-</div></template>
+  </div>
+</template>
 
 <script>
 import { sendMsg } from '@/api/login'

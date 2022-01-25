@@ -122,7 +122,7 @@ Service内不能抛出ServiceException以外的受检异常。若方法内含有
             @NotNull  @HttpParam(name = "model", type = HttpParamType.COMMON, description = "模型") HelloServiceImpl.Model model) throws ServiceException;
             
     }
-    
+
 这里定义了sayWithParam Api。这里定义了三个入参。分别是三个不同的类型。同样在HelloServiceImpl中实现对应的方法。
 
     return "say: " + content + "  ;number:" + number + "  ;model:" + JSONObject.toJSONString(model);
@@ -231,7 +231,7 @@ unimall完全支持集群部署，并推荐大家使用集群部署。前面可�
                     }            
                 }        
             }    
-        }    
+        }
         for (Class clazz : classList) {        
             this.registerService(clazz);    
         }

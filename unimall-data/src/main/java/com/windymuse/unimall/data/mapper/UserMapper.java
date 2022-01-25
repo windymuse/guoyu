@@ -20,6 +20,8 @@ public interface UserMapper extends BaseMapper<UserDO> {
             @Param("status") Integer status, @Param("offset") Integer offset,
             @Param("limit") Integer limit);
 
+    public UserDO getUserById(@Param("id") Long id);
+
     public Integer countUser(
             @Param("id") Long id, @Param("nickname") String nickname,
             @Param("level") Integer level, @Param("gender") Integer gender,

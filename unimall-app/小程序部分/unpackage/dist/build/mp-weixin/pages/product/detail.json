@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "详情展示",
+  "usingComponents": {
+    "u-parse": "/components/gaoyia-parse/parse",
+    "share-images": "/components/hj-placard/shareImages"
+  }
+}

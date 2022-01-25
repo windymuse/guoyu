@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "修改资料",
+  "usingComponents": {
+    "neil-modal": "/components/neil-modal/neil-modal"
+  }
+}

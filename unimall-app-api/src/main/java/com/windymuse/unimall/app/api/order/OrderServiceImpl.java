@@ -8,6 +8,8 @@ import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.windymuse.unimall.app.api.category.CategoryService;
+import com.windymuse.unimall.app.api.memberLevel.MemberLevelService;
+import com.windymuse.unimall.app.api.user.UserService;
 import com.windymuse.unimall.app.executor.GlobalExecutor;
 import com.windymuse.unimall.biz.service.freight.FreightBizService;
 import com.windymuse.unimall.biz.service.groupshop.GroupShopBizService;
@@ -74,6 +76,12 @@ public class OrderServiceImpl implements OrderService {
     private CartMapper cartMapper;
 
     @Autowired
+    private MemberLevelMapper memberLevelMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     private CategoryService categoryService;
 
     @Autowired
@@ -96,6 +104,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private AdminNotifyBizService adminNotifyBizService;
+
+    @Autowired
+    private MemberLevelService memberLevelService;
+
+
 
     @Value("${com.windymuse.unimall.machine-no}")
     private String MACHINE_NO;
@@ -186,7 +199,23 @@ public class OrderServiceImpl implements OrderService {
                     }
                 }
 
+
+                //------------- start::按会员等级打折 -------------------
+                UserDO userDO = userMapper.getUserById(userId);
+                // 获取当前用户对应会员等级的会员等级信息
+                List<MemberLevelDO> memberLevelList = memberLevelMapper.getMemberLevelList(null, null, userDO.getLevel(), null, null, 0, 100);
+                if (memberLevelList.size() > 0) {
+                    MemberLevelDO memberLevelDO = memberLevelList.get(0);
+                    Integer percent = memberLevelDO.getPercent();
+                    skuPrice = skuPrice * percent / 100;
+                }
+                //------------- end::按会员等级打折 -------------------
+
                 if (skuPrice != orderRequest.getTotalPrice()) {
+                    System.out.println("------------------");
+                    System.out.println(skuPrice);
+                    System.out.println(orderRequest.getTotalPrice());
+                    System.out.println("------------------");
                     throw new AppServiceException(ExceptionDefinition.ORDER_PRICE_CHECK_FAILED);
                 }
 

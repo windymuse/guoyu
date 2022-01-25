@@ -2,7 +2,7 @@
 	<view class="page">
 		<view v-for="(item, index) in orderDetail.skuList" :key="index">
 			<view class="goods-box-single">
-				<image class="goods-img" :src="item.img + '?x-oss-process=style/200px'" mode="aspectFill"></image>
+				<image class="goods-img" :src="item.img + '/200px'" mode="aspectFill"></image>
 				<view class="right">
 					<text class="title clamp">{{item.spuTitle}}</text>
 					<text class="attr-box">{{item.title}} x {{item.num}}</text>
@@ -29,7 +29,7 @@
 						<view class="uni-uploader__files">
 							<block v-for="(image,imgIndex) in item.imgs" :key="imgIndex">
 								<view class="uni-uploader__file" style="position: relative;">
-									<image class="uni-uploader__img" :src="image + '?x-oss-process=style/200px'" @tap="previewImage"></image>
+									<image class="uni-uploader__img" :src="image + '/200px'" @tap="previewImage"></image>
 									<view class="close-view" @click="close(item, index, imgIndex)">x</view>
 								</view>
 							</block>
@@ -88,6 +88,16 @@
 			})
 			
         },
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
         methods: {
             close(item, index, imgIndex){
                 item.imgs.splice(imgIndex,1);

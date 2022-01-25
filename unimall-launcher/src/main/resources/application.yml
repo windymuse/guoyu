@@ -1,0 +1,142 @@
+com:
+  windymuse:
+    admin:
+      notify:
+        enable: mock
+        uninotify:
+          app-id: gc8233222222L1uw7qSifH
+          app-secret: LjWGP33333333333333333J6XbI
+          url: http://public.dobbinsoft.com/m.api
+    ship:
+      query:
+        kdn:
+          app-key: 1595260
+          business-id: dd094002-362a-4bba-abfb-203f8421266c
+    unimall:
+      env: 1
+      machine-no: 1
+      wx:
+        app:
+          app-id: wx6e1355f89b03fd2e
+          app-secret: 013972cce59f480f6ac0890422f1aefd
+        h5:
+          app-id: wxc9d6f423651c0f24
+          app-secret: d8xxxxxxxddddddddsdfasfasfasfd7
+        key-path: /home/ubuntu/wx_cert/apiclient_cert.p12
+#        key-path: E:/apiclient_cert.p12
+        mch-id: 1615532081
+        mch-key: Yuyang06153812232738806151234567
+        mini:
+          app-id: wxa0b874a5be64612b
+          app-secret: 92def2201b560e50169c54f7b62cb5d1
+        notify-url: https://guoyu.windymuse.cn/cb/wxpay
+logging:
+  file: unimall.log
+  level:
+    root: info
+  path: /User/rize/logs
+oss:
+  aliyun:
+    oss:
+      accessId: LTAI4FyMDEYPHEuyPRLh7Kw1
+      accessKey: 9W2JRwiW9bFIShBnpGixfzLze6kj5T
+      basekUrl: https://fengye-guoyu-test.oss-cn-beijing.aliyuncs.com/
+      bucket: fengye-guoyu-test
+      callbackUrl: ''
+      dir: imgs/
+      endpoint: oss-cn-beijing.aliyuncs.com
+server:
+  port: 18080
+sms:
+  aliyun:
+    accessId: LTAI5tS4FeWNty1FwdGSJdCF
+    accessKey: 4bWoccRqVZD7pi75PcmAZeW3ALsCsU
+    admin-login-template-id: SMS_181720436
+    bind-phone-template-id: SMS_181720431
+    register-template-id: SMS_181720433
+    reset-password-template-id: SMS_181720432
+    signature: ????
+  enable: mock
+  qcloud:
+    admin-login-template-id: 381839
+    app-id: 1400186792
+    app-key: 31664f74451303e098ca689433477e53
+    bind-phone-template-id: 364423
+    register-template-id: 364423
+    reset-password-template-id: 364423
+    sign: windymuse
+spring:
+  druid:
+    driverClassName: com.mysql.jdbc.Driver
+    maxActive: 30
+    maxWait: 10000
+    minIdle: 5
+    password: guoyu@2021
+    url: jdbc:mysql://rm-wz9yxho9eg3x33hpono.mysql.rds.aliyuncs.com:3306/guoyu?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+    username: guoyu
+    validationQuery: '"SELECT X"'
+  freemarker:
+    cache: false
+    charset: utf-8
+    content-type: text/html
+    enabled: true
+    request-context-attribute: req
+    settings:
+      number_format: 0.##
+    suffix: .html
+    template-loader-path: classpath:/templates/
+  lock-redis:
+    database: 6
+    host: zexxbp5h27t7xm3ox.redis.rds.aliyuncs.com
+    password: N8mxQnbRwPBbXMBvzbu9bNhnpi9Cj
+    port: 6379
+  redis:
+    database: 4
+    host: zexxbp5h27t7xm3ox.redis.rds.aliyuncs.com
+    password: N8mxQnbRwPBbXMBvzbu9bNhnpi9Cj
+    port: 6379
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  user-redis:
+    database: 5
+    host: zexxbp5h27t7xm3ox.redis.rds.aliyuncs.com
+    password: N8mxQnbRwPBbXMBvzbu9bNhnpi9Cj
+    port: 6379
+
+# 对象存储配置
+storage:
+  # 当前工作的对象存储模式，分别是local、aliyun、tencent
+  active: tencent
+  # 本地对象存储配置信息
+  local:
+    storagePath: storage
+    address: http://localhost:10086/wx/storage/fetch/
+  # 阿里云对象存储配置信息
+  aliyun:
+    endpoint: oss-cn-beijing.aliyuncs.com
+    accessKeyId: LTAI4G1TGcvigmEbTFBQPmMc
+    accessKeySecret: ym4JO8sT3XNmRAVJbHR8vKlHGbwNot
+    bucketName: fufuyouxuan
+  #      endpoint: oss-cn-shenzhen.aliyuncs.com
+  #      accessKeyId: 111111
+  #      accessKeySecret: xxxxxx
+  #      bucketName: xxxxxx
+  # 腾讯对象存储配置信息
+  # 请参考 https://cloud.tencent.com/document/product/436/6249
+  tencent:
+    secretId: AKIDB7mFQJq3uUnpd9hRGp66pHSLxOXOj2qN
+    secretKey: SecJjrhHZZ03qRjGclfIfleHqGQKxIM9
+    region: ap-beijing
+    bucketName: guoyu-test-1253348289
+#    secretId: AKIDrXx70cx1pMdfT0Zrsd7KGwLTKvFI4brq
+#    secretKey: kDQM1PXQ2OUJr76pIUP3QVJq65nDNGtE
+#    region: ap-guangzhou
+#    bucketName: guoyuxiansheng
+  # 七牛云对象存储配置信息
+  qiniu:
+    endpoint: http://pd5cb6ulu.bkt.clouddn.com
+    accessKey: 111111
+    secretKey: xxxxxx
+    bucketName: mall

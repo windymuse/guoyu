@@ -36,7 +36,9 @@ public interface AdminMerchantConfigService {
             @HttpParam(name = "longitude", type = HttpParamType.COMMON, description = "经度") String longitude,
             @HttpParam(name = "latitude", type = HttpParamType.COMMON, description = "维度") String latitude,
             @HttpParam(name = "slogan", type = HttpParamType.COMMON, description = "标语") String slogan,
-            @NotNull @HttpParam(name = "showType", type = HttpParamType.COMMON, description = "展示方式") Integer showType
+            @NotNull @HttpParam(name = "showType", type = HttpParamType.COMMON, description = "展示方式") Integer showType,
+            @HttpParam(name = "startTime", type = HttpParamType.COMMON, description = "开始营业时间") String startTime,
+            @HttpParam(name = "endTime", type = HttpParamType.COMMON, description = "结束营业时间") String endTime
     ) throws ServiceException;
 
     @HttpMethod(description = "修改", permission = "promote:merchant:update", permissionParentName = "推广管理", permissionName = "商铺信息管理")
@@ -49,7 +51,9 @@ public interface AdminMerchantConfigService {
             @HttpParam(name = "longitude", type = HttpParamType.COMMON, description = "经度") String longitude,
             @HttpParam(name = "latitude", type = HttpParamType.COMMON, description = "维度") String latitude,
             @HttpParam(name = "slogan", type = HttpParamType.COMMON, description = "标语") String slogan,
-            @NotNull @HttpParam(name = "showType", type = HttpParamType.COMMON, description = "展示方式") Integer showType
+            @NotNull @HttpParam(name = "showType", type = HttpParamType.COMMON, description = "展示方式") Integer showType,
+            @HttpParam(name = "startTime", type = HttpParamType.COMMON, description = "开始营业时间") String startTime,
+            @HttpParam(name = "endTime", type = HttpParamType.COMMON, description = "结束营业时间") String endTime
     ) throws ServiceException;
 
     @HttpMethod(description = "查询", permission = "promote:merchant:query", permissionParentName = "推广管理", permissionName = "商铺信息管理")

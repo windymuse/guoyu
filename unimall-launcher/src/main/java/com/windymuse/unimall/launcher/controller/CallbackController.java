@@ -11,6 +11,7 @@ import com.windymuse.unimall.biz.service.notify.AdminNotifyBizService;
 import com.windymuse.unimall.biz.service.order.OrderBizService;
 import com.windymuse.unimall.biz.service.user.UserBizService;
 import com.windymuse.unimall.core.exception.ServiceException;
+import com.windymuse.unimall.data.domain.MemberLevelDO;
 import com.windymuse.unimall.data.domain.OrderDO;
 import com.windymuse.unimall.data.domain.OrderSkuDO;
 import com.windymuse.unimall.data.domain.UserDO;
@@ -70,6 +71,9 @@ public class CallbackController {
 
     @Autowired
     private AdminNotifyBizService adminNotifyBizService;
+
+    @Autowired
+    private MemberLevelMapper memberLevelMapper;
 
     @RequestMapping("/wxpay")
     @Transactional(rollbackFor = Exception.class)
@@ -149,10 +153,26 @@ public class CallbackController {
             }
         }
 
-        // 更新用户的积分
+        // 更新用户的积分和会员等级
         UserDO userDO = userMapper.selectById(orderDTO.getUserId());
         userDO.setPoints(userDO.getPoints() + result.getTotalFee());
+        // 获取下一级别的会员等级信息
+        List<MemberLevelDO> nextMemberLevelList = memberLevelMapper.getMemberLevelList(null, null, userDO.getLevel() + 1, null, null, 0, 100);
+        if (nextMemberLevelList.size() > 0) {
+            MemberLevelDO memberLevelDO = nextMemberLevelList.get(0);
+            System.out.println();
+            System.out.println("next level");
+            System.out.println(memberLevelDO.getDegree());
+            System.out.println(memberLevelDO.getMoney());
+            System.out.println();
+            System.out.println();
+            // 达到升级门槛
+            if (userDO.getPoints() >= memberLevelDO.getMoney()) {
+                userDO.setLevel(memberLevelDO.getDegree());
+            }
+        }
         userMapper.updateById(userDO);
+
 
         //通知管理员发货
         OrderDTO finalOrderDTO = orderDTO;

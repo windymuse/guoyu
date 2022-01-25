@@ -1,0 +1,6 @@
+{
+  "component": true,
+  "usingComponents": {
+    "q-r-code": "/components/qr_code/qrcode"
+  }
+}

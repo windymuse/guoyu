@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -30,7 +31,7 @@ public class AdminMerchantConfigServiceImpl implements AdminMerchantConfigServic
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean addMerchant(Long adminId, String title, String logoUrl, String description, String address, String longitude, String latitude, String slogan, Integer showType) throws ServiceException {
+    public boolean addMerchant(Long adminId, String title, String logoUrl, String description, String address, String longitude, String latitude, String slogan, Integer showType, String startTime, String endTime) throws ServiceException {
         Date now = new Date();
         ConfigDO titleDO = new ConfigDO("title",title);
             titleDO.setGmtCreate(now);titleDO.setGmtUpdate(now);
@@ -47,7 +48,11 @@ public class AdminMerchantConfigServiceImpl implements AdminMerchantConfigServic
         ConfigDO latitudeDO = new ConfigDO("latitude",latitude);
             latitudeDO.setGmtCreate(now);latitudeDO.setGmtUpdate(now);
         ConfigDO sloganDO = new ConfigDO("slogan",slogan);
-            sloganDO.setGmtCreate(now);sloganDO.setGmtUpdate(now);
+        sloganDO.setGmtCreate(now);sloganDO.setGmtUpdate(now);
+        ConfigDO startTimeDO = new ConfigDO("startTime",slogan);
+        startTimeDO.setGmtCreate(now);startTimeDO.setGmtUpdate(now);
+        ConfigDO endTimeDO = new ConfigDO("endTime",slogan);
+        endTimeDO.setGmtCreate(now);endTimeDO.setGmtUpdate(now);
         configMapper.insert(titleDO);
         configMapper.insert(logoDO);
         configMapper.insert(descDO);
@@ -56,13 +61,15 @@ public class AdminMerchantConfigServiceImpl implements AdminMerchantConfigServic
         configMapper.insert(longitudeDO);
         configMapper.insert(latitudeDO);
         configMapper.insert(sloganDO);
+        configMapper.insert(startTimeDO);
+        configMapper.insert(endTimeDO);
         configBizService.clearMerchantConfigCache();
         return true;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateMerchant(Long adminId, String title, String logoUrl, String description, String address, String longitude, String latitude, String slogan, Integer showType) throws ServiceException {
+    public boolean updateMerchant(Long adminId, String title, String logoUrl, String description, String address, String longitude, String latitude, String slogan, Integer showType, String startTime, String endTime) throws ServiceException {
 
         configMapper.update(new ConfigDO("title", title), new EntityWrapper<ConfigDO>().eq("key_word", "title"));
 
@@ -79,6 +86,10 @@ public class AdminMerchantConfigServiceImpl implements AdminMerchantConfigServic
         configMapper.update(new ConfigDO("latitude", latitude), new EntityWrapper<ConfigDO>().eq("key_word", "latitude"));
 
         configMapper.update(new ConfigDO("slogan", slogan), new EntityWrapper<ConfigDO>().eq("key_word", "slogan"));
+
+        configMapper.update(new ConfigDO("startTime", startTime), new EntityWrapper<ConfigDO>().eq("key_word", "startTime"));
+
+        configMapper.update(new ConfigDO("endTime", endTime), new EntityWrapper<ConfigDO>().eq("key_word", "endTime"));
 
         configBizService.clearMerchantConfigCache();
         return true;

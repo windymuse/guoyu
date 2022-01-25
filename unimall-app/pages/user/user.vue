@@ -26,7 +26,7 @@
 			</view>
 			<view v-if="hasLogin" class="vip-card-box">
 				<view class="b-btn">
-					当前等级折扣 {{currVipDegree.percent == 100 ? '无折扣' : currVipDegree / 10 + '折'}}
+					当前等级折扣 {{currVipDegree.percent == 100 ? '无折扣' : currVipDegree.percent + '折'}}
 				</view>
 				<view class="tit">
 					Lv{{userInfo.level || 0}}
@@ -81,11 +81,11 @@
 					<text>浏览历史</text>
 				</view>
 				<scroll-view v-if="footprintList.length > 0" scroll-x class="h-list">
-					<image v-for="(item, index ) in footprintList" :key="index" @longpress="deleteFootprint(item)" @click="navTo('/pages/product/detail?id=' + item.spuId)" :src="item.spuImg + '?x-oss-process=style/200px'" mode="aspectFill"></image>
+					<image v-for="(item, index ) in footprintList" :key="index" @longpress="deleteFootprint(item)" @click="navTo('/pages/product/detail?id=' + item.spuId)" :src="item.spuImg + '/200px'" mode="aspectFill"></image>
 				</scroll-view>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/list')"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" title="我的收藏" @eventClick="navTo('/pages/product/favorite')"></list-cell>
-				<list-cell icon="icon-huifu" iconColor="#e07472" title="在线客服" :openType="'contact'"></list-cell>
+				<!-- <list-cell icon="icon-huifu" iconColor="#e07472" title="在线客服" :openType="'contact'"></list-cell> -->
 				<list-cell icon="icon-tuandui" iconColor="#EE82EE" title="个人资料" @eventClick="navTo('/pages/user/profile')"></list-cell>
 				<list-cell icon="icon-iconfontweixin" iconColor="#EEEE00" title="我的优惠券" @eventClick="navTo('/pages/coupon/coupon')"></list-cell>
 				<list-cell icon="icon-pinglun-copy" iconColor="#ee883b" title="关于" @eventClick="navTo('/pages/user/about')"></list-cell>
@@ -98,9 +98,9 @@
 </template>  
 <script>  
 	import listCell from '@/components/mix-list-cell';
-    import {  
-        mapState 
-    } from 'vuex';  
+    import {
+        mapState
+    } from 'vuex';
 	let startY = 0, moveY = 0, pageAtTop = true;
     export default {
 		components: {
@@ -155,6 +155,16 @@
 			}
 		},
 		// #endif
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
         computed: {
 			...mapState(['hasLogin','userInfo']),
 			moneyToNext() {
@@ -186,7 +196,7 @@
 					let data = res.data
 					console.log('curr level', data)
 					if (data && data.length > 0) {
-						this.currVipDegree = data[0]
+						that.currVipDegree = data[0]
 					}
 				})
 				that.$api.request('member_level', 'getMemberLevel',{
@@ -199,7 +209,7 @@
 					let data = res.data
 					console.log('next level', data)
 					if (data && data.length > 0) {
-						this.nextVipDegree = data[0]
+						that.nextVipDegree = data[0]
 					}
 				})
 			},

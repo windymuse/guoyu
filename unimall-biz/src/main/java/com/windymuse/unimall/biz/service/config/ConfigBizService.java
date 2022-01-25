@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
 import java.util.List;
 
 /**
@@ -77,6 +78,12 @@ public class ConfigBizService {
                     break;
                 case "slogan":
                     configDTO.setSlogan(configDO.getValueWorth());
+                    break;
+                case "startTime":
+                    configDTO.setStartTime(configDO.getValueWorth());
+                    break;
+                case "endTime":
+                    configDTO.setEndTime(configDO.getValueWorth());
                     break;
                 case "showType":
                     configDTO.setShowType(Integer.parseInt(configDO.getValueWorth()));

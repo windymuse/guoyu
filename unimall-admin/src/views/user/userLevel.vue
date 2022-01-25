@@ -30,7 +30,7 @@
 
       <el-table-column align="center" label="通用折扣百分比" prop="percent">
         <template slot-scope="scope">
-          {{ scope.row.percent / 100 }}
+          {{ scope.row.percent }}%
         </template>
       </el-table-column>
 
@@ -94,7 +94,7 @@
         <el-form-item label="会员等级" prop="degree">
           <el-input v-model="dataForm.degree" />
         </el-form-item>
-        <el-form-item label="通用折扣百分比" prop="percent">
+        <el-form-item label="通用折扣百分比(100为原价)" prop="percent">
           <el-input v-model="dataForm.percent" />
         </el-form-item>
         <el-form-item label="最低消费额（分）" prop="money">
@@ -217,7 +217,7 @@ export default {
       this.listLoading = true
       listMemberLevel(this.listQuery)
         .then(response => {
-          this.list = response.data.data.items
+          this.list = response.data.data.items.sort((a, b) => a.degree - b.degree)
           this.total = response.data.data.total
           this.listLoading = false
         })
@@ -307,6 +307,7 @@ export default {
     },
     handleUpdate(row) {
       this.dataForm = Object.assign({}, row)
+      this.imgsFileList = []
       this.imgsFileList.push({ name: 'avatar', url: row.img })
       console.log([row.img])
       this.dialogStatus = 'update'

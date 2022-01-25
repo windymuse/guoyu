@@ -3,6 +3,7 @@ package com.windymuse.unimall.data.mapper;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.windymuse.unimall.data.domain.OrderDO;
 import com.windymuse.unimall.data.dto.order.OrderDTO;
+import com.windymuse.unimall.data.dto.order.OrderGoodsSumDTO;
 import com.windymuse.unimall.data.model.KVModel;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,4 +34,5 @@ public interface OrderMapper extends BaseMapper<OrderDO> {
 
     public List<String> selectExpireOrderNos(@Param("status") Integer status, @Param("time") Date time);
 
+    public List<OrderGoodsSumDTO> selectOrderGoodsSum(@Param("startTime") String startTime, @Param("endTime") String endTime);
 }

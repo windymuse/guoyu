@@ -72,6 +72,16 @@
 				that.merchantConfig = res.data
 			})
 		},
+		onShareAppMessage() {
+			return {
+				title: '国渔鲜生小程序',
+				desc: '全球鲜生供应商',
+				path: '/pages/index/index'
+			}
+		},
+		onShareTimeline() {
+			return {}
+		},
 		methods: {
 			...mapMutations(['login']),
 			inputChange(e) {

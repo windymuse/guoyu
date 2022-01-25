@@ -32,8 +32,12 @@ public class CartDTO extends SuperDTO {
 
     private Long spuId;
 
+    private String unit;
+
     private Long categoryId;
 
     private List<Long> categoryIdList;
+
+    private Integer deliverLimit;
 
 }
