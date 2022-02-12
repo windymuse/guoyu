@@ -110,7 +110,8 @@
       </div>
     </el-dialog>
 
-</div></template>
+  </div>
+</template>
 
 <style>
 .avatar-uploader .el-upload {
@@ -150,7 +151,7 @@ import { clearTreeEmptyChildren } from '@/utils/index'
 import Pagination from '@/components/Pagination'
 import ElOption from '../../../node_modules/element-ui/packages/select/src/option' // Secondary package based on el-pagination
 
-const recommendTypeMap = [{ value: 1, unionType: 3, name: '橱窗推荐' }, { value: '', unionType: 3, name: '全部' }]
+const recommendTypeMap = [{ value: 1, unionType: 3, name: '今日推荐' }, { value: '', unionType: 3, name: '全部' }]
 
 export default {
   name: 'Recommend',

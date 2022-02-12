@@ -4,7 +4,8 @@
 			<swiper indicator-dots circular=true duration="400">
 				<swiper-item class="swiper-item" v-for="(item,index) in goods.imgList" :key="index">
 					<view class="image-wrapper">
-						<image :src="item + '/600px'" class="loaded" mode="aspectFit"></image>
+						<video v-if="item.indexOf('.mp4') >= 0" :src="item" style="width: 100%; height: 100%;" controls></video>
+						<image v-else :src="item + '/600px'" class="loaded" mode="aspectFit"></image>
 					</view>
 				</swiper-item>
 			</swiper>

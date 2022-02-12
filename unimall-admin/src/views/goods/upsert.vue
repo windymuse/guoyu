@@ -42,7 +42,7 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item label="商品图片">
+        <el-form-item label="商品图片/视频">
           <el-upload
             :action="uploadPath"
             :headers="headers"
@@ -52,8 +52,8 @@
             :on-success="handleimgsUrl"
             :on-remove="handleRemove"
             multiple
-            accept=".jpg, .jpeg, .png, .gif"
-            list-type="picture-card"
+            accept=".jpg, .jpeg, .png, .gif, .mp4"
+            list-type="text"
           >
             <i class="el-icon-plus" />
           </el-upload>
@@ -519,8 +519,13 @@ export default {
     },
     handleimgsUrl(response, file, fileList) {
       if (response.errno === 200) {
-        this.goods.imgList.push(response.url)
+        const url = response.url
+        console.log(url)
+        this.goods.imgList.push(url)
         this.goods.img = this.goods.imgList[0]
+          // const video_url = 'https://guoyu-testing.oss-cn-beijing.aliyuncs.com/video.png'
+          // this.goods.imgList.push(video_url)
+          // this.goods.img = video_url
       }
     },
     handleRemove: function(file, fileList) {

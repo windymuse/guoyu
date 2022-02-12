@@ -37,6 +37,71 @@
 		</view>
 		
 		
+		<!-- 橱窗推荐 -->
+		<view v-if="windowSpuList && windowSpuList.length > 0" class="f-header m-t">
+		  <image src="/static/temp/h1.png" />
+		  <view class="tit-box">
+		    <text class="tit">
+		      今日推荐
+		    </text>
+		    <text class="tit2">
+		      Shop Window
+		    </text>
+		  </view>
+		</view>
+		<view v-if="windowSpuList && windowSpuList.length > 0" class="group-section">
+		
+		  <swiper class="g-swiper" :duration="500">
+		    <swiper-item
+		      v-for="(item, index) in windowSpuList"
+		      v-show="index % 2 === 0"
+		      :key="index"
+		      class="g-swiper-item"
+		    >
+		      <view class="g-item left" @click="navToWindowSuggestSpu(index)">
+		        <image :src="item.spuImg + '/400px'" mode="aspectFill" />
+		        <view class="t-box">
+		          <text class="title clamp">
+		            {{ item.spuTitle }}
+		          </text>
+		          <view class="price-box">
+		            <text class="price">
+		              ￥{{ isVip ? (item.spuVipPrice / 100.0 + ' [VIP]') : (item.spuPrice / 100.0) }}
+		            </text>
+		            <text v-if="item.spuOriginalPrice > (isVip ? item.spuVipPrice : item.spuPrice)" class="m-price">
+		              ￥{{ item.spuOriginalPrice / 100 }}
+		            </text>
+		          </view>
+		
+		          <view class="pro-box">
+		            <text>累计销售:{{ item.spuSales }}件</text>
+		          </view>
+		        </view>
+		      </view>
+		      <view v-if="index + 1 < windowSpuList.length" class="g-item right" @click="navToWindowSuggestSpu(index + 1)">
+		        <image :src="windowSpuList[index+1].spuImg" mode="aspectFill" />
+		        <view class="t-box">
+		          <text class="title clamp">
+		            {{ windowSpuList[index+1].spuTitle }}
+		          </text>
+		          <view class="price-box">
+		            <text class="price">
+		              ￥{{ isVip ? (windowSpuList[index+1].spuVipPrice / 100.0 + ' [VIP]') : (windowSpuList[index+1].spuPrice / 100.0) }}
+		            </text>
+		            <text v-if="windowSpuList[index+1].spuOriginalPrice > (isVip ? (windowSpuList[index+1].spuVipPrice) : (windowSpuList[index+1].spuPrice))" class="m-price">
+		              ￥{{ windowSpuList[index+1].spuOriginalPrice / 100.0 }}
+		            </text>
+		          </view>
+		          <view class="pro-box">
+		            <text>累计销售:{{ windowSpuList[index+1].spuSales }}件</text>
+		          </view>
+		        </view>
+		      </view>
+		      <view v-if="index + 1 === windowSpuList.length" class="g-item right" />
+		    </swiper-item>
+		  </swiper>
+		</view>
+		
 		
 
 		<!-- 分类推荐楼层 -->

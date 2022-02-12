@@ -39,6 +39,8 @@ mvnw.cmd
 /unimall-launcher/src/main/resources/application-dev.properties
 /unimall-launcher/src/main/resources/application-prd.properties
 /unimall-launcher/src/main/resources/application.properties
+/unimall-launcher/src/main/resources/application.properties.bak
+/unimall-launcher/src/main/resources/application.yml
 
 ### target ###
 /target/
