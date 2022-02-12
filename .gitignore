@@ -41,6 +41,8 @@ mvnw.cmd
 /unimall-launcher/src/main/resources/application.properties
 /unimall-launcher/src/main/resources/application.properties.bak
 /unimall-launcher/src/main/resources/application.yml
+unimall-launcher/src/main/resources/application.properties.bak
+unimall-launcher/src/main/resources/application.yml
 application.properties.bak
 application.yml
 
@@ -73,3 +75,8 @@ unimall.log.*.tmp
 /plugins/
 /unimall-app/pages/plugins/
 /unimall-admin/src/views/plugins/
+
+/unimall-app-bak/
+/国渔/
+/unimall-launcher/src/main/resources/application.yml
+/unimall-launcher/src/main/resources/application.properties.bak
