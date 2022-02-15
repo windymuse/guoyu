@@ -80,3 +80,4 @@ unimall.log.*.tmp
 /国渔/
 /unimall-launcher/src/main/resources/application.yml
 /unimall-launcher/src/main/resources/application.properties.bak
+/unimall-app/unpackage/dist/dev
