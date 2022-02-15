@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mall-guoyu:
+    container_name: mall-guoyu
+    restart: always
+    build:
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - E:\docker\guoyu:/var/logs
+    ports:
+      - 18080:18080
