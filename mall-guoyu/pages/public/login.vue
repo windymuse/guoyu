@@ -194,8 +194,6 @@
 					})
 				})
 
-
-
 			},
 			wechatLogin() {
 				const that = this
